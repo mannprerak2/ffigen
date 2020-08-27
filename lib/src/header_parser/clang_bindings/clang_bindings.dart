@@ -792,6 +792,19 @@ class Clang {
 
   _dart_clang_getCursorUSR_wrap _clang_getCursorUSR_wrap;
 
+  int clang_Cursor_isBitField_wrap(
+    ffi.Pointer<CXCursor> cursor,
+  ) {
+    _clang_Cursor_isBitField_wrap ??= _dylib.lookupFunction<
+        _c_clang_Cursor_isBitField_wrap,
+        _dart_clang_Cursor_isBitField_wrap>('clang_Cursor_isBitField_wrap');
+    return _clang_Cursor_isBitField_wrap(
+      cursor,
+    );
+  }
+
+  _dart_clang_Cursor_isBitField_wrap _clang_Cursor_isBitField_wrap;
+
   int clang_getFieldDeclBitWidth_wrap(
     ffi.Pointer<CXCursor> cursor,
   ) {
@@ -2674,6 +2687,14 @@ typedef _c_clang_getCursorUSR_wrap = ffi.Pointer<CXString> Function(
 );
 
 typedef _dart_clang_getCursorUSR_wrap = ffi.Pointer<CXString> Function(
+  ffi.Pointer<CXCursor> cursor,
+);
+
+typedef _c_clang_Cursor_isBitField_wrap = ffi.Uint32 Function(
+  ffi.Pointer<CXCursor> cursor,
+);
+
+typedef _dart_clang_Cursor_isBitField_wrap = int Function(
   ffi.Pointer<CXCursor> cursor,
 );
 

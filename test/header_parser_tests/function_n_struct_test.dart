@@ -46,9 +46,6 @@ ${strings.headers}:
     test('Struct3 flexible array member', () {
       expect((actual.getBinding('Struct3') as Struc).members.isEmpty, true);
     });
-    test('Struct4 bit field member', () {
-      expect((actual.getBinding('Struct4') as Struc).members.isEmpty, true);
-    });
   });
 }
 
@@ -84,7 +81,6 @@ Library expectedLibrary() {
           SupportedNativeType.Void,
         ),
       ),
-      Struc(name: 'Struct4'),
     ],
   );
 }

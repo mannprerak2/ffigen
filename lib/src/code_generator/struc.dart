@@ -36,7 +36,7 @@ import 'writer.dart';
 /// }
 /// ```
 class Struc extends NoLookUpBinding {
-  List<Member> members;
+  List<StructMember> members;
 
   Struc({
     String usr,
@@ -69,10 +69,14 @@ class Struc extends NoLookUpBinding {
       _typedefDependencies = <Typedef>[];
 
       // Write typedef's required by members and resolve name conflicts.
-      for (final m in members) {
-        final base = m.type.getBaseType();
-        if (base.broadType == BroadType.NativeFunction) {
-          _typedefDependencies.addAll(base.nativeFunc.getDependencies());
+      for (final structMember in members) {
+        // BitfieldGroup will not have typedef dependencies so we only run this
+        // for the members.
+        if (structMember is Member) {
+          final base = structMember.type.getBaseType();
+          if (base.broadType == BroadType.NativeFunction) {
+            _typedefDependencies.addAll(base.nativeFunc.getDependencies());
+          }
         }
       }
     }
@@ -99,34 +103,40 @@ class Struc extends NoLookUpBinding {
     // Write class declaration.
     s.write(
         'class $enclosingClassName extends ${w.ffiLibraryPrefix}.Struct{\n');
-    for (final m in members) {
-      final memberName = localUniqueNamer.makeUnique(m.name);
-      if (m.type.broadType == BroadType.ConstantArray) {
-        // TODO(5): Remove array helpers when inline array support arives.
-        final arrayHelper = ArrayHelper(
-          helperClassGroupName:
-              '${w.arrayHelperClassPrefix}_${enclosingClassName}_${memberName}',
-          elementType: m.type.getBaseArrayType(),
-          dimensions: _getArrayDimensionLengths(m.type),
-          name: memberName,
-          structName: enclosingClassName,
-          elementNamePrefix: '${expandedArrayItemPrefix}${memberName}_item_',
-        );
-        s.write(arrayHelper.declarationString(w));
-        helpers.add(arrayHelper);
-      } else {
-        const depth = '  ';
-        if (m.dartDoc != null) {
-          s.write(depth + '/// ');
-          s.writeAll(m.dartDoc.split('\n'), '\n' + depth + '/// ');
-          s.write('\n');
+    for (final structMember in members) {
+      if (structMember is Member) {
+        final m = structMember;
+        final memberName = localUniqueNamer.makeUnique(m.name);
+        if (structMember.type.broadType == BroadType.ConstantArray) {
+          // TODO(5): Remove array helpers when inline array support arives.
+          final arrayHelper = ArrayHelper(
+            helperClassGroupName:
+                '${w.arrayHelperClassPrefix}_${enclosingClassName}_${memberName}',
+            elementType: m.type.getBaseArrayType(),
+            dimensions: _getArrayDimensionLengths(m.type),
+            name: memberName,
+            structName: enclosingClassName,
+            elementNamePrefix: '${expandedArrayItemPrefix}${memberName}_item_',
+          );
+          s.write(arrayHelper.declarationString(w));
+          helpers.add(arrayHelper);
+        } else {
+          const depth = '  ';
+          if (m.dartDoc != null) {
+            s.write(depth + '/// ');
+            s.writeAll(m.dartDoc.split('\n'), '\n' + depth + '/// ');
+            s.write('\n');
+          }
+          if (m.type.isPrimitive) {
+            s.write('$depth@${m.type.getCType(w)}()\n');
+          }
+          s.write('$depth${m.type.getDartType(w)} ${memberName};\n\n');
         }
-        if (m.type.isPrimitive) {
-          s.write('$depth@${m.type.getCType(w)}()\n');
-        }
-        s.write('$depth${m.type.getDartType(w)} ${memberName};\n\n');
+      } else if (structMember is BitfieldGroup) {
+        //TODO(incomplete): handle bitfield group members;
       }
     }
+
     s.write('}\n\n');
 
     for (final helper in helpers) {
@@ -142,29 +152,28 @@ class Struc extends NoLookUpBinding {
     var expandedArrayItemPrefix = base;
     var suffixInt = 0;
     for (var i = 0; i < members.length; i++) {
-      if (members[i].name.startsWith(expandedArrayItemPrefix)) {
-        // Not a unique prefix, start over with a new suffix.
-        i = -1;
-        suffixInt++;
-        expandedArrayItemPrefix = '${base}${suffixInt}';
+      final m = members[i];
+      if (m is Member) {
+        if (m.name.startsWith(expandedArrayItemPrefix)) {
+          /// Not a unique prefix, set start over with a new suffix.
+          i = -1;
+          suffixInt++;
+          expandedArrayItemPrefix = '${base}${suffixInt}';
+        }
+      } else if (m is BitfieldGroup) {
+        for (final bf in m.bitfields) {
+          if (bf.name.startsWith(expandedArrayItemPrefix)) {
+            // Not a unique prefix, start over with a new suffix.
+            i = -1;
+            suffixInt++;
+            expandedArrayItemPrefix = '${base}${suffixInt}';
+            break;
+          }
+        }
       }
     }
     return expandedArrayItemPrefix + '_';
   }
-}
-
-class Member {
-  final String dartDoc;
-  final String originalName;
-  final String name;
-  final Type type;
-
-  const Member({
-    String originalName,
-    @required this.name,
-    @required this.type,
-    this.dartDoc,
-  }) : originalName = originalName ?? name;
 }
 
 // Helper bindings for struct array.
@@ -299,4 +308,38 @@ class ArrayHelper {
     }
     return s.toString();
   }
+}
+
+abstract class StructMember {}
+
+class Member extends StructMember {
+  final String dartDoc;
+  final String originalName;
+  final String name;
+  final Type type;
+  Member({
+    String originalName,
+    @required this.name,
+    @required this.type,
+    this.dartDoc,
+  }) : originalName = originalName ?? name;
+}
+
+class BitfieldGroup extends StructMember {
+  final List<Bitfield> bitfields;
+  BitfieldGroup(this.bitfields);
+}
+
+class Bitfield {
+  final String originalName;
+  final String name;
+  final int length;
+  final SupportedNativeType nativeType;
+
+  Bitfield({
+    String originalName,
+    @required this.name,
+    @required this.length,
+    @required this.nativeType,
+  }) : originalName = originalName ?? name;
 }

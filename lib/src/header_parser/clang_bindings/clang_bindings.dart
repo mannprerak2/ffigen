@@ -832,6 +832,19 @@ class Clang {
   }
 
   _dart_clang_Cursor_getOffsetOfField_wrap _clang_Cursor_getOffsetOfField_wrap;
+
+  int clang_Type_getSizeOf_wrap(
+    ffi.Pointer<CXType> cxtype,
+  ) {
+    _clang_Type_getSizeOf_wrap ??= _dylib.lookupFunction<
+        _c_clang_Type_getSizeOf_wrap,
+        _dart_clang_Type_getSizeOf_wrap>('clang_Type_getSizeOf_wrap');
+    return _clang_Type_getSizeOf_wrap(
+      cxtype,
+    );
+  }
+
+  _dart_clang_Type_getSizeOf_wrap _clang_Type_getSizeOf_wrap;
 }
 
 /// A character string.
@@ -2726,4 +2739,12 @@ typedef _c_clang_Cursor_getOffsetOfField_wrap = ffi.Int64 Function(
 
 typedef _dart_clang_Cursor_getOffsetOfField_wrap = int Function(
   ffi.Pointer<CXCursor> cursor,
+);
+
+typedef _c_clang_Type_getSizeOf_wrap = ffi.Int64 Function(
+  ffi.Pointer<CXType> cxtype,
+);
+
+typedef _dart_clang_Type_getSizeOf_wrap = int Function(
+  ffi.Pointer<CXType> cxtype,
 );

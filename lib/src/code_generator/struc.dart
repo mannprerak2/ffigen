@@ -326,8 +326,9 @@ class Member extends StructMember {
 }
 
 class BitfieldGroup extends StructMember {
+  final int startOffset;
   final List<Bitfield> bitfields;
-  BitfieldGroup(this.bitfields);
+  BitfieldGroup(this.startOffset, this.bitfields);
 }
 
 class Bitfield {
@@ -348,4 +349,9 @@ class Bitfield {
     @required this.bitOffset,
     @required this.nativeType,
   }) : originalName = originalName ?? name;
+
+  @override
+  String toString() {
+    return '$name($originalName), type: $nativeType, length: $length, bit offset: $bitOffset';
+  }
 }

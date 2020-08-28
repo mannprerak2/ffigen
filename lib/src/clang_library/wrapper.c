@@ -378,4 +378,9 @@ long long clang_Cursor_getOffsetOfField_wrap(CXCursor *cursor)
     return clang_Cursor_getOffsetOfField(*cursor);
 };
 
+long long clang_Type_getSizeOf_wrap(CXType *cxtype)
+{
+    return clang_Type_getSizeOf(*cxtype);
+}
+
 // END ===== WRAPPER FUNCTIONS =====================

@@ -103,3 +103,4 @@ functions:
     - clang_Cursor_isBitField_wrap
     - clang_getFieldDeclBitWidth_wrap
     - clang_Cursor_getOffsetOfField_wrap
+    - clang_Type_getSizeOf_wrap

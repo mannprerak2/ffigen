@@ -17,6 +17,11 @@ final _logger = Logger('ffigen.header_parser.structdecl_parser');
 /// Holds temporary information regarding [struc] while parsing.
 class _ParsedStruc {
   Struc struc;
+
+  // Used for calculating bitfield padding.
+  int lastSeenMemberOffset = 0;
+  int lastSeenMemberSize = 0;
+
   bool nestedStructMember = false;
   bool unimplementedMemberType = false;
   bool flexibleArrayMember = false;
@@ -139,8 +144,6 @@ int _structMembersVisitor(Pointer<clang_types.CXCursor> cursor,
       }
 
       if (clang.clang_Cursor_isBitField_wrap(cursor) != 0) {
-        print(
-            'Bitfield offset: ${clang.clang_Cursor_getOffsetOfField_wrap(cursor)}');
         final bitfield = Bitfield(
           originalName: cursor.spelling(),
           name: config.structDecl.renameMemberUsingConfig(
@@ -156,11 +159,17 @@ int _structMembersVisitor(Pointer<clang_types.CXCursor> cursor,
 
         /// Add a new [BitfieldGroup] if last member isn't a [BitfieldGroup].
         if (strucMembers.isEmpty || strucMembers.last is! BitfieldGroup) {
-          strucMembers.add(BitfieldGroup([]));
+          strucMembers.add(BitfieldGroup(
+            _stack.top.lastSeenMemberOffset + _stack.top.lastSeenMemberSize * 8,
+            [],
+          ));
+          _logger.finer(
+              'Parsing Bitfieldgroup - lastSeenMemberOffset: ${_stack.top.lastSeenMemberOffset}, lastSeenMemberSize: ${_stack.top.lastSeenMemberSize}');
         }
 
         /// Add [Bitfield] to last [BitfieldGroup].
         (strucMembers.last as BitfieldGroup).bitfields.add(bitfield);
+        _logger.finer('---- Parsed bitfield - ${bitfield.toString()}');
       } else {
         if (mt.getBaseType().broadType == BroadType.Unimplemented) {
           _stack.top.unimplementedMemberType = true;
@@ -180,6 +189,11 @@ int _structMembersVisitor(Pointer<clang_types.CXCursor> cursor,
             type: mt,
           ),
         );
+        _stack.top.lastSeenMemberOffset =
+            clang.clang_Cursor_getOffsetOfField_wrap(cursor);
+        final cxtype = cursor.type();
+        _stack.top.lastSeenMemberSize = clang.clang_Type_getSizeOf_wrap(cxtype);
+        cxtype.dispose();
       }
     }
     cursor.dispose();

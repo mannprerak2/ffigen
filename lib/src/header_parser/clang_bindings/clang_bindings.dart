@@ -818,6 +818,20 @@ class Clang {
   }
 
   _dart_clang_getFieldDeclBitWidth_wrap _clang_getFieldDeclBitWidth_wrap;
+
+  int clang_Cursor_getOffsetOfField_wrap(
+    ffi.Pointer<CXCursor> cursor,
+  ) {
+    _clang_Cursor_getOffsetOfField_wrap ??= _dylib.lookupFunction<
+            _c_clang_Cursor_getOffsetOfField_wrap,
+            _dart_clang_Cursor_getOffsetOfField_wrap>(
+        'clang_Cursor_getOffsetOfField_wrap');
+    return _clang_Cursor_getOffsetOfField_wrap(
+      cursor,
+    );
+  }
+
+  _dart_clang_Cursor_getOffsetOfField_wrap _clang_Cursor_getOffsetOfField_wrap;
 }
 
 /// A character string.
@@ -2703,5 +2717,13 @@ typedef _c_clang_getFieldDeclBitWidth_wrap = ffi.Int32 Function(
 );
 
 typedef _dart_clang_getFieldDeclBitWidth_wrap = int Function(
+  ffi.Pointer<CXCursor> cursor,
+);
+
+typedef _c_clang_Cursor_getOffsetOfField_wrap = ffi.Int64 Function(
+  ffi.Pointer<CXCursor> cursor,
+);
+
+typedef _dart_clang_Cursor_getOffsetOfField_wrap = int Function(
   ffi.Pointer<CXCursor> cursor,
 );

@@ -102,3 +102,4 @@ functions:
     - clang_getCursorUSR_wrap
     - clang_Cursor_isBitField_wrap
     - clang_getFieldDeclBitWidth_wrap
+    - clang_Cursor_getOffsetOfField_wrap

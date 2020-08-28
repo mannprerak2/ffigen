@@ -333,13 +333,19 @@ class BitfieldGroup extends StructMember {
 class Bitfield {
   final String originalName;
   final String name;
-  final int length;
   final SupportedNativeType nativeType;
+
+  /// Length of the bitfield.
+  final int length;
+
+  /// Field offset starting from the beginning of the structure.
+  final int bitOffset;
 
   Bitfield({
     String originalName,
     @required this.name,
     @required this.length,
+    @required this.bitOffset,
     @required this.nativeType,
   }) : originalName = originalName ?? name;
 }

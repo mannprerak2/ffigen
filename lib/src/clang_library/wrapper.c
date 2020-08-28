@@ -362,13 +362,20 @@ CXString *clang_getCursorUSR_wrap(CXCursor *cursor)
 {
     return ptrToCXString(clang_getCursorUSR(*cursor));
 }
+
 unsigned clang_Cursor_isBitField_wrap(CXCursor *cursor)
 {
     return clang_Cursor_isBitField(*cursor);
 }
+
 int clang_getFieldDeclBitWidth_wrap(CXCursor *cursor)
 {
     return clang_getFieldDeclBitWidth(*cursor);
 }
+
+long long clang_Cursor_getOffsetOfField_wrap(CXCursor *cursor)
+{
+    return clang_Cursor_getOffsetOfField(*cursor);
+};
 
 // END ===== WRAPPER FUNCTIONS =====================

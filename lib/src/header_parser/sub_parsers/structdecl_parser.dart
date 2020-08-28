@@ -139,6 +139,8 @@ int _structMembersVisitor(Pointer<clang_types.CXCursor> cursor,
       }
 
       if (clang.clang_Cursor_isBitField_wrap(cursor) != 0) {
+        print(
+            'Bitfield offset: ${clang.clang_Cursor_getOffsetOfField_wrap(cursor)}');
         final bitfield = Bitfield(
           originalName: cursor.spelling(),
           name: config.structDecl.renameMemberUsingConfig(
@@ -146,6 +148,7 @@ int _structMembersVisitor(Pointer<clang_types.CXCursor> cursor,
             cursor.spelling(),
           ),
           length: clang.clang_getFieldDeclBitWidth_wrap(cursor),
+          bitOffset: clang.clang_Cursor_getOffsetOfField_wrap(cursor),
           nativeType: mt.nativeType,
         );
 

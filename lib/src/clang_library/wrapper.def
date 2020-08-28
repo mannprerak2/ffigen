@@ -361,3 +361,4 @@ clang_Cursor_isAnonymousRecordDecl_wrap
 clang_getCursorUSR_wrap
 clang_Cursor_isBitField_wrap_wrap
 clang_getFieldDeclBitWidth_wrap
+clang_Cursor_getOffsetOfField_wrap

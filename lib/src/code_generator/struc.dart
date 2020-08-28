@@ -94,7 +94,8 @@ class Struc extends NoLookUpBinding {
 
     final helpers = <ArrayHelper>[];
 
-    final expandedArrayItemPrefix = getUniqueExpandedArrayItemPrefix();
+    final expandedArrayItemPrefix = getUniqueItemPrefix('_unique');
+    final bitfieldGroupPrefix = getUniqueItemPrefix('_bitfield');
 
     /// Adding [enclosingClassName] because dart doesn't allow class member
     /// to have the same name as the class.
@@ -104,6 +105,7 @@ class Struc extends NoLookUpBinding {
     s.write(
         'class $enclosingClassName extends ${w.ffiLibraryPrefix}.Struct{\n');
     for (final structMember in members) {
+      const depth = '  ';
       if (structMember is Member) {
         final m = structMember;
         final memberName = localUniqueNamer.makeUnique(m.name);
@@ -121,7 +123,6 @@ class Struc extends NoLookUpBinding {
           s.write(arrayHelper.declarationString(w));
           helpers.add(arrayHelper);
         } else {
-          const depth = '  ';
           if (m.dartDoc != null) {
             s.write(depth + '/// ');
             s.writeAll(m.dartDoc.split('\n'), '\n' + depth + '/// ');
@@ -133,7 +134,11 @@ class Struc extends NoLookUpBinding {
           s.write('$depth${m.type.getDartType(w)} ${memberName};\n\n');
         }
       } else if (structMember is BitfieldGroup) {
-        //TODO(incomplete): handle bitfield group members;
+        final bitfields = BitfieldHelper(
+          bitfieldGroup: structMember,
+          bitfieldPrefix: bitfieldGroupPrefix,
+        ).generate(w, depth);
+        s.write(bitfields + '\n');
       }
     }
 
@@ -146,33 +151,79 @@ class Struc extends NoLookUpBinding {
     return BindingString(type: BindingStringType.struc, string: s.toString());
   }
 
-  /// Gets a unique prefix in local namespace for expanded array items.
-  String getUniqueExpandedArrayItemPrefix() {
-    final base = '_unique';
-    var expandedArrayItemPrefix = base;
+  /// Gets a unique prefix in struct's local namespace.
+  String getUniqueItemPrefix(String base) {
+    var itemPrefix = base;
     var suffixInt = 0;
-    for (var i = 0; i < members.length; i++) {
-      final m = members[i];
-      if (m is Member) {
-        if (m.name.startsWith(expandedArrayItemPrefix)) {
-          /// Not a unique prefix, set start over with a new suffix.
-          i = -1;
-          suffixInt++;
-          expandedArrayItemPrefix = '${base}${suffixInt}';
-        }
-      } else if (m is BitfieldGroup) {
-        for (final bf in m.bitfields) {
-          if (bf.name.startsWith(expandedArrayItemPrefix)) {
-            // Not a unique prefix, start over with a new suffix.
-            i = -1;
-            suffixInt++;
-            expandedArrayItemPrefix = '${base}${suffixInt}';
-            break;
+    var unique = false;
+    // Inner function to update prefix.
+    void tryNewPrefix() {
+      unique = false;
+      suffixInt++;
+      itemPrefix = '${base}${suffixInt}';
+    }
+
+    while (!unique) {
+      // Check if prefix is unique, this will be set to false when a match is found.
+      unique = true;
+      // Check and update if prefix matches with generated dart class name.
+      if (name.startsWith(itemPrefix)) {
+        tryNewPrefix();
+        continue;
+      }
+      for (final m in members) {
+        if (m is Member) {
+          if (m.name.startsWith(itemPrefix)) {
+            tryNewPrefix();
           }
+        } else if (m is BitfieldGroup) {
+          for (final bf in m.bitfields) {
+            if (bf.name.startsWith(itemPrefix)) {
+              tryNewPrefix();
+              break;
+            }
+          }
+        }
+        // Stop checking member names if prefix is not unique.
+        if (!unique) {
+          break;
         }
       }
     }
-    return expandedArrayItemPrefix + '_';
+
+    return itemPrefix + '_';
+  }
+}
+
+class BitfieldHelper {
+  static int _bitfieldGroupsCounter = 0;
+
+  final BitfieldGroup bitfieldGroup;
+  final String prefix;
+
+  String rawItemName(int index) => '${prefix}i${index}';
+
+  BitfieldHelper({
+    @required this.bitfieldGroup,
+    @required String bitfieldPrefix,
+  }) : prefix = '${bitfieldPrefix}g${BitfieldHelper._bitfieldGroupsCounter++}_';
+
+  String generate(final Writer w, final String depth) {
+    final s = StringBuffer();
+
+    // Write Uint8's to cover the entire bitfield group's padding + size.
+    final start = bitfieldGroup.startOffset;
+    final end = bitfieldGroup.bitfields.last.bitOffset +
+        bitfieldGroup.bitfields.last.length;
+    final uint8 = Type.nativeType(SupportedNativeType.Uint8);
+
+    var counter = 0;
+    for (var i = start; i < end; i += 8, counter++) {
+      s.write('$depth@${uint8.getCType(w)}()\n');
+      s.write('$depth${uint8.getDartType(w)} ${rawItemName(counter)};\n');
+    }
+    // TODO(incomplete): handle bitfield group members;
+    return s.toString();
   }
 }
 
@@ -329,6 +380,11 @@ class BitfieldGroup extends StructMember {
   final int startOffset;
   final List<Bitfield> bitfields;
   BitfieldGroup(this.startOffset, this.bitfields);
+
+  @override
+  String toString() {
+    return 'startOffset: $startOffset, bitfields: $bitfields';
+  }
 }
 
 class Bitfield {
@@ -352,6 +408,6 @@ class Bitfield {
 
   @override
   String toString() {
-    return '$name($originalName), type: $nativeType, length: $length, bit offset: $bitOffset';
+    return '($name($originalName), type: $nativeType, length: $length, bit offset: $bitOffset)';
   }
 }

@@ -13,7 +13,7 @@ double func3(float, int8_t a, int64_t, int32_t b);
 void *func4(int8_t **, double, int32_t ***);
 
 // Would be treated as `typedef void shortHand(void (*b)())`.
-typedef void shortHand(void(b)());
+typedef void shortHand();
 // Would be treated as `void func5(shortHand *a, void (*b)())`.
 void func5(shortHand a, void(b)());
 

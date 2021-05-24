@@ -32,6 +32,10 @@ ${strings.structs}:
     - _ExcludedStruct
 ${strings.typedefmap}:
   'specified_type_as_IntPtr': 'IntPtr'
+
+${strings.preamble}: |
+  // ignore_for_file: unused_element
+  // ignore_for_file: unused_field
         ''') as yaml.YamlMap),
       );
     });
@@ -45,7 +49,7 @@ ${strings.typedefmap}:
         'test',
         'header_parser_tests',
         'expected_bindings',
-        '_expected_typedef_test_bindings.dart'
+        '_expected_typedef_bindings.dart'
       ]);
     });
   });

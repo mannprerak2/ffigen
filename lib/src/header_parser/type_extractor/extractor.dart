@@ -37,7 +37,6 @@ Type getCodeGenType(
           s.broadType == BroadType.Compound &&
           s.compound!.compoundType == CompoundType.struct &&
           s.compound!.usr == strings.dartHandleUsr) {
-        print('got dart dandle member.');
         return Type.handle();
       }
       return Type.pointer(s);

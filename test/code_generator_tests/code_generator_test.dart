@@ -447,6 +447,7 @@ void main() {
     );
     _matchLib(library, 'unions');
   });
+  // TODO: add typedef tests.
 }
 
 /// Utility to match expected bindings to the generated bindings.

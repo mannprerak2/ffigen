@@ -37,6 +37,7 @@ Type getCodeGenType(
           s.broadType == BroadType.Compound &&
           s.compound!.compoundType == CompoundType.struct &&
           s.compound!.usr == strings.dartHandleUsr) {
+        print('got dart dandle member.');
         return Type.handle();
       }
       return Type.pointer(s);
@@ -72,6 +73,9 @@ Type getCodeGenType(
           return s;
         } else if (s.broadType == BroadType.Enum) {
           // Ignore typedefs to Enum.
+          return s;
+        } else if (s.broadType == BroadType.Handle) {
+          // Do not use typedefs to Handle.
           return s;
         } else {
           final typealias = Typealias(name: spelling, type: s);
@@ -187,9 +191,6 @@ Type _extractfromRecord(clang_types.CXType cxtype, bool pointerReference) {
         pointerReference: pointerReference,
       );
       type = Type.compound(struc!);
-
-      // Add to bindings if it's not Dart_Handle and is unseen.
-      // TODO: handle Dart_Handle.
     }
   } else {
     _logger.fine(

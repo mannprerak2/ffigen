@@ -67,12 +67,6 @@ ${strings.headers}:
 }
 
 Library expectedLibrary() {
-  final namedTypedef = Typedef(
-    name: 'typedef1',
-    typedefType: TypedefType.C,
-    returnType: Type.nativeType(SupportedNativeType.Void),
-    parameters: [Parameter(type: Type.handle())],
-  );
   return Library(
     name: 'NativeLibrary',
     bindings: [
@@ -103,7 +97,21 @@ Library expectedLibrary() {
         returnType: Type.nativeType(SupportedNativeType.Void),
         parameters: [
           Parameter(
-            type: Type.pointer(Type.nativeFunc(namedTypedef)),
+            type: Type.pointer(
+              Type.nativeFunc(
+                NativeFunc.fromFunctionTypealias(
+                  Typealias(
+                    name: 'typedef1',
+                    type: Type.functionType(
+                      FunctionType(
+                        returnType: Type.nativeType(SupportedNativeType.Void),
+                        parameters: [Parameter(type: Type.handle())],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
           ),
         ],
       ),

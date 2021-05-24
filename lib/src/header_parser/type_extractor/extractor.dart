@@ -10,7 +10,6 @@ import 'package:logging/logging.dart';
 import '../clang_bindings/clang_bindings.dart' as clang_types;
 import '../data.dart';
 import '../sub_parsers/compounddecl_parser.dart';
-import '../translation_unit_parser.dart';
 import '../type_extractor/cxtypekindmap.dart';
 import '../utils.dart';
 
@@ -58,14 +57,21 @@ Type getCodeGenType(
       }
 
       // This is important or we get stuck in infinite recursion.
-      final ct = clang.clang_getTypedefDeclUnderlyingType(
-          clang.clang_getTypeDeclaration(cxtype));
+      final cursor = clang.clang_getTypeDeclaration(cxtype);
+      final typedefUsr = cursor.usr();
+      if (bindingsIndex.isSeenTypealias(typedefUsr)) {
+        return Type.typealias(bindingsIndex.getSeenTypealias(typedefUsr)!);
+      } else {
+        final ct = clang.clang_getTypedefDeclUnderlyingType(cursor);
+        // TODO: check if typealias has valid type.
 
-      final s = getCodeGenType(ct,
-          parentName: parentName ?? spelling,
-          pointerReference: pointerReference);
-      return Type.typealias(Typealias(name: spelling, type: s));
-
+        final s = getCodeGenType(ct,
+            parentName: parentName ?? spelling,
+            pointerReference: pointerReference);
+        final alias = Type.typealias(Typealias(name: spelling, type: s));
+        bindingsIndex.addTypealiasToSeen(typedefUsr, alias.typealias!);
+        return Type.typealias(Typealias(name: spelling, type: s));
+      }
     case clang_types.CXTypeKind.CXType_Elaborated:
       final et = clang.clang_Type_getNamedType(cxtype);
       final s = getCodeGenType(et,
@@ -170,9 +176,7 @@ Type _extractfromRecord(
       type = Type.compound(struc!);
 
       // Add to bindings if it's not Dart_Handle and is unseen.
-      if (!(config.useDartHandle && declUsr == strings.dartHandleUsr)) {
-        addToBindings(struc);
-      }
+      // TODO: handle Dart_Handle.
     }
   } else {
     _logger.fine(
@@ -203,8 +207,8 @@ Type _extractFromFunctionProto(clang_types.CXType cxtype) {
     );
   }
 
-  return Type.functionType(FunctionType(
+  return Type.nativeFunc(NativeFunc.fromFunctionType(FunctionType(
     parameters: _parameters,
     returnType: clang.clang_getResultType(cxtype).toCodeGenType(),
-  ));
+  )));
 }

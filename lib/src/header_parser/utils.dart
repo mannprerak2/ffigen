@@ -419,15 +419,15 @@ class BindingsIndex {
     return _macros[usr];
   }
 
-  bool isSeenTypealias(String originalName) {
-    return _typealiases.containsKey(originalName);
+  bool isSeenTypealias(String usr) {
+    return _typealiases.containsKey(usr);
   }
 
-  void addTypealiasToSeen(String originalName, Typealias t) {
-    _typealiases[originalName] = t;
+  void addTypealiasToSeen(String usr, Typealias t) {
+    _typealiases[usr] = t;
   }
 
-  Typealias? getSeenFunctionTypedef(String originalName) {
-    return _typealiases[originalName];
+  Typealias? getSeenTypealias(String usr) {
+    return _typealiases[usr];
   }
 }

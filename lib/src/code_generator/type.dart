@@ -167,10 +167,13 @@ class Type {
   /// Get all dependencies of this type and save them in [dependencies].
   void getDependencies(Set<Binding> dependencies) {
     if (compound != null && !dependencies.contains(compound)) {
-      compound?.getDependencies(dependencies);
+      compound!.getDependencies(dependencies);
     }
     if (child != null && !dependencies.contains(child)) {
-      child?.getDependencies(dependencies);
+      child!.getDependencies(dependencies);
+    }
+    if (typealias != null && !dependencies.contains(typealias)) {
+      typealias!.getDependencies(dependencies);
     }
   }
 
@@ -261,7 +264,15 @@ class Type {
       case BroadType.FunctionType:
         return functionType!.getDartType(w);
       case BroadType.Typealias:
-        return typealias!.name;
+        // Typealias cannot be used by name in Dart types unless both the C and
+        // Dart type of the underlying types are same.
+        final cType = typealias!.type.getCType(w);
+        final dartType = typealias!.type.getDartType(w);
+        if (cType == dartType) {
+          return typealias!.name;
+        } else {
+          return typealias!.type.getDartType(w);
+        }
       case BroadType.Unimplemented:
         throw UnimplementedError(
             'dart type unknown for ${broadType.toString()}');

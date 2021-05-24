@@ -148,26 +148,33 @@ Library expectedLibrary() {
         parameters: [
           Parameter(
               name: 'a',
-              type: Type.pointer(Type.nativeFunc(Typedef(
-                name: 'shortHand',
-                returnType: Type.nativeType(SupportedNativeType.Void),
-                typedefType: TypedefType.C,
-                parameters: [
-                  Parameter(
-                      type: Type.pointer(Type.nativeFunc(Typedef(
-                    name: 'b',
-                    returnType: Type.nativeType(SupportedNativeType.Void),
-                    typedefType: TypedefType.C,
-                  )))),
-                ],
-              )))),
+              type: Type.pointer(
+                Type.nativeFunc(NativeFunc.fromFunctionTypealias(Typealias(
+                    name: 'shortHand',
+                    type: Type.functionType(FunctionType(
+                      returnType: Type.nativeType(SupportedNativeType.Void),
+                      parameters: [
+                        Parameter(
+                            type: Type.pointer(Type.nativeFunc(
+                                NativeFunc.fromFunctionTypealias(Typealias(
+                                    name: 'b',
+                                    type: Type.functionType(FunctionType(
+                                      returnType: Type.nativeType(
+                                          SupportedNativeType.Void),
+                                      parameters: [],
+                                    )))))))
+                      ],
+                    ))))),
+              )),
           Parameter(
               name: 'b',
-              type: Type.pointer(Type.nativeFunc(Typedef(
-                name: '_typedefC_2',
-                returnType: Type.nativeType(SupportedNativeType.Void),
-                typedefType: TypedefType.C,
-              )))),
+              type: Type.pointer(
+                  Type.nativeFunc(NativeFunc.fromFunctionTypealias(Typealias(
+                      name: '_typedefC_2',
+                      type: Type.functionType(FunctionType(
+                        returnType: Type.nativeType(SupportedNativeType.Void),
+                        parameters: [],
+                      ))))))),
         ],
       ),
     ],

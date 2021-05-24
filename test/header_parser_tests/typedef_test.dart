@@ -57,7 +57,8 @@ Library expectedLibrary() {
       Struc(name: 'Struct1', members: [
         Member(
           name: 'named',
-          type: Type.pointer(Type.nativeFunc(namedTypedef)),
+          type: Type.pointer(
+              Type.nativeFunc(NativeFunc.fromFunctionTypealias(Typealias()))),
         ),
         Member(
           name: 'unnamed',

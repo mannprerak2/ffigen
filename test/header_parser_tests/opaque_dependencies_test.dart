@@ -41,7 +41,7 @@ ${strings.unions}:
       matchLibraryWithExpected(actual, [
         'test',
         'debug_generated',
-        'opaque_dependencies_test_output.dart'
+        'header_parser_opaque_dependencies_test_output.dart'
       ], [
         'test',
         'header_parser_tests',

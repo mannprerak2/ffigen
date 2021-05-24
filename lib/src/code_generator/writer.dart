@@ -5,7 +5,6 @@
 import 'package:ffigen/src/code_generator/utils.dart';
 
 import 'binding.dart';
-import 'typealias.dart';
 
 /// To store generated String bindings.
 class Writer {

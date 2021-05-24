@@ -61,8 +61,6 @@ Type getCodeGenType(
         return Type.typealias(bindingsIndex.getSeenTypealias(typedefUsr)!);
       } else {
         final ct = clang.clang_getTypedefDeclUnderlyingType(cursor);
-        // TODO: check if typealias has valid type.
-
         final s = getCodeGenType(ct, pointerReference: pointerReference);
 
         if (s.broadType == BroadType.Unimplemented) {

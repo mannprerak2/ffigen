@@ -32,6 +32,9 @@ class Func extends LookUpBinding {
   final FunctionType functionType;
   final bool exposeSymbolAddress;
 
+  /// Contains typealias for function type if [exposeSymbolAddress] is true.
+  Type? _exposedFunctionType;
+
   /// [originalName] is looked up in dynamic library, if not
   /// provided, takes the value of [name].
   Func({
@@ -57,6 +60,9 @@ class Func extends LookUpBinding {
         functionType.parameters[i].name = 'arg$i';
       }
     }
+
+    _exposedFunctionType = Type.typealias(
+        Typealias(name: 'Native_$name', type: Type.functionType(functionType)));
   }
 
   @override
@@ -111,22 +117,26 @@ class Func extends LookUpBinding {
     }
     s.write('}\n');
 
-    // Write function pointer.
-    s.write(
-        "late final $funcPointerName = ${w.lookupFuncIdentifier}<${w.ffiLibraryPrefix}.NativeFunction<${functionType.getCType(w)}>>('$originalName');\n");
-    // Write function variable.
-    s.write(
-        'late final $funcVarName = $funcPointerName.asFunction<${functionType.getDartType(w)}>();\n\n');
+    final cType = exposeSymbolAddress
+        ? _exposedFunctionType!.getCType(w)
+        : functionType.getCType(w, writeArgumentNames: false);
+    final dartType = functionType.getDartType(w, writeArgumentNames: false);
 
     if (exposeSymbolAddress) {
-      // Add to SymbolAddress in writer. TODO: create typealias for exposed symbol C typedef.
+      // Add to SymbolAddress in writer.
       w.symbolAddressWriter.addSymbol(
         type:
-            '${w.ffiLibraryPrefix}.Pointer<${w.ffiLibraryPrefix}.NativeFunction<${functionType.getCType(w)}>>',
+            '${w.ffiLibraryPrefix}.Pointer<${w.ffiLibraryPrefix}.NativeFunction<$cType>>',
         name: name,
         ptrName: funcPointerName,
       );
     }
+    // Write function pointer.
+    s.write(
+        "late final $funcPointerName = ${w.lookupFuncIdentifier}<${w.ffiLibraryPrefix}.NativeFunction<$cType>>('$originalName');\n");
+    s.write(
+        'late final $funcVarName = $funcPointerName.asFunction<$dartType>();\n\n');
+
     return BindingString(type: BindingStringType.func, string: s.toString());
   }
 
@@ -135,6 +145,9 @@ class Func extends LookUpBinding {
     if (dependencies.contains(this)) return;
 
     dependencies.add(this);
+    if (exposeSymbolAddress) {
+      _exposedFunctionType!.getDependencies(dependencies);
+    }
     functionType.getDependencies(dependencies);
   }
 }

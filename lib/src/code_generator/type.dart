@@ -313,7 +313,7 @@ class FunctionType {
     required this.parameters,
   });
 
-  String getCType(Writer w) {
+  String getCType(Writer w, {bool writeArgumentNames = true}) {
     final sb = StringBuffer();
 
     // Write return Type.
@@ -321,16 +321,15 @@ class FunctionType {
 
     // Write Function.
     sb.write(' Function(');
-    //TODO: should write type name?
     sb.write(parameters.map<String>((p) {
-      return p.type.getCType(w);
+      return '${p.type.getCType(w)} ${writeArgumentNames ? p.name : ""}';
     }).join(', '));
     sb.write(')');
 
     return sb.toString();
   }
 
-  String getDartType(Writer w) {
+  String getDartType(Writer w, {bool writeArgumentNames = true}) {
     final sb = StringBuffer();
 
     // Write return Type.
@@ -338,9 +337,8 @@ class FunctionType {
 
     // Write Function.
     sb.write(' Function(');
-    //TODO: should write type name?
     sb.write(parameters.map<String>((p) {
-      return p.type.getDartType(w);
+      return '${p.type.getDartType(w)} ${writeArgumentNames ? p.name : ""}';
     }).join(', '));
     sb.write(')');
 

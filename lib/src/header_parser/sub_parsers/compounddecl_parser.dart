@@ -75,9 +75,6 @@ Compound? parseCompoundDeclaration(
   clang_types.CXCursor cursor,
   CompoundType compoundType, {
 
-  /// Optionally provide name (useful in case declaration is inside a typedef).
-  String? name,
-
   /// Option to ignore declaration filter (Useful in case of extracting
   /// declarations when they are passed/returned by an included function.)
   bool ignoreFilter = false,
@@ -90,13 +87,6 @@ Compound? parseCompoundDeclaration(
   bool updateName = true,
 }) {
   _stack.push(_ParsedCompound());
-
-  // Parse the cursor definition instead, if this is a forward declaration.
-  if (isForwardDeclaration(cursor)) {
-    cursor = clang.clang_getCursorDefinition(cursor);
-  }
-  final declUsr = cursor.usr();
-  final declName = name ?? cursor.spelling();
 
   // Set includer functions according to compoundType.
   final bool Function(String, String) shouldIncludeDecl;
@@ -122,6 +112,24 @@ Compound? parseCompoundDeclaration(
       configDecl = config.unionDecl;
       className = 'Union';
       break;
+  }
+
+  // Parse the cursor definition instead, if this is a forward declaration.
+  if (isForwardDeclaration(cursor)) {
+    cursor = clang.clang_getCursorDefinition(cursor);
+  }
+  final declUsr = cursor.usr();
+  String declName;
+
+// Only set name using USR if the type is not Anonymous (i.e not inside
+  // any typedef and declared inplace inside another type).
+  if (clang.clang_Cursor_isAnonymous(cursor) == 0) {
+    // This gives the significant name, i.e name of the struct if defined or
+    // name of the first typedef declaration that refers to it.
+    declName = declUsr.split('@').last;
+  } else {
+    // Empty names are treated as inline declarations.
+    declName = '';
   }
 
   if (declName.isEmpty) {

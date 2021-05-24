@@ -85,7 +85,6 @@ int _typedefdeclarationCursorVisitor(clang_types.CXCursor cursor,
           _stack.top.binding = parseCompoundDeclaration(
             cursor,
             CompoundType.struct,
-            name: _stack.top.typedefName,
           );
         }
         break;
@@ -99,7 +98,6 @@ int _typedefdeclarationCursorVisitor(clang_types.CXCursor cursor,
           _stack.top.binding = parseCompoundDeclaration(
             cursor,
             CompoundType.union,
-            name: _stack.top.typedefName,
           );
         }
         break;

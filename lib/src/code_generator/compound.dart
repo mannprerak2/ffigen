@@ -137,7 +137,7 @@ abstract class Compound extends NoLookUpBinding {
           s.writeAll(m.dartDoc!.split('\n'), '\n' + depth + '/// ');
           s.write('\n');
         }
-        if (m.type.isPrimitive) {
+        if (!m.type.sameDartAndCType(w)) {
           s.write('$depth@${m.type.getCType(w)}()\n');
         }
         s.write('${depth}external ${m.type.getDartType(w)} $memberName;\n\n');

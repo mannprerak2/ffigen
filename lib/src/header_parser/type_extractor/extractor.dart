@@ -19,7 +19,6 @@ const _padding = '  ';
 /// Converts cxtype to a typestring code_generator can accept.
 Type getCodeGenType(
   clang_types.CXType cxtype, {
-  String? parentName,
 
   /// Passed on if a value was marked as a pointer before this one.
   bool pointerReference = false,
@@ -30,8 +29,7 @@ Type getCodeGenType(
   switch (kind) {
     case clang_types.CXTypeKind.CXType_Pointer:
       final pt = clang.clang_getPointeeType(cxtype);
-      final s =
-          getCodeGenType(pt, parentName: parentName, pointerReference: true);
+      final s = getCodeGenType(pt, pointerReference: true);
 
       // Replace Pointer<_Dart_Handle> with Handle.
       if (config.useDartHandle &&
@@ -65,20 +63,26 @@ Type getCodeGenType(
         final ct = clang.clang_getTypedefDeclUnderlyingType(cursor);
         // TODO: check if typealias has valid type.
 
-        final s = getCodeGenType(ct,
-            parentName: parentName ?? spelling,
-            pointerReference: pointerReference);
-        final alias = Type.typealias(Typealias(name: spelling, type: s));
-        bindingsIndex.addTypealiasToSeen(typedefUsr, alias.typealias!);
-        return Type.typealias(Typealias(name: spelling, type: s));
+        final s = getCodeGenType(ct, pointerReference: pointerReference);
+
+        if (s.broadType == BroadType.Unimplemented) {
+          return Type.unimplemented('Typedef refers to an unimplimented type.');
+        } else if (s.broadType == BroadType.Compound &&
+            s.compound!.name == spelling) {
+          // Do not use typedef if it refers to a compound with the same name.
+          return s;
+        } else {
+          final typealias = Typealias(name: spelling, type: s);
+          bindingsIndex.addTypealiasToSeen(typedefUsr, typealias);
+          return Type.typealias(typealias);
+        }
       }
     case clang_types.CXTypeKind.CXType_Elaborated:
       final et = clang.clang_Type_getNamedType(cxtype);
-      final s = getCodeGenType(et,
-          parentName: parentName, pointerReference: pointerReference);
+      final s = getCodeGenType(et, pointerReference: pointerReference);
       return s;
     case clang_types.CXTypeKind.CXType_Record:
-      return _extractfromRecord(cxtype, parentName, pointerReference);
+      return _extractfromRecord(cxtype, pointerReference);
     case clang_types.CXTypeKind.CXType_Enum:
       return Type.nativeType(
         enumNativeType,
@@ -116,8 +120,7 @@ Type getCodeGenType(
   }
 }
 
-Type _extractfromRecord(
-    clang_types.CXType cxtype, String? parentName, bool pointerReference) {
+Type _extractfromRecord(clang_types.CXType cxtype, bool pointerReference) {
   Type type;
 
   final cursor = clang.clang_getTypeDeclaration(cxtype);
@@ -127,9 +130,6 @@ Type _extractfromRecord(
   if (cursorKind == clang_types.CXCursorKind.CXCursor_StructDecl ||
       cursorKind == clang_types.CXCursorKind.CXCursor_UnionDecl) {
     final declUsr = cursor.usr();
-
-    // Name of typedef (parentName) is used if available.
-    final declName = parentName ?? cursor.spelling();
 
     // Set includer functions according to compoundType.
     final bool Function(String) isSeenDecl;
@@ -160,7 +160,6 @@ Type _extractfromRecord(
       parseCompoundDeclaration(
         cursor,
         compoundType,
-        name: declName,
         ignoreFilter: true,
         pointerReference: pointerReference,
         updateName: false,
@@ -169,7 +168,6 @@ Type _extractfromRecord(
       final struc = parseCompoundDeclaration(
         cursor,
         compoundType,
-        name: declName,
         ignoreFilter: true,
         pointerReference: pointerReference,
       );

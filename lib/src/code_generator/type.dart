@@ -175,6 +175,12 @@ class Type {
     if (typealias != null && !dependencies.contains(typealias)) {
       typealias!.getDependencies(dependencies);
     }
+    if (nativeFunc != null) {
+      nativeFunc!.getDependencies(dependencies);
+    }
+    if (functionType != null) {
+      functionType!.getDependencies(dependencies);
+    }
   }
 
   /// Get base type for any type.
@@ -201,8 +207,8 @@ class Type {
     }
   }
 
-  bool get isPrimitive =>
-      (broadType == BroadType.NativeType || broadType == BroadType.Boolean);
+  /// Function to check if the dart and C type string are same.
+  bool sameDartAndCType(Writer w) => getCType(w) == getDartType(w);
 
   /// Returns true if the type is a [Compound] and is incomplete.
   bool get isIncompleteCompound =>
@@ -266,9 +272,7 @@ class Type {
       case BroadType.Typealias:
         // Typealias cannot be used by name in Dart types unless both the C and
         // Dart type of the underlying types are same.
-        final cType = typealias!.type.getCType(w);
-        final dartType = typealias!.type.getDartType(w);
-        if (cType == dartType) {
+        if (typealias!.type.sameDartAndCType(w)) {
           return typealias!.name;
         } else {
           return typealias!.type.getDartType(w);
@@ -344,4 +348,8 @@ class NativeFunc {
 
   NativeFunc.fromFunctionTypealias(Typealias typealias)
       : type = Type.typealias(typealias);
+
+  void getDependencies(Set<Binding> dependencies) {
+    type.getDependencies(dependencies);
+  }
 }

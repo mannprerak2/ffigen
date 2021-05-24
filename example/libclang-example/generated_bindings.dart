@@ -33,9 +33,10 @@ class LibClang {
   }
 
   late final _clang_getCString_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getCString>>('clang_getCString');
-  late final _dart_clang_getCString _clang_getCString =
-      _clang_getCString_ptr.asFunction<_dart_clang_getCString>();
+      _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Int8> Function(CXString)>>(
+          'clang_getCString');
+  late final _clang_getCString = _clang_getCString_ptr
+      .asFunction<ffi.Pointer<ffi.Int8> Function(CXString)>();
 
   /// Free the given string.
   void clang_disposeString(
@@ -47,10 +48,10 @@ class LibClang {
   }
 
   late final _clang_disposeString_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_disposeString>>(
+      _lookup<ffi.NativeFunction<ffi.Void Function(CXString)>>(
           'clang_disposeString');
-  late final _dart_clang_disposeString _clang_disposeString =
-      _clang_disposeString_ptr.asFunction<_dart_clang_disposeString>();
+  late final _clang_disposeString =
+      _clang_disposeString_ptr.asFunction<void Function(CXString)>();
 
   /// Free the given string set.
   void clang_disposeStringSet(
@@ -62,10 +63,10 @@ class LibClang {
   }
 
   late final _clang_disposeStringSet_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_disposeStringSet>>(
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<CXStringSet>)>>(
           'clang_disposeStringSet');
-  late final _dart_clang_disposeStringSet _clang_disposeStringSet =
-      _clang_disposeStringSet_ptr.asFunction<_dart_clang_disposeStringSet>();
+  late final _clang_disposeStringSet = _clang_disposeStringSet_ptr
+      .asFunction<void Function(ffi.Pointer<CXStringSet>)>();
 
   /// Provides a shared context for creating translation units.
   ///
@@ -105,7 +106,7 @@ class LibClang {
   /// This process of creating the 'pch', loading it separately, and using it (via
   /// -include-pch) allows 'excludeDeclsFromPCH' to remove redundant callbacks
   /// (which gives the indexer the same performance benefit as the compiler).
-  ffi.Pointer<ffi.Void> clang_createIndex(
+  CXIndex clang_createIndex(
     int excludeDeclarationsFromPCH,
     int displayDiagnostics,
   ) {
@@ -116,17 +117,17 @@ class LibClang {
   }
 
   late final _clang_createIndex_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_createIndex>>(
+      _lookup<ffi.NativeFunction<CXIndex Function(ffi.Int32, ffi.Int32)>>(
           'clang_createIndex');
-  late final _dart_clang_createIndex _clang_createIndex =
-      _clang_createIndex_ptr.asFunction<_dart_clang_createIndex>();
+  late final _clang_createIndex =
+      _clang_createIndex_ptr.asFunction<CXIndex Function(int, int)>();
 
   /// Destroy the given index.
   ///
   /// The index must not be destroyed until all of the translation units created
   /// within that index have been destroyed.
   void clang_disposeIndex(
-    ffi.Pointer<ffi.Void> index,
+    CXIndex index,
   ) {
     return _clang_disposeIndex(
       index,
@@ -134,10 +135,10 @@ class LibClang {
   }
 
   late final _clang_disposeIndex_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_disposeIndex>>(
+      _lookup<ffi.NativeFunction<ffi.Void Function(CXIndex)>>(
           'clang_disposeIndex');
-  late final _dart_clang_disposeIndex _clang_disposeIndex =
-      _clang_disposeIndex_ptr.asFunction<_dart_clang_disposeIndex>();
+  late final _clang_disposeIndex =
+      _clang_disposeIndex_ptr.asFunction<void Function(CXIndex)>();
 
   /// Sets general options associated with a CXIndex.
   ///
@@ -151,7 +152,7 @@ class LibClang {
   ///
   /// \param options A bitmask of options, a bitwise OR of CXGlobalOpt_XXX flags.
   void clang_CXIndex_setGlobalOptions(
-    ffi.Pointer<ffi.Void> arg0,
+    CXIndex arg0,
     int options,
   ) {
     return _clang_CXIndex_setGlobalOptions(
@@ -161,18 +162,18 @@ class LibClang {
   }
 
   late final _clang_CXIndex_setGlobalOptions_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_CXIndex_setGlobalOptions>>(
+      _lookup<ffi.NativeFunction<ffi.Void Function(CXIndex, ffi.Uint32)>>(
           'clang_CXIndex_setGlobalOptions');
-  late final _dart_clang_CXIndex_setGlobalOptions
-      _clang_CXIndex_setGlobalOptions = _clang_CXIndex_setGlobalOptions_ptr
-          .asFunction<_dart_clang_CXIndex_setGlobalOptions>();
+  late final _clang_CXIndex_setGlobalOptions =
+      _clang_CXIndex_setGlobalOptions_ptr
+          .asFunction<void Function(CXIndex, int)>();
 
   /// Gets the general options associated with a CXIndex.
   ///
   /// \returns A bitmask of options, a bitwise OR of CXGlobalOpt_XXX flags that
   /// are associated with the given CXIndex object.
   int clang_CXIndex_getGlobalOptions(
-    ffi.Pointer<ffi.Void> arg0,
+    CXIndex arg0,
   ) {
     return _clang_CXIndex_getGlobalOptions(
       arg0,
@@ -180,11 +181,10 @@ class LibClang {
   }
 
   late final _clang_CXIndex_getGlobalOptions_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_CXIndex_getGlobalOptions>>(
+      _lookup<ffi.NativeFunction<ffi.Uint32 Function(CXIndex)>>(
           'clang_CXIndex_getGlobalOptions');
-  late final _dart_clang_CXIndex_getGlobalOptions
-      _clang_CXIndex_getGlobalOptions = _clang_CXIndex_getGlobalOptions_ptr
-          .asFunction<_dart_clang_CXIndex_getGlobalOptions>();
+  late final _clang_CXIndex_getGlobalOptions =
+      _clang_CXIndex_getGlobalOptions_ptr.asFunction<int Function(CXIndex)>();
 
   /// Sets the invocation emission path option in a CXIndex.
   ///
@@ -192,7 +192,7 @@ class LibClang {
   /// files for certain libclang invocations. A null value (default) implies that
   /// libclang invocations are not logged..
   void clang_CXIndex_setInvocationEmissionPathOption(
-    ffi.Pointer<ffi.Void> arg0,
+    CXIndex arg0,
     ffi.Pointer<ffi.Int8> Path,
   ) {
     return _clang_CXIndex_setInvocationEmissionPathOption(
@@ -203,16 +203,15 @@ class LibClang {
 
   late final _clang_CXIndex_setInvocationEmissionPathOption_ptr = _lookup<
           ffi.NativeFunction<
-              Native_clang_CXIndex_setInvocationEmissionPathOption>>(
+              ffi.Void Function(CXIndex, ffi.Pointer<ffi.Int8>)>>(
       'clang_CXIndex_setInvocationEmissionPathOption');
-  late final _dart_clang_CXIndex_setInvocationEmissionPathOption
-      _clang_CXIndex_setInvocationEmissionPathOption =
+  late final _clang_CXIndex_setInvocationEmissionPathOption =
       _clang_CXIndex_setInvocationEmissionPathOption_ptr
-          .asFunction<_dart_clang_CXIndex_setInvocationEmissionPathOption>();
+          .asFunction<void Function(CXIndex, ffi.Pointer<ffi.Int8>)>();
 
   /// Retrieve the complete file and path name of the given file.
   CXString clang_getFileName(
-    ffi.Pointer<ffi.Void> SFile,
+    CXFile SFile,
   ) {
     return _clang_getFileName(
       SFile,
@@ -220,14 +219,14 @@ class LibClang {
   }
 
   late final _clang_getFileName_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getFileName>>(
+      _lookup<ffi.NativeFunction<CXString Function(CXFile)>>(
           'clang_getFileName');
-  late final _dart_clang_getFileName _clang_getFileName =
-      _clang_getFileName_ptr.asFunction<_dart_clang_getFileName>();
+  late final _clang_getFileName =
+      _clang_getFileName_ptr.asFunction<CXString Function(CXFile)>();
 
   /// Retrieve the last modification time of the given file.
   int clang_getFileTime(
-    ffi.Pointer<ffi.Void> SFile,
+    CXFile SFile,
   ) {
     return _clang_getFileTime(
       SFile,
@@ -235,10 +234,9 @@ class LibClang {
   }
 
   late final _clang_getFileTime_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getFileTime>>(
-          'clang_getFileTime');
-  late final _dart_clang_getFileTime _clang_getFileTime =
-      _clang_getFileTime_ptr.asFunction<_dart_clang_getFileTime>();
+      _lookup<ffi.NativeFunction<time_t Function(CXFile)>>('clang_getFileTime');
+  late final _clang_getFileTime =
+      _clang_getFileTime_ptr.asFunction<int Function(CXFile)>();
 
   /// Retrieve the unique ID for the given \c file.
   ///
@@ -247,7 +245,7 @@ class LibClang {
   /// \returns If there was a failure getting the unique ID, returns non-zero,
   /// otherwise returns 0.
   int clang_getFileUniqueID(
-    ffi.Pointer<ffi.Void> file,
+    CXFile file,
     ffi.Pointer<CXFileUniqueID> outID,
   ) {
     return _clang_getFileUniqueID(
@@ -256,18 +254,19 @@ class LibClang {
     );
   }
 
-  late final _clang_getFileUniqueID_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getFileUniqueID>>(
-          'clang_getFileUniqueID');
-  late final _dart_clang_getFileUniqueID _clang_getFileUniqueID =
-      _clang_getFileUniqueID_ptr.asFunction<_dart_clang_getFileUniqueID>();
+  late final _clang_getFileUniqueID_ptr = _lookup<
+      ffi.NativeFunction<
+          ffi.Int32 Function(
+              CXFile, ffi.Pointer<CXFileUniqueID>)>>('clang_getFileUniqueID');
+  late final _clang_getFileUniqueID = _clang_getFileUniqueID_ptr
+      .asFunction<int Function(CXFile, ffi.Pointer<CXFileUniqueID>)>();
 
   /// Determine whether the given header is guarded against
   /// multiple inclusions, either with the conventional
   /// \#ifndef/\#define/\#endif macro guards or with \#pragma once.
   int clang_isFileMultipleIncludeGuarded(
-    ffi.Pointer<CXTranslationUnitImpl> tu,
-    ffi.Pointer<ffi.Void> file,
+    CXTranslationUnit tu,
+    CXFile file,
   ) {
     return _clang_isFileMultipleIncludeGuarded(
       tu,
@@ -275,13 +274,12 @@ class LibClang {
     );
   }
 
-  late final _clang_isFileMultipleIncludeGuarded_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_isFileMultipleIncludeGuarded>>(
-          'clang_isFileMultipleIncludeGuarded');
-  late final _dart_clang_isFileMultipleIncludeGuarded
-      _clang_isFileMultipleIncludeGuarded =
+  late final _clang_isFileMultipleIncludeGuarded_ptr = _lookup<
+          ffi.NativeFunction<ffi.Uint32 Function(CXTranslationUnit, CXFile)>>(
+      'clang_isFileMultipleIncludeGuarded');
+  late final _clang_isFileMultipleIncludeGuarded =
       _clang_isFileMultipleIncludeGuarded_ptr
-          .asFunction<_dart_clang_isFileMultipleIncludeGuarded>();
+          .asFunction<int Function(CXTranslationUnit, CXFile)>();
 
   /// Retrieve a file handle within the given translation unit.
   ///
@@ -291,8 +289,8 @@ class LibClang {
   ///
   /// \returns the file handle for the named file in the translation unit \p tu,
   /// or a NULL file handle if the file was not a part of this translation unit.
-  ffi.Pointer<ffi.Void> clang_getFile(
-    ffi.Pointer<CXTranslationUnitImpl> tu,
+  CXFile clang_getFile(
+    CXTranslationUnit tu,
     ffi.Pointer<ffi.Int8> file_name,
   ) {
     return _clang_getFile(
@@ -301,10 +299,12 @@ class LibClang {
     );
   }
 
-  late final _clang_getFile_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getFile>>('clang_getFile');
-  late final _dart_clang_getFile _clang_getFile =
-      _clang_getFile_ptr.asFunction<_dart_clang_getFile>();
+  late final _clang_getFile_ptr = _lookup<
+      ffi.NativeFunction<
+          CXFile Function(
+              CXTranslationUnit, ffi.Pointer<ffi.Int8>)>>('clang_getFile');
+  late final _clang_getFile = _clang_getFile_ptr
+      .asFunction<CXFile Function(CXTranslationUnit, ffi.Pointer<ffi.Int8>)>();
 
   /// Retrieve the buffer associated with the given file.
   ///
@@ -317,9 +317,9 @@ class LibClang {
   /// \returns a pointer to the buffer in memory that holds the contents of
   /// \p file, or a NULL pointer when the file is not loaded.
   ffi.Pointer<ffi.Int8> clang_getFileContents(
-    ffi.Pointer<CXTranslationUnitImpl> tu,
-    ffi.Pointer<ffi.Void> file,
-    ffi.Pointer<ffi.Uint64> size,
+    CXTranslationUnit tu,
+    CXFile file,
+    ffi.Pointer<size_t> size,
   ) {
     return _clang_getFileContents(
       tu,
@@ -328,17 +328,19 @@ class LibClang {
     );
   }
 
-  late final _clang_getFileContents_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getFileContents>>(
-          'clang_getFileContents');
-  late final _dart_clang_getFileContents _clang_getFileContents =
-      _clang_getFileContents_ptr.asFunction<_dart_clang_getFileContents>();
+  late final _clang_getFileContents_ptr = _lookup<
+      ffi.NativeFunction<
+          ffi.Pointer<ffi.Int8> Function(CXTranslationUnit, CXFile,
+              ffi.Pointer<size_t>)>>('clang_getFileContents');
+  late final _clang_getFileContents = _clang_getFileContents_ptr.asFunction<
+      ffi.Pointer<ffi.Int8> Function(
+          CXTranslationUnit, CXFile, ffi.Pointer<size_t>)>();
 
   /// Returns non-zero if the \c file1 and \c file2 point to the same file,
   /// or they are both NULL.
   int clang_File_isEqual(
-    ffi.Pointer<ffi.Void> file1,
-    ffi.Pointer<ffi.Void> file2,
+    CXFile file1,
+    CXFile file2,
   ) {
     return _clang_File_isEqual(
       file1,
@@ -347,16 +349,16 @@ class LibClang {
   }
 
   late final _clang_File_isEqual_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_File_isEqual>>(
+      _lookup<ffi.NativeFunction<ffi.Int32 Function(CXFile, CXFile)>>(
           'clang_File_isEqual');
-  late final _dart_clang_File_isEqual _clang_File_isEqual =
-      _clang_File_isEqual_ptr.asFunction<_dart_clang_File_isEqual>();
+  late final _clang_File_isEqual =
+      _clang_File_isEqual_ptr.asFunction<int Function(CXFile, CXFile)>();
 
   /// Returns the real path name of \c file.
   ///
   /// An empty string may be returned. Use \c clang_getFileName() in that case.
   CXString clang_File_tryGetRealPathName(
-    ffi.Pointer<ffi.Void> file,
+    CXFile file,
   ) {
     return _clang_File_tryGetRealPathName(
       file,
@@ -364,11 +366,10 @@ class LibClang {
   }
 
   late final _clang_File_tryGetRealPathName_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_File_tryGetRealPathName>>(
+      _lookup<ffi.NativeFunction<CXString Function(CXFile)>>(
           'clang_File_tryGetRealPathName');
-  late final _dart_clang_File_tryGetRealPathName
-      _clang_File_tryGetRealPathName = _clang_File_tryGetRealPathName_ptr
-          .asFunction<_dart_clang_File_tryGetRealPathName>();
+  late final _clang_File_tryGetRealPathName = _clang_File_tryGetRealPathName_ptr
+      .asFunction<CXString Function(CXFile)>();
 
   /// Retrieve a NULL (invalid) source location.
   CXSourceLocation clang_getNullLocation() {
@@ -376,10 +377,10 @@ class LibClang {
   }
 
   late final _clang_getNullLocation_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getNullLocation>>(
+      _lookup<ffi.NativeFunction<CXSourceLocation Function()>>(
           'clang_getNullLocation');
-  late final _dart_clang_getNullLocation _clang_getNullLocation =
-      _clang_getNullLocation_ptr.asFunction<_dart_clang_getNullLocation>();
+  late final _clang_getNullLocation =
+      _clang_getNullLocation_ptr.asFunction<CXSourceLocation Function()>();
 
   /// Determine whether two source locations, which must refer into
   /// the same translation unit, refer to exactly the same point in the source
@@ -397,17 +398,18 @@ class LibClang {
     );
   }
 
-  late final _clang_equalLocations_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_equalLocations>>(
-          'clang_equalLocations');
-  late final _dart_clang_equalLocations _clang_equalLocations =
-      _clang_equalLocations_ptr.asFunction<_dart_clang_equalLocations>();
+  late final _clang_equalLocations_ptr = _lookup<
+      ffi.NativeFunction<
+          ffi.Uint32 Function(
+              CXSourceLocation, CXSourceLocation)>>('clang_equalLocations');
+  late final _clang_equalLocations = _clang_equalLocations_ptr
+      .asFunction<int Function(CXSourceLocation, CXSourceLocation)>();
 
   /// Retrieves the source location associated with a given file/line/column
   /// in a particular translation unit.
   CXSourceLocation clang_getLocation(
-    ffi.Pointer<CXTranslationUnitImpl> tu,
-    ffi.Pointer<ffi.Void> file,
+    CXTranslationUnit tu,
+    CXFile file,
     int line,
     int column,
   ) {
@@ -419,17 +421,18 @@ class LibClang {
     );
   }
 
-  late final _clang_getLocation_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getLocation>>(
-          'clang_getLocation');
-  late final _dart_clang_getLocation _clang_getLocation =
-      _clang_getLocation_ptr.asFunction<_dart_clang_getLocation>();
+  late final _clang_getLocation_ptr = _lookup<
+      ffi.NativeFunction<
+          CXSourceLocation Function(CXTranslationUnit, CXFile, ffi.Uint32,
+              ffi.Uint32)>>('clang_getLocation');
+  late final _clang_getLocation = _clang_getLocation_ptr.asFunction<
+      CXSourceLocation Function(CXTranslationUnit, CXFile, int, int)>();
 
   /// Retrieves the source location associated with a given character offset
   /// in a particular translation unit.
   CXSourceLocation clang_getLocationForOffset(
-    ffi.Pointer<CXTranslationUnitImpl> tu,
-    ffi.Pointer<ffi.Void> file,
+    CXTranslationUnit tu,
+    CXFile file,
     int offset,
   ) {
     return _clang_getLocationForOffset(
@@ -439,12 +442,12 @@ class LibClang {
     );
   }
 
-  late final _clang_getLocationForOffset_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getLocationForOffset>>(
-          'clang_getLocationForOffset');
-  late final _dart_clang_getLocationForOffset _clang_getLocationForOffset =
-      _clang_getLocationForOffset_ptr
-          .asFunction<_dart_clang_getLocationForOffset>();
+  late final _clang_getLocationForOffset_ptr = _lookup<
+      ffi.NativeFunction<
+          CXSourceLocation Function(CXTranslationUnit, CXFile,
+              ffi.Uint32)>>('clang_getLocationForOffset');
+  late final _clang_getLocationForOffset = _clang_getLocationForOffset_ptr
+      .asFunction<CXSourceLocation Function(CXTranslationUnit, CXFile, int)>();
 
   /// Returns non-zero if the given source location is in a system header.
   int clang_Location_isInSystemHeader(
@@ -456,11 +459,11 @@ class LibClang {
   }
 
   late final _clang_Location_isInSystemHeader_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_Location_isInSystemHeader>>(
+      _lookup<ffi.NativeFunction<ffi.Int32 Function(CXSourceLocation)>>(
           'clang_Location_isInSystemHeader');
-  late final _dart_clang_Location_isInSystemHeader
-      _clang_Location_isInSystemHeader = _clang_Location_isInSystemHeader_ptr
-          .asFunction<_dart_clang_Location_isInSystemHeader>();
+  late final _clang_Location_isInSystemHeader =
+      _clang_Location_isInSystemHeader_ptr
+          .asFunction<int Function(CXSourceLocation)>();
 
   /// Returns non-zero if the given source location is in the main file of
   /// the corresponding translation unit.
@@ -473,11 +476,10 @@ class LibClang {
   }
 
   late final _clang_Location_isFromMainFile_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_Location_isFromMainFile>>(
+      _lookup<ffi.NativeFunction<ffi.Int32 Function(CXSourceLocation)>>(
           'clang_Location_isFromMainFile');
-  late final _dart_clang_Location_isFromMainFile
-      _clang_Location_isFromMainFile = _clang_Location_isFromMainFile_ptr
-          .asFunction<_dart_clang_Location_isFromMainFile>();
+  late final _clang_Location_isFromMainFile = _clang_Location_isFromMainFile_ptr
+      .asFunction<int Function(CXSourceLocation)>();
 
   /// Retrieve a NULL (invalid) source range.
   CXSourceRange clang_getNullRange() {
@@ -485,10 +487,10 @@ class LibClang {
   }
 
   late final _clang_getNullRange_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getNullRange>>(
+      _lookup<ffi.NativeFunction<CXSourceRange Function()>>(
           'clang_getNullRange');
-  late final _dart_clang_getNullRange _clang_getNullRange =
-      _clang_getNullRange_ptr.asFunction<_dart_clang_getNullRange>();
+  late final _clang_getNullRange =
+      _clang_getNullRange_ptr.asFunction<CXSourceRange Function()>();
 
   /// Retrieve a source range given the beginning and ending source
   /// locations.
@@ -502,10 +504,12 @@ class LibClang {
     );
   }
 
-  late final _clang_getRange_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getRange>>('clang_getRange');
-  late final _dart_clang_getRange _clang_getRange =
-      _clang_getRange_ptr.asFunction<_dart_clang_getRange>();
+  late final _clang_getRange_ptr = _lookup<
+      ffi.NativeFunction<
+          CXSourceRange Function(
+              CXSourceLocation, CXSourceLocation)>>('clang_getRange');
+  late final _clang_getRange = _clang_getRange_ptr
+      .asFunction<CXSourceRange Function(CXSourceLocation, CXSourceLocation)>();
 
   /// Determine whether two ranges are equivalent.
   ///
@@ -520,11 +524,12 @@ class LibClang {
     );
   }
 
-  late final _clang_equalRanges_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_equalRanges>>(
-          'clang_equalRanges');
-  late final _dart_clang_equalRanges _clang_equalRanges =
-      _clang_equalRanges_ptr.asFunction<_dart_clang_equalRanges>();
+  late final _clang_equalRanges_ptr = _lookup<
+      ffi.NativeFunction<
+          ffi.Uint32 Function(
+              CXSourceRange, CXSourceRange)>>('clang_equalRanges');
+  late final _clang_equalRanges = _clang_equalRanges_ptr
+      .asFunction<int Function(CXSourceRange, CXSourceRange)>();
 
   /// Returns non-zero if \p range is null.
   int clang_Range_isNull(
@@ -536,10 +541,10 @@ class LibClang {
   }
 
   late final _clang_Range_isNull_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_Range_isNull>>(
+      _lookup<ffi.NativeFunction<ffi.Int32 Function(CXSourceRange)>>(
           'clang_Range_isNull');
-  late final _dart_clang_Range_isNull _clang_Range_isNull =
-      _clang_Range_isNull_ptr.asFunction<_dart_clang_Range_isNull>();
+  late final _clang_Range_isNull =
+      _clang_Range_isNull_ptr.asFunction<int Function(CXSourceRange)>();
 
   /// Retrieve the file, line, column, and offset represented by
   /// the given source location.
@@ -563,7 +568,7 @@ class LibClang {
   /// buffer to which the given source location points.
   void clang_getExpansionLocation(
     CXSourceLocation location,
-    ffi.Pointer<ffi.Pointer<ffi.Void>> file,
+    ffi.Pointer<CXFile> file,
     ffi.Pointer<ffi.Uint32> line,
     ffi.Pointer<ffi.Uint32> column,
     ffi.Pointer<ffi.Uint32> offset,
@@ -577,12 +582,22 @@ class LibClang {
     );
   }
 
-  late final _clang_getExpansionLocation_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getExpansionLocation>>(
-          'clang_getExpansionLocation');
-  late final _dart_clang_getExpansionLocation _clang_getExpansionLocation =
-      _clang_getExpansionLocation_ptr
-          .asFunction<_dart_clang_getExpansionLocation>();
+  late final _clang_getExpansionLocation_ptr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              CXSourceLocation,
+              ffi.Pointer<CXFile>,
+              ffi.Pointer<ffi.Uint32>,
+              ffi.Pointer<ffi.Uint32>,
+              ffi.Pointer<ffi.Uint32>)>>('clang_getExpansionLocation');
+  late final _clang_getExpansionLocation =
+      _clang_getExpansionLocation_ptr.asFunction<
+          void Function(
+              CXSourceLocation,
+              ffi.Pointer<CXFile>,
+              ffi.Pointer<ffi.Uint32>,
+              ffi.Pointer<ffi.Uint32>,
+              ffi.Pointer<ffi.Uint32>)>();
 
   /// Retrieve the file, line and column represented by the given source
   /// location, as specified in a # line directive.
@@ -636,12 +651,17 @@ class LibClang {
     );
   }
 
-  late final _clang_getPresumedLocation_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getPresumedLocation>>(
-          'clang_getPresumedLocation');
-  late final _dart_clang_getPresumedLocation _clang_getPresumedLocation =
-      _clang_getPresumedLocation_ptr
-          .asFunction<_dart_clang_getPresumedLocation>();
+  late final _clang_getPresumedLocation_ptr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              CXSourceLocation,
+              ffi.Pointer<CXString>,
+              ffi.Pointer<ffi.Uint32>,
+              ffi.Pointer<ffi.Uint32>)>>('clang_getPresumedLocation');
+  late final _clang_getPresumedLocation =
+      _clang_getPresumedLocation_ptr.asFunction<
+          void Function(CXSourceLocation, ffi.Pointer<CXString>,
+              ffi.Pointer<ffi.Uint32>, ffi.Pointer<ffi.Uint32>)>();
 
   /// Legacy API to retrieve the file, line, column, and offset represented
   /// by the given source location.
@@ -651,7 +671,7 @@ class LibClang {
   /// details.
   void clang_getInstantiationLocation(
     CXSourceLocation location,
-    ffi.Pointer<ffi.Pointer<ffi.Void>> file,
+    ffi.Pointer<CXFile> file,
     ffi.Pointer<ffi.Uint32> line,
     ffi.Pointer<ffi.Uint32> column,
     ffi.Pointer<ffi.Uint32> offset,
@@ -665,12 +685,22 @@ class LibClang {
     );
   }
 
-  late final _clang_getInstantiationLocation_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getInstantiationLocation>>(
-          'clang_getInstantiationLocation');
-  late final _dart_clang_getInstantiationLocation
-      _clang_getInstantiationLocation = _clang_getInstantiationLocation_ptr
-          .asFunction<_dart_clang_getInstantiationLocation>();
+  late final _clang_getInstantiationLocation_ptr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              CXSourceLocation,
+              ffi.Pointer<CXFile>,
+              ffi.Pointer<ffi.Uint32>,
+              ffi.Pointer<ffi.Uint32>,
+              ffi.Pointer<ffi.Uint32>)>>('clang_getInstantiationLocation');
+  late final _clang_getInstantiationLocation =
+      _clang_getInstantiationLocation_ptr.asFunction<
+          void Function(
+              CXSourceLocation,
+              ffi.Pointer<CXFile>,
+              ffi.Pointer<ffi.Uint32>,
+              ffi.Pointer<ffi.Uint32>,
+              ffi.Pointer<ffi.Uint32>)>();
 
   /// Retrieve the file, line, column, and offset represented by
   /// the given source location.
@@ -694,7 +724,7 @@ class LibClang {
   /// buffer to which the given source location points.
   void clang_getSpellingLocation(
     CXSourceLocation location,
-    ffi.Pointer<ffi.Pointer<ffi.Void>> file,
+    ffi.Pointer<CXFile> file,
     ffi.Pointer<ffi.Uint32> line,
     ffi.Pointer<ffi.Uint32> column,
     ffi.Pointer<ffi.Uint32> offset,
@@ -708,12 +738,22 @@ class LibClang {
     );
   }
 
-  late final _clang_getSpellingLocation_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getSpellingLocation>>(
-          'clang_getSpellingLocation');
-  late final _dart_clang_getSpellingLocation _clang_getSpellingLocation =
-      _clang_getSpellingLocation_ptr
-          .asFunction<_dart_clang_getSpellingLocation>();
+  late final _clang_getSpellingLocation_ptr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              CXSourceLocation,
+              ffi.Pointer<CXFile>,
+              ffi.Pointer<ffi.Uint32>,
+              ffi.Pointer<ffi.Uint32>,
+              ffi.Pointer<ffi.Uint32>)>>('clang_getSpellingLocation');
+  late final _clang_getSpellingLocation =
+      _clang_getSpellingLocation_ptr.asFunction<
+          void Function(
+              CXSourceLocation,
+              ffi.Pointer<CXFile>,
+              ffi.Pointer<ffi.Uint32>,
+              ffi.Pointer<ffi.Uint32>,
+              ffi.Pointer<ffi.Uint32>)>();
 
   /// Retrieve the file, line, column, and offset represented by
   /// the given source location.
@@ -738,7 +778,7 @@ class LibClang {
   /// buffer to which the given source location points.
   void clang_getFileLocation(
     CXSourceLocation location,
-    ffi.Pointer<ffi.Pointer<ffi.Void>> file,
+    ffi.Pointer<CXFile> file,
     ffi.Pointer<ffi.Uint32> line,
     ffi.Pointer<ffi.Uint32> column,
     ffi.Pointer<ffi.Uint32> offset,
@@ -752,11 +792,21 @@ class LibClang {
     );
   }
 
-  late final _clang_getFileLocation_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getFileLocation>>(
-          'clang_getFileLocation');
-  late final _dart_clang_getFileLocation _clang_getFileLocation =
-      _clang_getFileLocation_ptr.asFunction<_dart_clang_getFileLocation>();
+  late final _clang_getFileLocation_ptr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              CXSourceLocation,
+              ffi.Pointer<CXFile>,
+              ffi.Pointer<ffi.Uint32>,
+              ffi.Pointer<ffi.Uint32>,
+              ffi.Pointer<ffi.Uint32>)>>('clang_getFileLocation');
+  late final _clang_getFileLocation = _clang_getFileLocation_ptr.asFunction<
+      void Function(
+          CXSourceLocation,
+          ffi.Pointer<CXFile>,
+          ffi.Pointer<ffi.Uint32>,
+          ffi.Pointer<ffi.Uint32>,
+          ffi.Pointer<ffi.Uint32>)>();
 
   /// Retrieve a source location representing the first character within a
   /// source range.
@@ -769,10 +819,10 @@ class LibClang {
   }
 
   late final _clang_getRangeStart_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getRangeStart>>(
+      _lookup<ffi.NativeFunction<CXSourceLocation Function(CXSourceRange)>>(
           'clang_getRangeStart');
-  late final _dart_clang_getRangeStart _clang_getRangeStart =
-      _clang_getRangeStart_ptr.asFunction<_dart_clang_getRangeStart>();
+  late final _clang_getRangeStart = _clang_getRangeStart_ptr
+      .asFunction<CXSourceLocation Function(CXSourceRange)>();
 
   /// Retrieve a source location representing the last character within a
   /// source range.
@@ -785,18 +835,18 @@ class LibClang {
   }
 
   late final _clang_getRangeEnd_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getRangeEnd>>(
+      _lookup<ffi.NativeFunction<CXSourceLocation Function(CXSourceRange)>>(
           'clang_getRangeEnd');
-  late final _dart_clang_getRangeEnd _clang_getRangeEnd =
-      _clang_getRangeEnd_ptr.asFunction<_dart_clang_getRangeEnd>();
+  late final _clang_getRangeEnd = _clang_getRangeEnd_ptr
+      .asFunction<CXSourceLocation Function(CXSourceRange)>();
 
   /// Retrieve all ranges that were skipped by the preprocessor.
   ///
   /// The preprocessor will skip lines when they are surrounded by an
   /// if/ifdef/ifndef directive whose condition does not evaluate to true.
   ffi.Pointer<CXSourceRangeList> clang_getSkippedRanges(
-    ffi.Pointer<CXTranslationUnitImpl> tu,
-    ffi.Pointer<ffi.Void> file,
+    CXTranslationUnit tu,
+    CXFile file,
   ) {
     return _clang_getSkippedRanges(
       tu,
@@ -804,11 +854,12 @@ class LibClang {
     );
   }
 
-  late final _clang_getSkippedRanges_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getSkippedRanges>>(
-          'clang_getSkippedRanges');
-  late final _dart_clang_getSkippedRanges _clang_getSkippedRanges =
-      _clang_getSkippedRanges_ptr.asFunction<_dart_clang_getSkippedRanges>();
+  late final _clang_getSkippedRanges_ptr = _lookup<
+      ffi.NativeFunction<
+          ffi.Pointer<CXSourceRangeList> Function(
+              CXTranslationUnit, CXFile)>>('clang_getSkippedRanges');
+  late final _clang_getSkippedRanges = _clang_getSkippedRanges_ptr.asFunction<
+      ffi.Pointer<CXSourceRangeList> Function(CXTranslationUnit, CXFile)>();
 
   /// Retrieve all ranges from all files that were skipped by the
   /// preprocessor.
@@ -816,19 +867,19 @@ class LibClang {
   /// The preprocessor will skip lines when they are surrounded by an
   /// if/ifdef/ifndef directive whose condition does not evaluate to true.
   ffi.Pointer<CXSourceRangeList> clang_getAllSkippedRanges(
-    ffi.Pointer<CXTranslationUnitImpl> tu,
+    CXTranslationUnit tu,
   ) {
     return _clang_getAllSkippedRanges(
       tu,
     );
   }
 
-  late final _clang_getAllSkippedRanges_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getAllSkippedRanges>>(
-          'clang_getAllSkippedRanges');
-  late final _dart_clang_getAllSkippedRanges _clang_getAllSkippedRanges =
-      _clang_getAllSkippedRanges_ptr
-          .asFunction<_dart_clang_getAllSkippedRanges>();
+  late final _clang_getAllSkippedRanges_ptr = _lookup<
+      ffi.NativeFunction<
+          ffi.Pointer<CXSourceRangeList> Function(
+              CXTranslationUnit)>>('clang_getAllSkippedRanges');
+  late final _clang_getAllSkippedRanges = _clang_getAllSkippedRanges_ptr
+      .asFunction<ffi.Pointer<CXSourceRangeList> Function(CXTranslationUnit)>();
 
   /// Destroy the given \c CXSourceRangeList.
   void clang_disposeSourceRangeList(
@@ -839,16 +890,16 @@ class LibClang {
     );
   }
 
-  late final _clang_disposeSourceRangeList_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_disposeSourceRangeList>>(
-          'clang_disposeSourceRangeList');
-  late final _dart_clang_disposeSourceRangeList _clang_disposeSourceRangeList =
-      _clang_disposeSourceRangeList_ptr
-          .asFunction<_dart_clang_disposeSourceRangeList>();
+  late final _clang_disposeSourceRangeList_ptr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              ffi.Pointer<CXSourceRangeList>)>>('clang_disposeSourceRangeList');
+  late final _clang_disposeSourceRangeList = _clang_disposeSourceRangeList_ptr
+      .asFunction<void Function(ffi.Pointer<CXSourceRangeList>)>();
 
   /// Determine the number of diagnostics in a CXDiagnosticSet.
   int clang_getNumDiagnosticsInSet(
-    ffi.Pointer<ffi.Void> Diags,
+    CXDiagnosticSet Diags,
   ) {
     return _clang_getNumDiagnosticsInSet(
       Diags,
@@ -856,11 +907,10 @@ class LibClang {
   }
 
   late final _clang_getNumDiagnosticsInSet_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getNumDiagnosticsInSet>>(
+      _lookup<ffi.NativeFunction<ffi.Uint32 Function(CXDiagnosticSet)>>(
           'clang_getNumDiagnosticsInSet');
-  late final _dart_clang_getNumDiagnosticsInSet _clang_getNumDiagnosticsInSet =
-      _clang_getNumDiagnosticsInSet_ptr
-          .asFunction<_dart_clang_getNumDiagnosticsInSet>();
+  late final _clang_getNumDiagnosticsInSet = _clang_getNumDiagnosticsInSet_ptr
+      .asFunction<int Function(CXDiagnosticSet)>();
 
   /// Retrieve a diagnostic associated with the given CXDiagnosticSet.
   ///
@@ -869,8 +919,8 @@ class LibClang {
   ///
   /// \returns the requested diagnostic. This diagnostic must be freed
   /// via a call to \c clang_disposeDiagnostic().
-  ffi.Pointer<ffi.Void> clang_getDiagnosticInSet(
-    ffi.Pointer<ffi.Void> Diags,
+  CXDiagnostic clang_getDiagnosticInSet(
+    CXDiagnosticSet Diags,
     int Index,
   ) {
     return _clang_getDiagnosticInSet(
@@ -879,12 +929,12 @@ class LibClang {
     );
   }
 
-  late final _clang_getDiagnosticInSet_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getDiagnosticInSet>>(
-          'clang_getDiagnosticInSet');
-  late final _dart_clang_getDiagnosticInSet _clang_getDiagnosticInSet =
-      _clang_getDiagnosticInSet_ptr
-          .asFunction<_dart_clang_getDiagnosticInSet>();
+  late final _clang_getDiagnosticInSet_ptr = _lookup<
+      ffi.NativeFunction<
+          CXDiagnostic Function(
+              CXDiagnosticSet, ffi.Uint32)>>('clang_getDiagnosticInSet');
+  late final _clang_getDiagnosticInSet = _clang_getDiagnosticInSet_ptr
+      .asFunction<CXDiagnostic Function(CXDiagnosticSet, int)>();
 
   /// Deserialize a set of diagnostics from a Clang diagnostics bitcode
   /// file.
@@ -897,7 +947,7 @@ class LibClang {
   ///
   /// \returns A loaded CXDiagnosticSet if successful, and NULL otherwise.  These
   /// diagnostics should be released using clang_disposeDiagnosticSet().
-  ffi.Pointer<ffi.Void> clang_loadDiagnostics(
+  CXDiagnosticSet clang_loadDiagnostics(
     ffi.Pointer<ffi.Int8> file,
     ffi.Pointer<ffi.Int32> error,
     ffi.Pointer<CXString> errorString,
@@ -909,15 +959,19 @@ class LibClang {
     );
   }
 
-  late final _clang_loadDiagnostics_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_loadDiagnostics>>(
-          'clang_loadDiagnostics');
-  late final _dart_clang_loadDiagnostics _clang_loadDiagnostics =
-      _clang_loadDiagnostics_ptr.asFunction<_dart_clang_loadDiagnostics>();
+  late final _clang_loadDiagnostics_ptr = _lookup<
+      ffi.NativeFunction<
+          CXDiagnosticSet Function(
+              ffi.Pointer<ffi.Int8>,
+              ffi.Pointer<ffi.Int32>,
+              ffi.Pointer<CXString>)>>('clang_loadDiagnostics');
+  late final _clang_loadDiagnostics = _clang_loadDiagnostics_ptr.asFunction<
+      CXDiagnosticSet Function(ffi.Pointer<ffi.Int8>, ffi.Pointer<ffi.Int32>,
+          ffi.Pointer<CXString>)>();
 
   /// Release a CXDiagnosticSet and all of its contained diagnostics.
   void clang_disposeDiagnosticSet(
-    ffi.Pointer<ffi.Void> Diags,
+    CXDiagnosticSet Diags,
   ) {
     return _clang_disposeDiagnosticSet(
       Diags,
@@ -925,18 +979,17 @@ class LibClang {
   }
 
   late final _clang_disposeDiagnosticSet_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_disposeDiagnosticSet>>(
+      _lookup<ffi.NativeFunction<ffi.Void Function(CXDiagnosticSet)>>(
           'clang_disposeDiagnosticSet');
-  late final _dart_clang_disposeDiagnosticSet _clang_disposeDiagnosticSet =
-      _clang_disposeDiagnosticSet_ptr
-          .asFunction<_dart_clang_disposeDiagnosticSet>();
+  late final _clang_disposeDiagnosticSet = _clang_disposeDiagnosticSet_ptr
+      .asFunction<void Function(CXDiagnosticSet)>();
 
   /// Retrieve the child diagnostics of a CXDiagnostic.
   ///
   /// This CXDiagnosticSet does not need to be released by
   /// clang_disposeDiagnosticSet.
-  ffi.Pointer<ffi.Void> clang_getChildDiagnostics(
-    ffi.Pointer<ffi.Void> D,
+  CXDiagnosticSet clang_getChildDiagnostics(
+    CXDiagnostic D,
   ) {
     return _clang_getChildDiagnostics(
       D,
@@ -944,16 +997,15 @@ class LibClang {
   }
 
   late final _clang_getChildDiagnostics_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getChildDiagnostics>>(
+      _lookup<ffi.NativeFunction<CXDiagnosticSet Function(CXDiagnostic)>>(
           'clang_getChildDiagnostics');
-  late final _dart_clang_getChildDiagnostics _clang_getChildDiagnostics =
-      _clang_getChildDiagnostics_ptr
-          .asFunction<_dart_clang_getChildDiagnostics>();
+  late final _clang_getChildDiagnostics = _clang_getChildDiagnostics_ptr
+      .asFunction<CXDiagnosticSet Function(CXDiagnostic)>();
 
   /// Determine the number of diagnostics produced for the given
   /// translation unit.
   int clang_getNumDiagnostics(
-    ffi.Pointer<CXTranslationUnitImpl> Unit,
+    CXTranslationUnit Unit,
   ) {
     return _clang_getNumDiagnostics(
       Unit,
@@ -961,10 +1013,10 @@ class LibClang {
   }
 
   late final _clang_getNumDiagnostics_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getNumDiagnostics>>(
+      _lookup<ffi.NativeFunction<ffi.Uint32 Function(CXTranslationUnit)>>(
           'clang_getNumDiagnostics');
-  late final _dart_clang_getNumDiagnostics _clang_getNumDiagnostics =
-      _clang_getNumDiagnostics_ptr.asFunction<_dart_clang_getNumDiagnostics>();
+  late final _clang_getNumDiagnostics = _clang_getNumDiagnostics_ptr
+      .asFunction<int Function(CXTranslationUnit)>();
 
   /// Retrieve a diagnostic associated with the given translation unit.
   ///
@@ -973,8 +1025,8 @@ class LibClang {
   ///
   /// \returns the requested diagnostic. This diagnostic must be freed
   /// via a call to \c clang_disposeDiagnostic().
-  ffi.Pointer<ffi.Void> clang_getDiagnostic(
-    ffi.Pointer<CXTranslationUnitImpl> Unit,
+  CXDiagnostic clang_getDiagnostic(
+    CXTranslationUnit Unit,
     int Index,
   ) {
     return _clang_getDiagnostic(
@@ -983,18 +1035,19 @@ class LibClang {
     );
   }
 
-  late final _clang_getDiagnostic_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getDiagnostic>>(
-          'clang_getDiagnostic');
-  late final _dart_clang_getDiagnostic _clang_getDiagnostic =
-      _clang_getDiagnostic_ptr.asFunction<_dart_clang_getDiagnostic>();
+  late final _clang_getDiagnostic_ptr = _lookup<
+      ffi.NativeFunction<
+          CXDiagnostic Function(
+              CXTranslationUnit, ffi.Uint32)>>('clang_getDiagnostic');
+  late final _clang_getDiagnostic = _clang_getDiagnostic_ptr
+      .asFunction<CXDiagnostic Function(CXTranslationUnit, int)>();
 
   /// Retrieve the complete set of diagnostics associated with a
   /// translation unit.
   ///
   /// \param Unit the translation unit to query.
-  ffi.Pointer<ffi.Void> clang_getDiagnosticSetFromTU(
-    ffi.Pointer<CXTranslationUnitImpl> Unit,
+  CXDiagnosticSet clang_getDiagnosticSetFromTU(
+    CXTranslationUnit Unit,
   ) {
     return _clang_getDiagnosticSetFromTU(
       Unit,
@@ -1002,15 +1055,14 @@ class LibClang {
   }
 
   late final _clang_getDiagnosticSetFromTU_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getDiagnosticSetFromTU>>(
+      _lookup<ffi.NativeFunction<CXDiagnosticSet Function(CXTranslationUnit)>>(
           'clang_getDiagnosticSetFromTU');
-  late final _dart_clang_getDiagnosticSetFromTU _clang_getDiagnosticSetFromTU =
-      _clang_getDiagnosticSetFromTU_ptr
-          .asFunction<_dart_clang_getDiagnosticSetFromTU>();
+  late final _clang_getDiagnosticSetFromTU = _clang_getDiagnosticSetFromTU_ptr
+      .asFunction<CXDiagnosticSet Function(CXTranslationUnit)>();
 
   /// Destroy a diagnostic.
   void clang_disposeDiagnostic(
-    ffi.Pointer<ffi.Void> Diagnostic,
+    CXDiagnostic Diagnostic,
   ) {
     return _clang_disposeDiagnostic(
       Diagnostic,
@@ -1018,10 +1070,10 @@ class LibClang {
   }
 
   late final _clang_disposeDiagnostic_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_disposeDiagnostic>>(
+      _lookup<ffi.NativeFunction<ffi.Void Function(CXDiagnostic)>>(
           'clang_disposeDiagnostic');
-  late final _dart_clang_disposeDiagnostic _clang_disposeDiagnostic =
-      _clang_disposeDiagnostic_ptr.asFunction<_dart_clang_disposeDiagnostic>();
+  late final _clang_disposeDiagnostic =
+      _clang_disposeDiagnostic_ptr.asFunction<void Function(CXDiagnostic)>();
 
   /// Format the given diagnostic in a manner that is suitable for display.
   ///
@@ -1037,7 +1089,7 @@ class LibClang {
   ///
   /// \returns A new string containing for formatted diagnostic.
   CXString clang_formatDiagnostic(
-    ffi.Pointer<ffi.Void> Diagnostic,
+    CXDiagnostic Diagnostic,
     int Options,
   ) {
     return _clang_formatDiagnostic(
@@ -1047,10 +1099,10 @@ class LibClang {
   }
 
   late final _clang_formatDiagnostic_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_formatDiagnostic>>(
+      _lookup<ffi.NativeFunction<CXString Function(CXDiagnostic, ffi.Uint32)>>(
           'clang_formatDiagnostic');
-  late final _dart_clang_formatDiagnostic _clang_formatDiagnostic =
-      _clang_formatDiagnostic_ptr.asFunction<_dart_clang_formatDiagnostic>();
+  late final _clang_formatDiagnostic = _clang_formatDiagnostic_ptr
+      .asFunction<CXString Function(CXDiagnostic, int)>();
 
   /// Retrieve the set of display options most similar to the
   /// default behavior of the clang compiler.
@@ -1062,16 +1114,14 @@ class LibClang {
   }
 
   late final _clang_defaultDiagnosticDisplayOptions_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_defaultDiagnosticDisplayOptions>>(
+      _lookup<ffi.NativeFunction<ffi.Uint32 Function()>>(
           'clang_defaultDiagnosticDisplayOptions');
-  late final _dart_clang_defaultDiagnosticDisplayOptions
-      _clang_defaultDiagnosticDisplayOptions =
-      _clang_defaultDiagnosticDisplayOptions_ptr
-          .asFunction<_dart_clang_defaultDiagnosticDisplayOptions>();
+  late final _clang_defaultDiagnosticDisplayOptions =
+      _clang_defaultDiagnosticDisplayOptions_ptr.asFunction<int Function()>();
 
   /// Determine the severity of the given diagnostic.
   int clang_getDiagnosticSeverity(
-    ffi.Pointer<ffi.Void> arg0,
+    CXDiagnostic arg0,
   ) {
     return _clang_getDiagnosticSeverity(
       arg0,
@@ -1079,18 +1129,17 @@ class LibClang {
   }
 
   late final _clang_getDiagnosticSeverity_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getDiagnosticSeverity>>(
+      _lookup<ffi.NativeFunction<ffi.Int32 Function(CXDiagnostic)>>(
           'clang_getDiagnosticSeverity');
-  late final _dart_clang_getDiagnosticSeverity _clang_getDiagnosticSeverity =
-      _clang_getDiagnosticSeverity_ptr
-          .asFunction<_dart_clang_getDiagnosticSeverity>();
+  late final _clang_getDiagnosticSeverity =
+      _clang_getDiagnosticSeverity_ptr.asFunction<int Function(CXDiagnostic)>();
 
   /// Retrieve the source location of the given diagnostic.
   ///
   /// This location is where Clang would print the caret ('^') when
   /// displaying the diagnostic on the command line.
   CXSourceLocation clang_getDiagnosticLocation(
-    ffi.Pointer<ffi.Void> arg0,
+    CXDiagnostic arg0,
   ) {
     return _clang_getDiagnosticLocation(
       arg0,
@@ -1098,15 +1147,14 @@ class LibClang {
   }
 
   late final _clang_getDiagnosticLocation_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getDiagnosticLocation>>(
+      _lookup<ffi.NativeFunction<CXSourceLocation Function(CXDiagnostic)>>(
           'clang_getDiagnosticLocation');
-  late final _dart_clang_getDiagnosticLocation _clang_getDiagnosticLocation =
-      _clang_getDiagnosticLocation_ptr
-          .asFunction<_dart_clang_getDiagnosticLocation>();
+  late final _clang_getDiagnosticLocation = _clang_getDiagnosticLocation_ptr
+      .asFunction<CXSourceLocation Function(CXDiagnostic)>();
 
   /// Retrieve the text of the given diagnostic.
   CXString clang_getDiagnosticSpelling(
-    ffi.Pointer<ffi.Void> arg0,
+    CXDiagnostic arg0,
   ) {
     return _clang_getDiagnosticSpelling(
       arg0,
@@ -1114,11 +1162,10 @@ class LibClang {
   }
 
   late final _clang_getDiagnosticSpelling_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getDiagnosticSpelling>>(
+      _lookup<ffi.NativeFunction<CXString Function(CXDiagnostic)>>(
           'clang_getDiagnosticSpelling');
-  late final _dart_clang_getDiagnosticSpelling _clang_getDiagnosticSpelling =
-      _clang_getDiagnosticSpelling_ptr
-          .asFunction<_dart_clang_getDiagnosticSpelling>();
+  late final _clang_getDiagnosticSpelling = _clang_getDiagnosticSpelling_ptr
+      .asFunction<CXString Function(CXDiagnostic)>();
 
   /// Retrieve the name of the command-line option that enabled this
   /// diagnostic.
@@ -1131,7 +1178,7 @@ class LibClang {
   /// \returns A string that contains the command-line option used to enable this
   /// warning, such as "-Wconversion" or "-pedantic".
   CXString clang_getDiagnosticOption(
-    ffi.Pointer<ffi.Void> Diag,
+    CXDiagnostic Diag,
     ffi.Pointer<CXString> Disable,
   ) {
     return _clang_getDiagnosticOption(
@@ -1140,12 +1187,12 @@ class LibClang {
     );
   }
 
-  late final _clang_getDiagnosticOption_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getDiagnosticOption>>(
-          'clang_getDiagnosticOption');
-  late final _dart_clang_getDiagnosticOption _clang_getDiagnosticOption =
-      _clang_getDiagnosticOption_ptr
-          .asFunction<_dart_clang_getDiagnosticOption>();
+  late final _clang_getDiagnosticOption_ptr = _lookup<
+      ffi.NativeFunction<
+          CXString Function(CXDiagnostic,
+              ffi.Pointer<CXString>)>>('clang_getDiagnosticOption');
+  late final _clang_getDiagnosticOption = _clang_getDiagnosticOption_ptr
+      .asFunction<CXString Function(CXDiagnostic, ffi.Pointer<CXString>)>();
 
   /// Retrieve the category number for this diagnostic.
   ///
@@ -1156,7 +1203,7 @@ class LibClang {
   /// \returns The number of the category that contains this diagnostic, or zero
   /// if this diagnostic is uncategorized.
   int clang_getDiagnosticCategory(
-    ffi.Pointer<ffi.Void> arg0,
+    CXDiagnostic arg0,
   ) {
     return _clang_getDiagnosticCategory(
       arg0,
@@ -1164,11 +1211,10 @@ class LibClang {
   }
 
   late final _clang_getDiagnosticCategory_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getDiagnosticCategory>>(
+      _lookup<ffi.NativeFunction<ffi.Uint32 Function(CXDiagnostic)>>(
           'clang_getDiagnosticCategory');
-  late final _dart_clang_getDiagnosticCategory _clang_getDiagnosticCategory =
-      _clang_getDiagnosticCategory_ptr
-          .asFunction<_dart_clang_getDiagnosticCategory>();
+  late final _clang_getDiagnosticCategory =
+      _clang_getDiagnosticCategory_ptr.asFunction<int Function(CXDiagnostic)>();
 
   /// Retrieve the name of a particular diagnostic category.  This
   /// is now deprecated.  Use clang_getDiagnosticCategoryText()
@@ -1187,17 +1233,16 @@ class LibClang {
   }
 
   late final _clang_getDiagnosticCategoryName_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getDiagnosticCategoryName>>(
+      _lookup<ffi.NativeFunction<CXString Function(ffi.Uint32)>>(
           'clang_getDiagnosticCategoryName');
-  late final _dart_clang_getDiagnosticCategoryName
-      _clang_getDiagnosticCategoryName = _clang_getDiagnosticCategoryName_ptr
-          .asFunction<_dart_clang_getDiagnosticCategoryName>();
+  late final _clang_getDiagnosticCategoryName =
+      _clang_getDiagnosticCategoryName_ptr.asFunction<CXString Function(int)>();
 
   /// Retrieve the diagnostic category text for a given diagnostic.
   ///
   /// \returns The text of the given diagnostic category.
   CXString clang_getDiagnosticCategoryText(
-    ffi.Pointer<ffi.Void> arg0,
+    CXDiagnostic arg0,
   ) {
     return _clang_getDiagnosticCategoryText(
       arg0,
@@ -1205,16 +1250,16 @@ class LibClang {
   }
 
   late final _clang_getDiagnosticCategoryText_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getDiagnosticCategoryText>>(
+      _lookup<ffi.NativeFunction<CXString Function(CXDiagnostic)>>(
           'clang_getDiagnosticCategoryText');
-  late final _dart_clang_getDiagnosticCategoryText
-      _clang_getDiagnosticCategoryText = _clang_getDiagnosticCategoryText_ptr
-          .asFunction<_dart_clang_getDiagnosticCategoryText>();
+  late final _clang_getDiagnosticCategoryText =
+      _clang_getDiagnosticCategoryText_ptr
+          .asFunction<CXString Function(CXDiagnostic)>();
 
   /// Determine the number of source ranges associated with the given
   /// diagnostic.
   int clang_getDiagnosticNumRanges(
-    ffi.Pointer<ffi.Void> arg0,
+    CXDiagnostic arg0,
   ) {
     return _clang_getDiagnosticNumRanges(
       arg0,
@@ -1222,11 +1267,10 @@ class LibClang {
   }
 
   late final _clang_getDiagnosticNumRanges_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getDiagnosticNumRanges>>(
+      _lookup<ffi.NativeFunction<ffi.Uint32 Function(CXDiagnostic)>>(
           'clang_getDiagnosticNumRanges');
-  late final _dart_clang_getDiagnosticNumRanges _clang_getDiagnosticNumRanges =
-      _clang_getDiagnosticNumRanges_ptr
-          .asFunction<_dart_clang_getDiagnosticNumRanges>();
+  late final _clang_getDiagnosticNumRanges = _clang_getDiagnosticNumRanges_ptr
+      .asFunction<int Function(CXDiagnostic)>();
 
   /// Retrieve a source range associated with the diagnostic.
   ///
@@ -1240,7 +1284,7 @@ class LibClang {
   ///
   /// \returns the requested source range.
   CXSourceRange clang_getDiagnosticRange(
-    ffi.Pointer<ffi.Void> Diagnostic,
+    CXDiagnostic Diagnostic,
     int Range,
   ) {
     return _clang_getDiagnosticRange(
@@ -1249,17 +1293,16 @@ class LibClang {
     );
   }
 
-  late final _clang_getDiagnosticRange_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getDiagnosticRange>>(
-          'clang_getDiagnosticRange');
-  late final _dart_clang_getDiagnosticRange _clang_getDiagnosticRange =
-      _clang_getDiagnosticRange_ptr
-          .asFunction<_dart_clang_getDiagnosticRange>();
+  late final _clang_getDiagnosticRange_ptr = _lookup<
+          ffi.NativeFunction<CXSourceRange Function(CXDiagnostic, ffi.Uint32)>>(
+      'clang_getDiagnosticRange');
+  late final _clang_getDiagnosticRange = _clang_getDiagnosticRange_ptr
+      .asFunction<CXSourceRange Function(CXDiagnostic, int)>();
 
   /// Determine the number of fix-it hints associated with the
   /// given diagnostic.
   int clang_getDiagnosticNumFixIts(
-    ffi.Pointer<ffi.Void> Diagnostic,
+    CXDiagnostic Diagnostic,
   ) {
     return _clang_getDiagnosticNumFixIts(
       Diagnostic,
@@ -1267,11 +1310,10 @@ class LibClang {
   }
 
   late final _clang_getDiagnosticNumFixIts_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getDiagnosticNumFixIts>>(
+      _lookup<ffi.NativeFunction<ffi.Uint32 Function(CXDiagnostic)>>(
           'clang_getDiagnosticNumFixIts');
-  late final _dart_clang_getDiagnosticNumFixIts _clang_getDiagnosticNumFixIts =
-      _clang_getDiagnosticNumFixIts_ptr
-          .asFunction<_dart_clang_getDiagnosticNumFixIts>();
+  late final _clang_getDiagnosticNumFixIts = _clang_getDiagnosticNumFixIts_ptr
+      .asFunction<int Function(CXDiagnostic)>();
 
   /// Retrieve the replacement information for a given fix-it.
   ///
@@ -1297,7 +1339,7 @@ class LibClang {
   /// \returns A string containing text that should be replace the source
   /// code indicated by the \c ReplacementRange.
   CXString clang_getDiagnosticFixIt(
-    ffi.Pointer<ffi.Void> Diagnostic,
+    CXDiagnostic Diagnostic,
     int FixIt,
     ffi.Pointer<CXSourceRange> ReplacementRange,
   ) {
@@ -1308,16 +1350,17 @@ class LibClang {
     );
   }
 
-  late final _clang_getDiagnosticFixIt_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getDiagnosticFixIt>>(
-          'clang_getDiagnosticFixIt');
-  late final _dart_clang_getDiagnosticFixIt _clang_getDiagnosticFixIt =
-      _clang_getDiagnosticFixIt_ptr
-          .asFunction<_dart_clang_getDiagnosticFixIt>();
+  late final _clang_getDiagnosticFixIt_ptr = _lookup<
+      ffi.NativeFunction<
+          CXString Function(CXDiagnostic, ffi.Uint32,
+              ffi.Pointer<CXSourceRange>)>>('clang_getDiagnosticFixIt');
+  late final _clang_getDiagnosticFixIt =
+      _clang_getDiagnosticFixIt_ptr.asFunction<
+          CXString Function(CXDiagnostic, int, ffi.Pointer<CXSourceRange>)>();
 
   /// Get the original translation unit source file name.
   CXString clang_getTranslationUnitSpelling(
-    ffi.Pointer<CXTranslationUnitImpl> CTUnit,
+    CXTranslationUnit CTUnit,
   ) {
     return _clang_getTranslationUnitSpelling(
       CTUnit,
@@ -1325,11 +1368,11 @@ class LibClang {
   }
 
   late final _clang_getTranslationUnitSpelling_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getTranslationUnitSpelling>>(
+      _lookup<ffi.NativeFunction<CXString Function(CXTranslationUnit)>>(
           'clang_getTranslationUnitSpelling');
-  late final _dart_clang_getTranslationUnitSpelling
-      _clang_getTranslationUnitSpelling = _clang_getTranslationUnitSpelling_ptr
-          .asFunction<_dart_clang_getTranslationUnitSpelling>();
+  late final _clang_getTranslationUnitSpelling =
+      _clang_getTranslationUnitSpelling_ptr
+          .asFunction<CXString Function(CXTranslationUnit)>();
 
   /// Return the CXTranslationUnit for a given source file and the provided
   /// command line arguments one would pass to the compiler.
@@ -1369,8 +1412,8 @@ class LibClang {
   /// those files.  The contents and name of these files (as specified by
   /// CXUnsavedFile) are copied when necessary, so the client only needs to
   /// guarantee their validity until the call to this function returns.
-  ffi.Pointer<CXTranslationUnitImpl> clang_createTranslationUnitFromSourceFile(
-    ffi.Pointer<ffi.Void> CIdx,
+  CXTranslationUnit clang_createTranslationUnitFromSourceFile(
+    CXIndex CIdx,
     ffi.Pointer<ffi.Int8> source_filename,
     int num_clang_command_line_args,
     ffi.Pointer<ffi.Pointer<ffi.Int8>> clang_command_line_args,
@@ -1388,19 +1431,31 @@ class LibClang {
   }
 
   late final _clang_createTranslationUnitFromSourceFile_ptr = _lookup<
-          ffi.NativeFunction<Native_clang_createTranslationUnitFromSourceFile>>(
+          ffi.NativeFunction<
+              CXTranslationUnit Function(
+                  CXIndex,
+                  ffi.Pointer<ffi.Int8>,
+                  ffi.Int32,
+                  ffi.Pointer<ffi.Pointer<ffi.Int8>>,
+                  ffi.Uint32,
+                  ffi.Pointer<CXUnsavedFile>)>>(
       'clang_createTranslationUnitFromSourceFile');
-  late final _dart_clang_createTranslationUnitFromSourceFile
-      _clang_createTranslationUnitFromSourceFile =
-      _clang_createTranslationUnitFromSourceFile_ptr
-          .asFunction<_dart_clang_createTranslationUnitFromSourceFile>();
+  late final _clang_createTranslationUnitFromSourceFile =
+      _clang_createTranslationUnitFromSourceFile_ptr.asFunction<
+          CXTranslationUnit Function(
+              CXIndex,
+              ffi.Pointer<ffi.Int8>,
+              int,
+              ffi.Pointer<ffi.Pointer<ffi.Int8>>,
+              int,
+              ffi.Pointer<CXUnsavedFile>)>();
 
   /// Same as \c clang_createTranslationUnit2, but returns
   /// the \c CXTranslationUnit instead of an error code.  In case of an error this
   /// routine returns a \c NULL \c CXTranslationUnit, without further detailed
   /// error codes.
-  ffi.Pointer<CXTranslationUnitImpl> clang_createTranslationUnit(
-    ffi.Pointer<ffi.Void> CIdx,
+  CXTranslationUnit clang_createTranslationUnit(
+    CXIndex CIdx,
     ffi.Pointer<ffi.Int8> ast_filename,
   ) {
     return _clang_createTranslationUnit(
@@ -1409,12 +1464,12 @@ class LibClang {
     );
   }
 
-  late final _clang_createTranslationUnit_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_createTranslationUnit>>(
-          'clang_createTranslationUnit');
-  late final _dart_clang_createTranslationUnit _clang_createTranslationUnit =
-      _clang_createTranslationUnit_ptr
-          .asFunction<_dart_clang_createTranslationUnit>();
+  late final _clang_createTranslationUnit_ptr = _lookup<
+      ffi.NativeFunction<
+          CXTranslationUnit Function(
+              CXIndex, ffi.Pointer<ffi.Int8>)>>('clang_createTranslationUnit');
+  late final _clang_createTranslationUnit = _clang_createTranslationUnit_ptr
+      .asFunction<CXTranslationUnit Function(CXIndex, ffi.Pointer<ffi.Int8>)>();
 
   /// Create a translation unit from an AST file (\c -emit-ast).
   ///
@@ -1423,9 +1478,9 @@ class LibClang {
   ///
   /// \returns Zero on success, otherwise returns an error code.
   int clang_createTranslationUnit2(
-    ffi.Pointer<ffi.Void> CIdx,
+    CXIndex CIdx,
     ffi.Pointer<ffi.Int8> ast_filename,
-    ffi.Pointer<ffi.Pointer<CXTranslationUnitImpl>> out_TU,
+    ffi.Pointer<CXTranslationUnit> out_TU,
   ) {
     return _clang_createTranslationUnit2(
       CIdx,
@@ -1434,12 +1489,14 @@ class LibClang {
     );
   }
 
-  late final _clang_createTranslationUnit2_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_createTranslationUnit2>>(
-          'clang_createTranslationUnit2');
-  late final _dart_clang_createTranslationUnit2 _clang_createTranslationUnit2 =
-      _clang_createTranslationUnit2_ptr
-          .asFunction<_dart_clang_createTranslationUnit2>();
+  late final _clang_createTranslationUnit2_ptr = _lookup<
+      ffi.NativeFunction<
+          ffi.Int32 Function(CXIndex, ffi.Pointer<ffi.Int8>,
+              ffi.Pointer<CXTranslationUnit>)>>('clang_createTranslationUnit2');
+  late final _clang_createTranslationUnit2 =
+      _clang_createTranslationUnit2_ptr.asFunction<
+          int Function(CXIndex, ffi.Pointer<ffi.Int8>,
+              ffi.Pointer<CXTranslationUnit>)>();
 
   /// Returns the set of flags that is suitable for parsing a translation
   /// unit that is being edited.
@@ -1455,21 +1512,19 @@ class LibClang {
     return _clang_defaultEditingTranslationUnitOptions();
   }
 
-  late final _clang_defaultEditingTranslationUnitOptions_ptr = _lookup<
-          ffi.NativeFunction<
-              Native_clang_defaultEditingTranslationUnitOptions>>(
-      'clang_defaultEditingTranslationUnitOptions');
-  late final _dart_clang_defaultEditingTranslationUnitOptions
-      _clang_defaultEditingTranslationUnitOptions =
+  late final _clang_defaultEditingTranslationUnitOptions_ptr =
+      _lookup<ffi.NativeFunction<ffi.Uint32 Function()>>(
+          'clang_defaultEditingTranslationUnitOptions');
+  late final _clang_defaultEditingTranslationUnitOptions =
       _clang_defaultEditingTranslationUnitOptions_ptr
-          .asFunction<_dart_clang_defaultEditingTranslationUnitOptions>();
+          .asFunction<int Function()>();
 
   /// Same as \c clang_parseTranslationUnit2, but returns
   /// the \c CXTranslationUnit instead of an error code.  In case of an error this
   /// routine returns a \c NULL \c CXTranslationUnit, without further detailed
   /// error codes.
-  ffi.Pointer<CXTranslationUnitImpl> clang_parseTranslationUnit(
-    ffi.Pointer<ffi.Void> CIdx,
+  CXTranslationUnit clang_parseTranslationUnit(
+    CXIndex CIdx,
     ffi.Pointer<ffi.Int8> source_filename,
     ffi.Pointer<ffi.Pointer<ffi.Int8>> command_line_args,
     int num_command_line_args,
@@ -1488,12 +1543,26 @@ class LibClang {
     );
   }
 
-  late final _clang_parseTranslationUnit_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_parseTranslationUnit>>(
-          'clang_parseTranslationUnit');
-  late final _dart_clang_parseTranslationUnit _clang_parseTranslationUnit =
-      _clang_parseTranslationUnit_ptr
-          .asFunction<_dart_clang_parseTranslationUnit>();
+  late final _clang_parseTranslationUnit_ptr = _lookup<
+      ffi.NativeFunction<
+          CXTranslationUnit Function(
+              CXIndex,
+              ffi.Pointer<ffi.Int8>,
+              ffi.Pointer<ffi.Pointer<ffi.Int8>>,
+              ffi.Int32,
+              ffi.Pointer<CXUnsavedFile>,
+              ffi.Uint32,
+              ffi.Uint32)>>('clang_parseTranslationUnit');
+  late final _clang_parseTranslationUnit =
+      _clang_parseTranslationUnit_ptr.asFunction<
+          CXTranslationUnit Function(
+              CXIndex,
+              ffi.Pointer<ffi.Int8>,
+              ffi.Pointer<ffi.Pointer<ffi.Int8>>,
+              int,
+              ffi.Pointer<CXUnsavedFile>,
+              int,
+              int)>();
 
   /// Parse the given source file and the translation unit corresponding
   /// to that file.
@@ -1538,14 +1607,14 @@ class LibClang {
   ///
   /// \returns Zero on success, otherwise returns an error code.
   int clang_parseTranslationUnit2(
-    ffi.Pointer<ffi.Void> CIdx,
+    CXIndex CIdx,
     ffi.Pointer<ffi.Int8> source_filename,
     ffi.Pointer<ffi.Pointer<ffi.Int8>> command_line_args,
     int num_command_line_args,
     ffi.Pointer<CXUnsavedFile> unsaved_files,
     int num_unsaved_files,
     int options,
-    ffi.Pointer<ffi.Pointer<CXTranslationUnitImpl>> out_TU,
+    ffi.Pointer<CXTranslationUnit> out_TU,
   ) {
     return _clang_parseTranslationUnit2(
       CIdx,
@@ -1559,25 +1628,41 @@ class LibClang {
     );
   }
 
-  late final _clang_parseTranslationUnit2_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_parseTranslationUnit2>>(
-          'clang_parseTranslationUnit2');
-  late final _dart_clang_parseTranslationUnit2 _clang_parseTranslationUnit2 =
-      _clang_parseTranslationUnit2_ptr
-          .asFunction<_dart_clang_parseTranslationUnit2>();
+  late final _clang_parseTranslationUnit2_ptr = _lookup<
+      ffi.NativeFunction<
+          ffi.Int32 Function(
+              CXIndex,
+              ffi.Pointer<ffi.Int8>,
+              ffi.Pointer<ffi.Pointer<ffi.Int8>>,
+              ffi.Int32,
+              ffi.Pointer<CXUnsavedFile>,
+              ffi.Uint32,
+              ffi.Uint32,
+              ffi.Pointer<CXTranslationUnit>)>>('clang_parseTranslationUnit2');
+  late final _clang_parseTranslationUnit2 =
+      _clang_parseTranslationUnit2_ptr.asFunction<
+          int Function(
+              CXIndex,
+              ffi.Pointer<ffi.Int8>,
+              ffi.Pointer<ffi.Pointer<ffi.Int8>>,
+              int,
+              ffi.Pointer<CXUnsavedFile>,
+              int,
+              int,
+              ffi.Pointer<CXTranslationUnit>)>();
 
   /// Same as clang_parseTranslationUnit2 but requires a full command line
   /// for \c command_line_args including argv[0]. This is useful if the standard
   /// library paths are relative to the binary.
   int clang_parseTranslationUnit2FullArgv(
-    ffi.Pointer<ffi.Void> CIdx,
+    CXIndex CIdx,
     ffi.Pointer<ffi.Int8> source_filename,
     ffi.Pointer<ffi.Pointer<ffi.Int8>> command_line_args,
     int num_command_line_args,
     ffi.Pointer<CXUnsavedFile> unsaved_files,
     int num_unsaved_files,
     int options,
-    ffi.Pointer<ffi.Pointer<CXTranslationUnitImpl>> out_TU,
+    ffi.Pointer<CXTranslationUnit> out_TU,
   ) {
     return _clang_parseTranslationUnit2FullArgv(
       CIdx,
@@ -1591,13 +1676,29 @@ class LibClang {
     );
   }
 
-  late final _clang_parseTranslationUnit2FullArgv_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_parseTranslationUnit2FullArgv>>(
-          'clang_parseTranslationUnit2FullArgv');
-  late final _dart_clang_parseTranslationUnit2FullArgv
-      _clang_parseTranslationUnit2FullArgv =
-      _clang_parseTranslationUnit2FullArgv_ptr
-          .asFunction<_dart_clang_parseTranslationUnit2FullArgv>();
+  late final _clang_parseTranslationUnit2FullArgv_ptr = _lookup<
+          ffi.NativeFunction<
+              ffi.Int32 Function(
+                  CXIndex,
+                  ffi.Pointer<ffi.Int8>,
+                  ffi.Pointer<ffi.Pointer<ffi.Int8>>,
+                  ffi.Int32,
+                  ffi.Pointer<CXUnsavedFile>,
+                  ffi.Uint32,
+                  ffi.Uint32,
+                  ffi.Pointer<CXTranslationUnit>)>>(
+      'clang_parseTranslationUnit2FullArgv');
+  late final _clang_parseTranslationUnit2FullArgv =
+      _clang_parseTranslationUnit2FullArgv_ptr.asFunction<
+          int Function(
+              CXIndex,
+              ffi.Pointer<ffi.Int8>,
+              ffi.Pointer<ffi.Pointer<ffi.Int8>>,
+              int,
+              ffi.Pointer<CXUnsavedFile>,
+              int,
+              int,
+              ffi.Pointer<CXTranslationUnit>)>();
 
   /// Returns the set of flags that is suitable for saving a translation
   /// unit.
@@ -1607,7 +1708,7 @@ class LibClang {
   /// set contains an unspecified set of options that save translation units with
   /// the most commonly-requested data.
   int clang_defaultSaveOptions(
-    ffi.Pointer<CXTranslationUnitImpl> TU,
+    CXTranslationUnit TU,
   ) {
     return _clang_defaultSaveOptions(
       TU,
@@ -1615,11 +1716,10 @@ class LibClang {
   }
 
   late final _clang_defaultSaveOptions_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_defaultSaveOptions>>(
+      _lookup<ffi.NativeFunction<ffi.Uint32 Function(CXTranslationUnit)>>(
           'clang_defaultSaveOptions');
-  late final _dart_clang_defaultSaveOptions _clang_defaultSaveOptions =
-      _clang_defaultSaveOptions_ptr
-          .asFunction<_dart_clang_defaultSaveOptions>();
+  late final _clang_defaultSaveOptions = _clang_defaultSaveOptions_ptr
+      .asFunction<int Function(CXTranslationUnit)>();
 
   /// Saves a translation unit into a serialized representation of
   /// that translation unit on disk.
@@ -1643,7 +1743,7 @@ class LibClang {
   /// enumeration. Zero (CXSaveError_None) indicates that the translation unit was
   /// saved successfully, while a non-zero value indicates that a problem occurred.
   int clang_saveTranslationUnit(
-    ffi.Pointer<CXTranslationUnitImpl> TU,
+    CXTranslationUnit TU,
     ffi.Pointer<ffi.Int8> FileName,
     int options,
   ) {
@@ -1654,12 +1754,13 @@ class LibClang {
     );
   }
 
-  late final _clang_saveTranslationUnit_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_saveTranslationUnit>>(
-          'clang_saveTranslationUnit');
-  late final _dart_clang_saveTranslationUnit _clang_saveTranslationUnit =
-      _clang_saveTranslationUnit_ptr
-          .asFunction<_dart_clang_saveTranslationUnit>();
+  late final _clang_saveTranslationUnit_ptr = _lookup<
+      ffi.NativeFunction<
+          ffi.Int32 Function(CXTranslationUnit, ffi.Pointer<ffi.Int8>,
+              ffi.Uint32)>>('clang_saveTranslationUnit');
+  late final _clang_saveTranslationUnit =
+      _clang_saveTranslationUnit_ptr.asFunction<
+          int Function(CXTranslationUnit, ffi.Pointer<ffi.Int8>, int)>();
 
   /// Suspend a translation unit in order to free memory associated with it.
   ///
@@ -1667,7 +1768,7 @@ class LibClang {
   /// side does not support any other calls than \c clang_reparseTranslationUnit
   /// to resume it or \c clang_disposeTranslationUnit to dispose it completely.
   int clang_suspendTranslationUnit(
-    ffi.Pointer<CXTranslationUnitImpl> arg0,
+    CXTranslationUnit arg0,
   ) {
     return _clang_suspendTranslationUnit(
       arg0,
@@ -1675,15 +1776,14 @@ class LibClang {
   }
 
   late final _clang_suspendTranslationUnit_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_suspendTranslationUnit>>(
+      _lookup<ffi.NativeFunction<ffi.Uint32 Function(CXTranslationUnit)>>(
           'clang_suspendTranslationUnit');
-  late final _dart_clang_suspendTranslationUnit _clang_suspendTranslationUnit =
-      _clang_suspendTranslationUnit_ptr
-          .asFunction<_dart_clang_suspendTranslationUnit>();
+  late final _clang_suspendTranslationUnit = _clang_suspendTranslationUnit_ptr
+      .asFunction<int Function(CXTranslationUnit)>();
 
   /// Destroy the specified CXTranslationUnit object.
   void clang_disposeTranslationUnit(
-    ffi.Pointer<CXTranslationUnitImpl> arg0,
+    CXTranslationUnit arg0,
   ) {
     return _clang_disposeTranslationUnit(
       arg0,
@@ -1691,11 +1791,10 @@ class LibClang {
   }
 
   late final _clang_disposeTranslationUnit_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_disposeTranslationUnit>>(
+      _lookup<ffi.NativeFunction<ffi.Void Function(CXTranslationUnit)>>(
           'clang_disposeTranslationUnit');
-  late final _dart_clang_disposeTranslationUnit _clang_disposeTranslationUnit =
-      _clang_disposeTranslationUnit_ptr
-          .asFunction<_dart_clang_disposeTranslationUnit>();
+  late final _clang_disposeTranslationUnit = _clang_disposeTranslationUnit_ptr
+      .asFunction<void Function(CXTranslationUnit)>();
 
   /// Returns the set of flags that is suitable for reparsing a translation
   /// unit.
@@ -1706,7 +1805,7 @@ class LibClang {
   /// of reparsing. The set of optimizations enabled may change from one version
   /// to the next.
   int clang_defaultReparseOptions(
-    ffi.Pointer<CXTranslationUnitImpl> TU,
+    CXTranslationUnit TU,
   ) {
     return _clang_defaultReparseOptions(
       TU,
@@ -1714,11 +1813,10 @@ class LibClang {
   }
 
   late final _clang_defaultReparseOptions_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_defaultReparseOptions>>(
+      _lookup<ffi.NativeFunction<ffi.Uint32 Function(CXTranslationUnit)>>(
           'clang_defaultReparseOptions');
-  late final _dart_clang_defaultReparseOptions _clang_defaultReparseOptions =
-      _clang_defaultReparseOptions_ptr
-          .asFunction<_dart_clang_defaultReparseOptions>();
+  late final _clang_defaultReparseOptions = _clang_defaultReparseOptions_ptr
+      .asFunction<int Function(CXTranslationUnit)>();
 
   /// Reparse the source files that produced this translation unit.
   ///
@@ -1758,7 +1856,7 @@ class LibClang {
   /// \c clang_disposeTranslationUnit(TU).  The error codes returned by this
   /// routine are described by the \c CXErrorCode enum.
   int clang_reparseTranslationUnit(
-    ffi.Pointer<CXTranslationUnitImpl> TU,
+    CXTranslationUnit TU,
     int num_unsaved_files,
     ffi.Pointer<CXUnsavedFile> unsaved_files,
     int options,
@@ -1771,12 +1869,17 @@ class LibClang {
     );
   }
 
-  late final _clang_reparseTranslationUnit_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_reparseTranslationUnit>>(
-          'clang_reparseTranslationUnit');
-  late final _dart_clang_reparseTranslationUnit _clang_reparseTranslationUnit =
-      _clang_reparseTranslationUnit_ptr
-          .asFunction<_dart_clang_reparseTranslationUnit>();
+  late final _clang_reparseTranslationUnit_ptr = _lookup<
+      ffi.NativeFunction<
+          ffi.Int32 Function(
+              CXTranslationUnit,
+              ffi.Uint32,
+              ffi.Pointer<CXUnsavedFile>,
+              ffi.Uint32)>>('clang_reparseTranslationUnit');
+  late final _clang_reparseTranslationUnit =
+      _clang_reparseTranslationUnit_ptr.asFunction<
+          int Function(
+              CXTranslationUnit, int, ffi.Pointer<CXUnsavedFile>, int)>();
 
   /// Returns the human-readable null-terminated C string that represents
   /// the name of the memory category.  This string should never be freed.
@@ -1789,28 +1892,26 @@ class LibClang {
   }
 
   late final _clang_getTUResourceUsageName_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getTUResourceUsageName>>(
+      _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Int8> Function(ffi.Int32)>>(
           'clang_getTUResourceUsageName');
-  late final _dart_clang_getTUResourceUsageName _clang_getTUResourceUsageName =
-      _clang_getTUResourceUsageName_ptr
-          .asFunction<_dart_clang_getTUResourceUsageName>();
+  late final _clang_getTUResourceUsageName = _clang_getTUResourceUsageName_ptr
+      .asFunction<ffi.Pointer<ffi.Int8> Function(int)>();
 
   /// Return the memory usage of a translation unit.  This object
   /// should be released with clang_disposeCXTUResourceUsage().
   CXTUResourceUsage clang_getCXTUResourceUsage(
-    ffi.Pointer<CXTranslationUnitImpl> TU,
+    CXTranslationUnit TU,
   ) {
     return _clang_getCXTUResourceUsage(
       TU,
     );
   }
 
-  late final _clang_getCXTUResourceUsage_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getCXTUResourceUsage>>(
-          'clang_getCXTUResourceUsage');
-  late final _dart_clang_getCXTUResourceUsage _clang_getCXTUResourceUsage =
-      _clang_getCXTUResourceUsage_ptr
-          .asFunction<_dart_clang_getCXTUResourceUsage>();
+  late final _clang_getCXTUResourceUsage_ptr = _lookup<
+          ffi.NativeFunction<CXTUResourceUsage Function(CXTranslationUnit)>>(
+      'clang_getCXTUResourceUsage');
+  late final _clang_getCXTUResourceUsage = _clang_getCXTUResourceUsage_ptr
+      .asFunction<CXTUResourceUsage Function(CXTranslationUnit)>();
 
   void clang_disposeCXTUResourceUsage(
     CXTUResourceUsage usage,
@@ -1821,17 +1922,17 @@ class LibClang {
   }
 
   late final _clang_disposeCXTUResourceUsage_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_disposeCXTUResourceUsage>>(
+      _lookup<ffi.NativeFunction<ffi.Void Function(CXTUResourceUsage)>>(
           'clang_disposeCXTUResourceUsage');
-  late final _dart_clang_disposeCXTUResourceUsage
-      _clang_disposeCXTUResourceUsage = _clang_disposeCXTUResourceUsage_ptr
-          .asFunction<_dart_clang_disposeCXTUResourceUsage>();
+  late final _clang_disposeCXTUResourceUsage =
+      _clang_disposeCXTUResourceUsage_ptr
+          .asFunction<void Function(CXTUResourceUsage)>();
 
   /// Get target information for this translation unit.
   ///
   /// The CXTargetInfo object cannot outlive the CXTranslationUnit object.
-  ffi.Pointer<CXTargetInfoImpl> clang_getTranslationUnitTargetInfo(
-    ffi.Pointer<CXTranslationUnitImpl> CTUnit,
+  CXTargetInfo clang_getTranslationUnitTargetInfo(
+    CXTranslationUnit CTUnit,
   ) {
     return _clang_getTranslationUnitTargetInfo(
       CTUnit,
@@ -1839,16 +1940,15 @@ class LibClang {
   }
 
   late final _clang_getTranslationUnitTargetInfo_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getTranslationUnitTargetInfo>>(
+      _lookup<ffi.NativeFunction<CXTargetInfo Function(CXTranslationUnit)>>(
           'clang_getTranslationUnitTargetInfo');
-  late final _dart_clang_getTranslationUnitTargetInfo
-      _clang_getTranslationUnitTargetInfo =
+  late final _clang_getTranslationUnitTargetInfo =
       _clang_getTranslationUnitTargetInfo_ptr
-          .asFunction<_dart_clang_getTranslationUnitTargetInfo>();
+          .asFunction<CXTargetInfo Function(CXTranslationUnit)>();
 
   /// Destroy the CXTargetInfo object.
   void clang_TargetInfo_dispose(
-    ffi.Pointer<CXTargetInfoImpl> Info,
+    CXTargetInfo Info,
   ) {
     return _clang_TargetInfo_dispose(
       Info,
@@ -1856,17 +1956,16 @@ class LibClang {
   }
 
   late final _clang_TargetInfo_dispose_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_TargetInfo_dispose>>(
+      _lookup<ffi.NativeFunction<ffi.Void Function(CXTargetInfo)>>(
           'clang_TargetInfo_dispose');
-  late final _dart_clang_TargetInfo_dispose _clang_TargetInfo_dispose =
-      _clang_TargetInfo_dispose_ptr
-          .asFunction<_dart_clang_TargetInfo_dispose>();
+  late final _clang_TargetInfo_dispose =
+      _clang_TargetInfo_dispose_ptr.asFunction<void Function(CXTargetInfo)>();
 
   /// Get the normalized target triple as a string.
   ///
   /// Returns the empty string in case of any error.
   CXString clang_TargetInfo_getTriple(
-    ffi.Pointer<CXTargetInfoImpl> Info,
+    CXTargetInfo Info,
   ) {
     return _clang_TargetInfo_getTriple(
       Info,
@@ -1874,17 +1973,16 @@ class LibClang {
   }
 
   late final _clang_TargetInfo_getTriple_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_TargetInfo_getTriple>>(
+      _lookup<ffi.NativeFunction<CXString Function(CXTargetInfo)>>(
           'clang_TargetInfo_getTriple');
-  late final _dart_clang_TargetInfo_getTriple _clang_TargetInfo_getTriple =
-      _clang_TargetInfo_getTriple_ptr
-          .asFunction<_dart_clang_TargetInfo_getTriple>();
+  late final _clang_TargetInfo_getTriple = _clang_TargetInfo_getTriple_ptr
+      .asFunction<CXString Function(CXTargetInfo)>();
 
   /// Get the pointer width of the target in bits.
   ///
   /// Returns -1 in case of error.
   int clang_TargetInfo_getPointerWidth(
-    ffi.Pointer<CXTargetInfoImpl> Info,
+    CXTargetInfo Info,
   ) {
     return _clang_TargetInfo_getPointerWidth(
       Info,
@@ -1892,11 +1990,11 @@ class LibClang {
   }
 
   late final _clang_TargetInfo_getPointerWidth_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_TargetInfo_getPointerWidth>>(
+      _lookup<ffi.NativeFunction<ffi.Int32 Function(CXTargetInfo)>>(
           'clang_TargetInfo_getPointerWidth');
-  late final _dart_clang_TargetInfo_getPointerWidth
-      _clang_TargetInfo_getPointerWidth = _clang_TargetInfo_getPointerWidth_ptr
-          .asFunction<_dart_clang_TargetInfo_getPointerWidth>();
+  late final _clang_TargetInfo_getPointerWidth =
+      _clang_TargetInfo_getPointerWidth_ptr
+          .asFunction<int Function(CXTargetInfo)>();
 
   /// Retrieve the NULL cursor, which represents no entity.
   CXCursor clang_getNullCursor() {
@@ -1904,17 +2002,16 @@ class LibClang {
   }
 
   late final _clang_getNullCursor_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getNullCursor>>(
-          'clang_getNullCursor');
-  late final _dart_clang_getNullCursor _clang_getNullCursor =
-      _clang_getNullCursor_ptr.asFunction<_dart_clang_getNullCursor>();
+      _lookup<ffi.NativeFunction<CXCursor Function()>>('clang_getNullCursor');
+  late final _clang_getNullCursor =
+      _clang_getNullCursor_ptr.asFunction<CXCursor Function()>();
 
   /// Retrieve the cursor that represents the given translation unit.
   ///
   /// The translation unit cursor can be used to start traversing the
   /// various declarations within the given translation unit.
   CXCursor clang_getTranslationUnitCursor(
-    ffi.Pointer<CXTranslationUnitImpl> arg0,
+    CXTranslationUnit arg0,
   ) {
     return _clang_getTranslationUnitCursor(
       arg0,
@@ -1922,11 +2019,11 @@ class LibClang {
   }
 
   late final _clang_getTranslationUnitCursor_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getTranslationUnitCursor>>(
+      _lookup<ffi.NativeFunction<CXCursor Function(CXTranslationUnit)>>(
           'clang_getTranslationUnitCursor');
-  late final _dart_clang_getTranslationUnitCursor
-      _clang_getTranslationUnitCursor = _clang_getTranslationUnitCursor_ptr
-          .asFunction<_dart_clang_getTranslationUnitCursor>();
+  late final _clang_getTranslationUnitCursor =
+      _clang_getTranslationUnitCursor_ptr
+          .asFunction<CXCursor Function(CXTranslationUnit)>();
 
   /// Determine whether two cursors are equivalent.
   int clang_equalCursors(
@@ -1940,10 +2037,10 @@ class LibClang {
   }
 
   late final _clang_equalCursors_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_equalCursors>>(
+      _lookup<ffi.NativeFunction<ffi.Uint32 Function(CXCursor, CXCursor)>>(
           'clang_equalCursors');
-  late final _dart_clang_equalCursors _clang_equalCursors =
-      _clang_equalCursors_ptr.asFunction<_dart_clang_equalCursors>();
+  late final _clang_equalCursors =
+      _clang_equalCursors_ptr.asFunction<int Function(CXCursor, CXCursor)>();
 
   /// Returns non-zero if \p cursor is null.
   int clang_Cursor_isNull(
@@ -1955,10 +2052,10 @@ class LibClang {
   }
 
   late final _clang_Cursor_isNull_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_Cursor_isNull>>(
+      _lookup<ffi.NativeFunction<ffi.Int32 Function(CXCursor)>>(
           'clang_Cursor_isNull');
-  late final _dart_clang_Cursor_isNull _clang_Cursor_isNull =
-      _clang_Cursor_isNull_ptr.asFunction<_dart_clang_Cursor_isNull>();
+  late final _clang_Cursor_isNull =
+      _clang_Cursor_isNull_ptr.asFunction<int Function(CXCursor)>();
 
   /// Compute a hash value for the given cursor.
   int clang_hashCursor(
@@ -1970,9 +2067,10 @@ class LibClang {
   }
 
   late final _clang_hashCursor_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_hashCursor>>('clang_hashCursor');
-  late final _dart_clang_hashCursor _clang_hashCursor =
-      _clang_hashCursor_ptr.asFunction<_dart_clang_hashCursor>();
+      _lookup<ffi.NativeFunction<ffi.Uint32 Function(CXCursor)>>(
+          'clang_hashCursor');
+  late final _clang_hashCursor =
+      _clang_hashCursor_ptr.asFunction<int Function(CXCursor)>();
 
   /// Retrieve the kind of the given cursor.
   int clang_getCursorKind(
@@ -1984,10 +2082,10 @@ class LibClang {
   }
 
   late final _clang_getCursorKind_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getCursorKind>>(
+      _lookup<ffi.NativeFunction<ffi.Int32 Function(CXCursor)>>(
           'clang_getCursorKind');
-  late final _dart_clang_getCursorKind _clang_getCursorKind =
-      _clang_getCursorKind_ptr.asFunction<_dart_clang_getCursorKind>();
+  late final _clang_getCursorKind =
+      _clang_getCursorKind_ptr.asFunction<int Function(CXCursor)>();
 
   /// Determine whether the given cursor kind represents a declaration.
   int clang_isDeclaration(
@@ -1999,10 +2097,10 @@ class LibClang {
   }
 
   late final _clang_isDeclaration_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_isDeclaration>>(
+      _lookup<ffi.NativeFunction<ffi.Uint32 Function(ffi.Int32)>>(
           'clang_isDeclaration');
-  late final _dart_clang_isDeclaration _clang_isDeclaration =
-      _clang_isDeclaration_ptr.asFunction<_dart_clang_isDeclaration>();
+  late final _clang_isDeclaration =
+      _clang_isDeclaration_ptr.asFunction<int Function(int)>();
 
   /// Determine whether the given declaration is invalid.
   ///
@@ -2019,11 +2117,10 @@ class LibClang {
   }
 
   late final _clang_isInvalidDeclaration_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_isInvalidDeclaration>>(
+      _lookup<ffi.NativeFunction<ffi.Uint32 Function(CXCursor)>>(
           'clang_isInvalidDeclaration');
-  late final _dart_clang_isInvalidDeclaration _clang_isInvalidDeclaration =
-      _clang_isInvalidDeclaration_ptr
-          .asFunction<_dart_clang_isInvalidDeclaration>();
+  late final _clang_isInvalidDeclaration =
+      _clang_isInvalidDeclaration_ptr.asFunction<int Function(CXCursor)>();
 
   /// Determine whether the given cursor kind represents a simple
   /// reference.
@@ -2040,10 +2137,10 @@ class LibClang {
   }
 
   late final _clang_isReference_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_isReference>>(
+      _lookup<ffi.NativeFunction<ffi.Uint32 Function(ffi.Int32)>>(
           'clang_isReference');
-  late final _dart_clang_isReference _clang_isReference =
-      _clang_isReference_ptr.asFunction<_dart_clang_isReference>();
+  late final _clang_isReference =
+      _clang_isReference_ptr.asFunction<int Function(int)>();
 
   /// Determine whether the given cursor kind represents an expression.
   int clang_isExpression(
@@ -2055,10 +2152,10 @@ class LibClang {
   }
 
   late final _clang_isExpression_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_isExpression>>(
+      _lookup<ffi.NativeFunction<ffi.Uint32 Function(ffi.Int32)>>(
           'clang_isExpression');
-  late final _dart_clang_isExpression _clang_isExpression =
-      _clang_isExpression_ptr.asFunction<_dart_clang_isExpression>();
+  late final _clang_isExpression =
+      _clang_isExpression_ptr.asFunction<int Function(int)>();
 
   /// Determine whether the given cursor kind represents a statement.
   int clang_isStatement(
@@ -2070,10 +2167,10 @@ class LibClang {
   }
 
   late final _clang_isStatement_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_isStatement>>(
+      _lookup<ffi.NativeFunction<ffi.Uint32 Function(ffi.Int32)>>(
           'clang_isStatement');
-  late final _dart_clang_isStatement _clang_isStatement =
-      _clang_isStatement_ptr.asFunction<_dart_clang_isStatement>();
+  late final _clang_isStatement =
+      _clang_isStatement_ptr.asFunction<int Function(int)>();
 
   /// Determine whether the given cursor kind represents an attribute.
   int clang_isAttribute(
@@ -2085,10 +2182,10 @@ class LibClang {
   }
 
   late final _clang_isAttribute_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_isAttribute>>(
+      _lookup<ffi.NativeFunction<ffi.Uint32 Function(ffi.Int32)>>(
           'clang_isAttribute');
-  late final _dart_clang_isAttribute _clang_isAttribute =
-      _clang_isAttribute_ptr.asFunction<_dart_clang_isAttribute>();
+  late final _clang_isAttribute =
+      _clang_isAttribute_ptr.asFunction<int Function(int)>();
 
   /// Determine whether the given cursor has any attributes.
   int clang_Cursor_hasAttrs(
@@ -2100,10 +2197,10 @@ class LibClang {
   }
 
   late final _clang_Cursor_hasAttrs_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_Cursor_hasAttrs>>(
+      _lookup<ffi.NativeFunction<ffi.Uint32 Function(CXCursor)>>(
           'clang_Cursor_hasAttrs');
-  late final _dart_clang_Cursor_hasAttrs _clang_Cursor_hasAttrs =
-      _clang_Cursor_hasAttrs_ptr.asFunction<_dart_clang_Cursor_hasAttrs>();
+  late final _clang_Cursor_hasAttrs =
+      _clang_Cursor_hasAttrs_ptr.asFunction<int Function(CXCursor)>();
 
   /// Determine whether the given cursor kind represents an invalid
   /// cursor.
@@ -2116,9 +2213,10 @@ class LibClang {
   }
 
   late final _clang_isInvalid_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_isInvalid>>('clang_isInvalid');
-  late final _dart_clang_isInvalid _clang_isInvalid =
-      _clang_isInvalid_ptr.asFunction<_dart_clang_isInvalid>();
+      _lookup<ffi.NativeFunction<ffi.Uint32 Function(ffi.Int32)>>(
+          'clang_isInvalid');
+  late final _clang_isInvalid =
+      _clang_isInvalid_ptr.asFunction<int Function(int)>();
 
   /// Determine whether the given cursor kind represents a translation
   /// unit.
@@ -2131,10 +2229,10 @@ class LibClang {
   }
 
   late final _clang_isTranslationUnit_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_isTranslationUnit>>(
+      _lookup<ffi.NativeFunction<ffi.Uint32 Function(ffi.Int32)>>(
           'clang_isTranslationUnit');
-  late final _dart_clang_isTranslationUnit _clang_isTranslationUnit =
-      _clang_isTranslationUnit_ptr.asFunction<_dart_clang_isTranslationUnit>();
+  late final _clang_isTranslationUnit =
+      _clang_isTranslationUnit_ptr.asFunction<int Function(int)>();
 
   /// Determine whether the given cursor represents a preprocessing
   /// element, such as a preprocessor directive or macro instantiation.
@@ -2147,10 +2245,10 @@ class LibClang {
   }
 
   late final _clang_isPreprocessing_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_isPreprocessing>>(
+      _lookup<ffi.NativeFunction<ffi.Uint32 Function(ffi.Int32)>>(
           'clang_isPreprocessing');
-  late final _dart_clang_isPreprocessing _clang_isPreprocessing =
-      _clang_isPreprocessing_ptr.asFunction<_dart_clang_isPreprocessing>();
+  late final _clang_isPreprocessing =
+      _clang_isPreprocessing_ptr.asFunction<int Function(int)>();
 
   /// Determine whether the given cursor represents a currently
   /// unexposed piece of the AST (e.g., CXCursor_UnexposedStmt).
@@ -2163,10 +2261,10 @@ class LibClang {
   }
 
   late final _clang_isUnexposed_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_isUnexposed>>(
+      _lookup<ffi.NativeFunction<ffi.Uint32 Function(ffi.Int32)>>(
           'clang_isUnexposed');
-  late final _dart_clang_isUnexposed _clang_isUnexposed =
-      _clang_isUnexposed_ptr.asFunction<_dart_clang_isUnexposed>();
+  late final _clang_isUnexposed =
+      _clang_isUnexposed_ptr.asFunction<int Function(int)>();
 
   /// Determine the linkage of the entity referred to by a given cursor.
   int clang_getCursorLinkage(
@@ -2178,10 +2276,10 @@ class LibClang {
   }
 
   late final _clang_getCursorLinkage_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getCursorLinkage>>(
+      _lookup<ffi.NativeFunction<ffi.Int32 Function(CXCursor)>>(
           'clang_getCursorLinkage');
-  late final _dart_clang_getCursorLinkage _clang_getCursorLinkage =
-      _clang_getCursorLinkage_ptr.asFunction<_dart_clang_getCursorLinkage>();
+  late final _clang_getCursorLinkage =
+      _clang_getCursorLinkage_ptr.asFunction<int Function(CXCursor)>();
 
   /// Describe the visibility of the entity referred to by a cursor.
   ///
@@ -2201,11 +2299,10 @@ class LibClang {
   }
 
   late final _clang_getCursorVisibility_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getCursorVisibility>>(
+      _lookup<ffi.NativeFunction<ffi.Int32 Function(CXCursor)>>(
           'clang_getCursorVisibility');
-  late final _dart_clang_getCursorVisibility _clang_getCursorVisibility =
-      _clang_getCursorVisibility_ptr
-          .asFunction<_dart_clang_getCursorVisibility>();
+  late final _clang_getCursorVisibility =
+      _clang_getCursorVisibility_ptr.asFunction<int Function(CXCursor)>();
 
   /// Determine the availability of the entity that this cursor refers to,
   /// taking the current target platform into account.
@@ -2222,11 +2319,10 @@ class LibClang {
   }
 
   late final _clang_getCursorAvailability_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getCursorAvailability>>(
+      _lookup<ffi.NativeFunction<ffi.Int32 Function(CXCursor)>>(
           'clang_getCursorAvailability');
-  late final _dart_clang_getCursorAvailability _clang_getCursorAvailability =
-      _clang_getCursorAvailability_ptr
-          .asFunction<_dart_clang_getCursorAvailability>();
+  late final _clang_getCursorAvailability =
+      _clang_getCursorAvailability_ptr.asFunction<int Function(CXCursor)>();
 
   /// Determine the availability of the entity that this cursor refers to
   /// on any platforms for which availability information is known.
@@ -2282,13 +2378,26 @@ class LibClang {
     );
   }
 
-  late final _clang_getCursorPlatformAvailability_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getCursorPlatformAvailability>>(
-          'clang_getCursorPlatformAvailability');
-  late final _dart_clang_getCursorPlatformAvailability
-      _clang_getCursorPlatformAvailability =
-      _clang_getCursorPlatformAvailability_ptr
-          .asFunction<_dart_clang_getCursorPlatformAvailability>();
+  late final _clang_getCursorPlatformAvailability_ptr = _lookup<
+      ffi.NativeFunction<
+          ffi.Int32 Function(
+              CXCursor,
+              ffi.Pointer<ffi.Int32>,
+              ffi.Pointer<CXString>,
+              ffi.Pointer<ffi.Int32>,
+              ffi.Pointer<CXString>,
+              ffi.Pointer<CXPlatformAvailability>,
+              ffi.Int32)>>('clang_getCursorPlatformAvailability');
+  late final _clang_getCursorPlatformAvailability =
+      _clang_getCursorPlatformAvailability_ptr.asFunction<
+          int Function(
+              CXCursor,
+              ffi.Pointer<ffi.Int32>,
+              ffi.Pointer<CXString>,
+              ffi.Pointer<ffi.Int32>,
+              ffi.Pointer<CXString>,
+              ffi.Pointer<CXPlatformAvailability>,
+              int)>();
 
   /// Free the memory associated with a \c CXPlatformAvailability structure.
   void clang_disposeCXPlatformAvailability(
@@ -2299,13 +2408,13 @@ class LibClang {
     );
   }
 
-  late final _clang_disposeCXPlatformAvailability_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_disposeCXPlatformAvailability>>(
-          'clang_disposeCXPlatformAvailability');
-  late final _dart_clang_disposeCXPlatformAvailability
-      _clang_disposeCXPlatformAvailability =
+  late final _clang_disposeCXPlatformAvailability_ptr = _lookup<
+          ffi.NativeFunction<
+              ffi.Void Function(ffi.Pointer<CXPlatformAvailability>)>>(
+      'clang_disposeCXPlatformAvailability');
+  late final _clang_disposeCXPlatformAvailability =
       _clang_disposeCXPlatformAvailability_ptr
-          .asFunction<_dart_clang_disposeCXPlatformAvailability>();
+          .asFunction<void Function(ffi.Pointer<CXPlatformAvailability>)>();
 
   /// Determine the "language" of the entity referred to by a given cursor.
   int clang_getCursorLanguage(
@@ -2317,10 +2426,10 @@ class LibClang {
   }
 
   late final _clang_getCursorLanguage_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getCursorLanguage>>(
+      _lookup<ffi.NativeFunction<ffi.Int32 Function(CXCursor)>>(
           'clang_getCursorLanguage');
-  late final _dart_clang_getCursorLanguage _clang_getCursorLanguage =
-      _clang_getCursorLanguage_ptr.asFunction<_dart_clang_getCursorLanguage>();
+  late final _clang_getCursorLanguage =
+      _clang_getCursorLanguage_ptr.asFunction<int Function(CXCursor)>();
 
   /// Determine the "thread-local storage (TLS) kind" of the declaration
   /// referred to by a cursor.
@@ -2333,13 +2442,13 @@ class LibClang {
   }
 
   late final _clang_getCursorTLSKind_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getCursorTLSKind>>(
+      _lookup<ffi.NativeFunction<ffi.Int32 Function(CXCursor)>>(
           'clang_getCursorTLSKind');
-  late final _dart_clang_getCursorTLSKind _clang_getCursorTLSKind =
-      _clang_getCursorTLSKind_ptr.asFunction<_dart_clang_getCursorTLSKind>();
+  late final _clang_getCursorTLSKind =
+      _clang_getCursorTLSKind_ptr.asFunction<int Function(CXCursor)>();
 
   /// Returns the translation unit that a cursor originated from.
-  ffi.Pointer<CXTranslationUnitImpl> clang_Cursor_getTranslationUnit(
+  CXTranslationUnit clang_Cursor_getTranslationUnit(
     CXCursor arg0,
   ) {
     return _clang_Cursor_getTranslationUnit(
@@ -2348,26 +2457,26 @@ class LibClang {
   }
 
   late final _clang_Cursor_getTranslationUnit_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_Cursor_getTranslationUnit>>(
+      _lookup<ffi.NativeFunction<CXTranslationUnit Function(CXCursor)>>(
           'clang_Cursor_getTranslationUnit');
-  late final _dart_clang_Cursor_getTranslationUnit
-      _clang_Cursor_getTranslationUnit = _clang_Cursor_getTranslationUnit_ptr
-          .asFunction<_dart_clang_Cursor_getTranslationUnit>();
+  late final _clang_Cursor_getTranslationUnit =
+      _clang_Cursor_getTranslationUnit_ptr
+          .asFunction<CXTranslationUnit Function(CXCursor)>();
 
   /// Creates an empty CXCursorSet.
-  ffi.Pointer<CXCursorSetImpl> clang_createCXCursorSet() {
+  CXCursorSet clang_createCXCursorSet() {
     return _clang_createCXCursorSet();
   }
 
   late final _clang_createCXCursorSet_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_createCXCursorSet>>(
+      _lookup<ffi.NativeFunction<CXCursorSet Function()>>(
           'clang_createCXCursorSet');
-  late final _dart_clang_createCXCursorSet _clang_createCXCursorSet =
-      _clang_createCXCursorSet_ptr.asFunction<_dart_clang_createCXCursorSet>();
+  late final _clang_createCXCursorSet =
+      _clang_createCXCursorSet_ptr.asFunction<CXCursorSet Function()>();
 
   /// Disposes a CXCursorSet and releases its associated memory.
   void clang_disposeCXCursorSet(
-    ffi.Pointer<CXCursorSetImpl> cset,
+    CXCursorSet cset,
   ) {
     return _clang_disposeCXCursorSet(
       cset,
@@ -2375,17 +2484,16 @@ class LibClang {
   }
 
   late final _clang_disposeCXCursorSet_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_disposeCXCursorSet>>(
+      _lookup<ffi.NativeFunction<ffi.Void Function(CXCursorSet)>>(
           'clang_disposeCXCursorSet');
-  late final _dart_clang_disposeCXCursorSet _clang_disposeCXCursorSet =
-      _clang_disposeCXCursorSet_ptr
-          .asFunction<_dart_clang_disposeCXCursorSet>();
+  late final _clang_disposeCXCursorSet =
+      _clang_disposeCXCursorSet_ptr.asFunction<void Function(CXCursorSet)>();
 
   /// Queries a CXCursorSet to see if it contains a specific CXCursor.
   ///
   /// \returns non-zero if the set contains the specified cursor.
   int clang_CXCursorSet_contains(
-    ffi.Pointer<CXCursorSetImpl> cset,
+    CXCursorSet cset,
     CXCursor cursor,
   ) {
     return _clang_CXCursorSet_contains(
@@ -2395,17 +2503,16 @@ class LibClang {
   }
 
   late final _clang_CXCursorSet_contains_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_CXCursorSet_contains>>(
+      _lookup<ffi.NativeFunction<ffi.Uint32 Function(CXCursorSet, CXCursor)>>(
           'clang_CXCursorSet_contains');
-  late final _dart_clang_CXCursorSet_contains _clang_CXCursorSet_contains =
-      _clang_CXCursorSet_contains_ptr
-          .asFunction<_dart_clang_CXCursorSet_contains>();
+  late final _clang_CXCursorSet_contains = _clang_CXCursorSet_contains_ptr
+      .asFunction<int Function(CXCursorSet, CXCursor)>();
 
   /// Inserts a CXCursor into a CXCursorSet.
   ///
   /// \returns zero if the CXCursor was already in the set, and non-zero otherwise.
   int clang_CXCursorSet_insert(
-    ffi.Pointer<CXCursorSetImpl> cset,
+    CXCursorSet cset,
     CXCursor cursor,
   ) {
     return _clang_CXCursorSet_insert(
@@ -2415,11 +2522,10 @@ class LibClang {
   }
 
   late final _clang_CXCursorSet_insert_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_CXCursorSet_insert>>(
+      _lookup<ffi.NativeFunction<ffi.Uint32 Function(CXCursorSet, CXCursor)>>(
           'clang_CXCursorSet_insert');
-  late final _dart_clang_CXCursorSet_insert _clang_CXCursorSet_insert =
-      _clang_CXCursorSet_insert_ptr
-          .asFunction<_dart_clang_CXCursorSet_insert>();
+  late final _clang_CXCursorSet_insert = _clang_CXCursorSet_insert_ptr
+      .asFunction<int Function(CXCursorSet, CXCursor)>();
 
   /// Determine the semantic parent of the given cursor.
   ///
@@ -2461,11 +2567,10 @@ class LibClang {
   }
 
   late final _clang_getCursorSemanticParent_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getCursorSemanticParent>>(
+      _lookup<ffi.NativeFunction<CXCursor Function(CXCursor)>>(
           'clang_getCursorSemanticParent');
-  late final _dart_clang_getCursorSemanticParent
-      _clang_getCursorSemanticParent = _clang_getCursorSemanticParent_ptr
-          .asFunction<_dart_clang_getCursorSemanticParent>();
+  late final _clang_getCursorSemanticParent = _clang_getCursorSemanticParent_ptr
+      .asFunction<CXCursor Function(CXCursor)>();
 
   /// Determine the lexical parent of the given cursor.
   ///
@@ -2508,11 +2613,10 @@ class LibClang {
   }
 
   late final _clang_getCursorLexicalParent_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getCursorLexicalParent>>(
+      _lookup<ffi.NativeFunction<CXCursor Function(CXCursor)>>(
           'clang_getCursorLexicalParent');
-  late final _dart_clang_getCursorLexicalParent _clang_getCursorLexicalParent =
-      _clang_getCursorLexicalParent_ptr
-          .asFunction<_dart_clang_getCursorLexicalParent>();
+  late final _clang_getCursorLexicalParent = _clang_getCursorLexicalParent_ptr
+      .asFunction<CXCursor Function(CXCursor)>();
 
   /// Determine the set of methods that are overridden by the given
   /// method.
@@ -2567,12 +2671,14 @@ class LibClang {
     );
   }
 
-  late final _clang_getOverriddenCursors_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getOverriddenCursors>>(
-          'clang_getOverriddenCursors');
-  late final _dart_clang_getOverriddenCursors _clang_getOverriddenCursors =
-      _clang_getOverriddenCursors_ptr
-          .asFunction<_dart_clang_getOverriddenCursors>();
+  late final _clang_getOverriddenCursors_ptr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(CXCursor, ffi.Pointer<ffi.Pointer<CXCursor>>,
+              ffi.Pointer<ffi.Uint32>)>>('clang_getOverriddenCursors');
+  late final _clang_getOverriddenCursors =
+      _clang_getOverriddenCursors_ptr.asFunction<
+          void Function(CXCursor, ffi.Pointer<ffi.Pointer<CXCursor>>,
+              ffi.Pointer<ffi.Uint32>)>();
 
   /// Free the set of overridden cursors returned by \c
   /// clang_getOverriddenCursors().
@@ -2585,15 +2691,15 @@ class LibClang {
   }
 
   late final _clang_disposeOverriddenCursors_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_disposeOverriddenCursors>>(
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<CXCursor>)>>(
           'clang_disposeOverriddenCursors');
-  late final _dart_clang_disposeOverriddenCursors
-      _clang_disposeOverriddenCursors = _clang_disposeOverriddenCursors_ptr
-          .asFunction<_dart_clang_disposeOverriddenCursors>();
+  late final _clang_disposeOverriddenCursors =
+      _clang_disposeOverriddenCursors_ptr
+          .asFunction<void Function(ffi.Pointer<CXCursor>)>();
 
   /// Retrieve the file that is included by the given inclusion directive
   /// cursor.
-  ffi.Pointer<ffi.Void> clang_getIncludedFile(
+  CXFile clang_getIncludedFile(
     CXCursor cursor,
   ) {
     return _clang_getIncludedFile(
@@ -2602,10 +2708,10 @@ class LibClang {
   }
 
   late final _clang_getIncludedFile_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getIncludedFile>>(
+      _lookup<ffi.NativeFunction<CXFile Function(CXCursor)>>(
           'clang_getIncludedFile');
-  late final _dart_clang_getIncludedFile _clang_getIncludedFile =
-      _clang_getIncludedFile_ptr.asFunction<_dart_clang_getIncludedFile>();
+  late final _clang_getIncludedFile =
+      _clang_getIncludedFile_ptr.asFunction<CXFile Function(CXCursor)>();
 
   /// Map a source location to the cursor that describes the entity at that
   /// location in the source code.
@@ -2621,7 +2727,7 @@ class LibClang {
   /// \returns a cursor representing the entity at the given source location, or
   /// a NULL cursor if no such entity can be found.
   CXCursor clang_getCursor(
-    ffi.Pointer<CXTranslationUnitImpl> arg0,
+    CXTranslationUnit arg0,
     CXSourceLocation arg1,
   ) {
     return _clang_getCursor(
@@ -2630,10 +2736,12 @@ class LibClang {
     );
   }
 
-  late final _clang_getCursor_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getCursor>>('clang_getCursor');
-  late final _dart_clang_getCursor _clang_getCursor =
-      _clang_getCursor_ptr.asFunction<_dart_clang_getCursor>();
+  late final _clang_getCursor_ptr = _lookup<
+      ffi.NativeFunction<
+          CXCursor Function(
+              CXTranslationUnit, CXSourceLocation)>>('clang_getCursor');
+  late final _clang_getCursor = _clang_getCursor_ptr
+      .asFunction<CXCursor Function(CXTranslationUnit, CXSourceLocation)>();
 
   /// Retrieve the physical location of the source constructor referenced
   /// by the given cursor.
@@ -2652,10 +2760,10 @@ class LibClang {
   }
 
   late final _clang_getCursorLocation_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getCursorLocation>>(
+      _lookup<ffi.NativeFunction<CXSourceLocation Function(CXCursor)>>(
           'clang_getCursorLocation');
-  late final _dart_clang_getCursorLocation _clang_getCursorLocation =
-      _clang_getCursorLocation_ptr.asFunction<_dart_clang_getCursorLocation>();
+  late final _clang_getCursorLocation = _clang_getCursorLocation_ptr
+      .asFunction<CXSourceLocation Function(CXCursor)>();
 
   /// Retrieve the physical extent of the source construct referenced by
   /// the given cursor.
@@ -2675,10 +2783,10 @@ class LibClang {
   }
 
   late final _clang_getCursorExtent_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getCursorExtent>>(
+      _lookup<ffi.NativeFunction<CXSourceRange Function(CXCursor)>>(
           'clang_getCursorExtent');
-  late final _dart_clang_getCursorExtent _clang_getCursorExtent =
-      _clang_getCursorExtent_ptr.asFunction<_dart_clang_getCursorExtent>();
+  late final _clang_getCursorExtent =
+      _clang_getCursorExtent_ptr.asFunction<CXSourceRange Function(CXCursor)>();
 
   /// Retrieve the type of a CXCursor (if any).
   CXType clang_getCursorType(
@@ -2690,10 +2798,10 @@ class LibClang {
   }
 
   late final _clang_getCursorType_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getCursorType>>(
+      _lookup<ffi.NativeFunction<CXType Function(CXCursor)>>(
           'clang_getCursorType');
-  late final _dart_clang_getCursorType _clang_getCursorType =
-      _clang_getCursorType_ptr.asFunction<_dart_clang_getCursorType>();
+  late final _clang_getCursorType =
+      _clang_getCursorType_ptr.asFunction<CXType Function(CXCursor)>();
 
   /// Pretty-print the underlying type using the rules of the
   /// language of the translation unit from which it came.
@@ -2708,10 +2816,10 @@ class LibClang {
   }
 
   late final _clang_getTypeSpelling_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getTypeSpelling>>(
+      _lookup<ffi.NativeFunction<CXString Function(CXType)>>(
           'clang_getTypeSpelling');
-  late final _dart_clang_getTypeSpelling _clang_getTypeSpelling =
-      _clang_getTypeSpelling_ptr.asFunction<_dart_clang_getTypeSpelling>();
+  late final _clang_getTypeSpelling =
+      _clang_getTypeSpelling_ptr.asFunction<CXString Function(CXType)>();
 
   /// Retrieve the underlying type of a typedef declaration.
   ///
@@ -2726,12 +2834,11 @@ class LibClang {
   }
 
   late final _clang_getTypedefDeclUnderlyingType_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getTypedefDeclUnderlyingType>>(
+      _lookup<ffi.NativeFunction<CXType Function(CXCursor)>>(
           'clang_getTypedefDeclUnderlyingType');
-  late final _dart_clang_getTypedefDeclUnderlyingType
-      _clang_getTypedefDeclUnderlyingType =
+  late final _clang_getTypedefDeclUnderlyingType =
       _clang_getTypedefDeclUnderlyingType_ptr
-          .asFunction<_dart_clang_getTypedefDeclUnderlyingType>();
+          .asFunction<CXType Function(CXCursor)>();
 
   /// Retrieve the integer type of an enum declaration.
   ///
@@ -2746,11 +2853,10 @@ class LibClang {
   }
 
   late final _clang_getEnumDeclIntegerType_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getEnumDeclIntegerType>>(
+      _lookup<ffi.NativeFunction<CXType Function(CXCursor)>>(
           'clang_getEnumDeclIntegerType');
-  late final _dart_clang_getEnumDeclIntegerType _clang_getEnumDeclIntegerType =
-      _clang_getEnumDeclIntegerType_ptr
-          .asFunction<_dart_clang_getEnumDeclIntegerType>();
+  late final _clang_getEnumDeclIntegerType =
+      _clang_getEnumDeclIntegerType_ptr.asFunction<CXType Function(CXCursor)>();
 
   /// Retrieve the integer value of an enum constant declaration as a signed
   /// long long.
@@ -2767,11 +2873,10 @@ class LibClang {
   }
 
   late final _clang_getEnumConstantDeclValue_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getEnumConstantDeclValue>>(
+      _lookup<ffi.NativeFunction<ffi.Int64 Function(CXCursor)>>(
           'clang_getEnumConstantDeclValue');
-  late final _dart_clang_getEnumConstantDeclValue
-      _clang_getEnumConstantDeclValue = _clang_getEnumConstantDeclValue_ptr
-          .asFunction<_dart_clang_getEnumConstantDeclValue>();
+  late final _clang_getEnumConstantDeclValue =
+      _clang_getEnumConstantDeclValue_ptr.asFunction<int Function(CXCursor)>();
 
   /// Retrieve the integer value of an enum constant declaration as an unsigned
   /// long long.
@@ -2787,13 +2892,12 @@ class LibClang {
     );
   }
 
-  late final _clang_getEnumConstantDeclUnsignedValue_ptr = _lookup<
-          ffi.NativeFunction<Native_clang_getEnumConstantDeclUnsignedValue>>(
-      'clang_getEnumConstantDeclUnsignedValue');
-  late final _dart_clang_getEnumConstantDeclUnsignedValue
-      _clang_getEnumConstantDeclUnsignedValue =
+  late final _clang_getEnumConstantDeclUnsignedValue_ptr =
+      _lookup<ffi.NativeFunction<ffi.Uint64 Function(CXCursor)>>(
+          'clang_getEnumConstantDeclUnsignedValue');
+  late final _clang_getEnumConstantDeclUnsignedValue =
       _clang_getEnumConstantDeclUnsignedValue_ptr
-          .asFunction<_dart_clang_getEnumConstantDeclUnsignedValue>();
+          .asFunction<int Function(CXCursor)>();
 
   /// Retrieve the bit width of a bit field declaration as an integer.
   ///
@@ -2807,11 +2911,10 @@ class LibClang {
   }
 
   late final _clang_getFieldDeclBitWidth_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getFieldDeclBitWidth>>(
+      _lookup<ffi.NativeFunction<ffi.Int32 Function(CXCursor)>>(
           'clang_getFieldDeclBitWidth');
-  late final _dart_clang_getFieldDeclBitWidth _clang_getFieldDeclBitWidth =
-      _clang_getFieldDeclBitWidth_ptr
-          .asFunction<_dart_clang_getFieldDeclBitWidth>();
+  late final _clang_getFieldDeclBitWidth =
+      _clang_getFieldDeclBitWidth_ptr.asFunction<int Function(CXCursor)>();
 
   /// Retrieve the number of non-variadic arguments associated with a given
   /// cursor.
@@ -2827,11 +2930,10 @@ class LibClang {
   }
 
   late final _clang_Cursor_getNumArguments_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_Cursor_getNumArguments>>(
+      _lookup<ffi.NativeFunction<ffi.Int32 Function(CXCursor)>>(
           'clang_Cursor_getNumArguments');
-  late final _dart_clang_Cursor_getNumArguments _clang_Cursor_getNumArguments =
-      _clang_Cursor_getNumArguments_ptr
-          .asFunction<_dart_clang_Cursor_getNumArguments>();
+  late final _clang_Cursor_getNumArguments =
+      _clang_Cursor_getNumArguments_ptr.asFunction<int Function(CXCursor)>();
 
   /// Retrieve the argument cursor of a function or method.
   ///
@@ -2849,11 +2951,10 @@ class LibClang {
   }
 
   late final _clang_Cursor_getArgument_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_Cursor_getArgument>>(
+      _lookup<ffi.NativeFunction<CXCursor Function(CXCursor, ffi.Uint32)>>(
           'clang_Cursor_getArgument');
-  late final _dart_clang_Cursor_getArgument _clang_Cursor_getArgument =
-      _clang_Cursor_getArgument_ptr
-          .asFunction<_dart_clang_Cursor_getArgument>();
+  late final _clang_Cursor_getArgument = _clang_Cursor_getArgument_ptr
+      .asFunction<CXCursor Function(CXCursor, int)>();
 
   /// Returns the number of template args of a function decl representing a
   /// template specialization.
@@ -2878,12 +2979,11 @@ class LibClang {
   }
 
   late final _clang_Cursor_getNumTemplateArguments_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_Cursor_getNumTemplateArguments>>(
+      _lookup<ffi.NativeFunction<ffi.Int32 Function(CXCursor)>>(
           'clang_Cursor_getNumTemplateArguments');
-  late final _dart_clang_Cursor_getNumTemplateArguments
-      _clang_Cursor_getNumTemplateArguments =
+  late final _clang_Cursor_getNumTemplateArguments =
       _clang_Cursor_getNumTemplateArguments_ptr
-          .asFunction<_dart_clang_Cursor_getNumTemplateArguments>();
+          .asFunction<int Function(CXCursor)>();
 
   /// Retrieve the kind of the I'th template argument of the CXCursor C.
   ///
@@ -2910,12 +3010,11 @@ class LibClang {
   }
 
   late final _clang_Cursor_getTemplateArgumentKind_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_Cursor_getTemplateArgumentKind>>(
+      _lookup<ffi.NativeFunction<ffi.Int32 Function(CXCursor, ffi.Uint32)>>(
           'clang_Cursor_getTemplateArgumentKind');
-  late final _dart_clang_Cursor_getTemplateArgumentKind
-      _clang_Cursor_getTemplateArgumentKind =
+  late final _clang_Cursor_getTemplateArgumentKind =
       _clang_Cursor_getTemplateArgumentKind_ptr
-          .asFunction<_dart_clang_Cursor_getTemplateArgumentKind>();
+          .asFunction<int Function(CXCursor, int)>();
 
   /// Retrieve a CXType representing the type of a TemplateArgument of a
   /// function decl representing a template specialization.
@@ -2944,12 +3043,11 @@ class LibClang {
   }
 
   late final _clang_Cursor_getTemplateArgumentType_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_Cursor_getTemplateArgumentType>>(
+      _lookup<ffi.NativeFunction<CXType Function(CXCursor, ffi.Uint32)>>(
           'clang_Cursor_getTemplateArgumentType');
-  late final _dart_clang_Cursor_getTemplateArgumentType
-      _clang_Cursor_getTemplateArgumentType =
+  late final _clang_Cursor_getTemplateArgumentType =
       _clang_Cursor_getTemplateArgumentType_ptr
-          .asFunction<_dart_clang_Cursor_getTemplateArgumentType>();
+          .asFunction<CXType Function(CXCursor, int)>();
 
   /// Retrieve the value of an Integral TemplateArgument (of a function
   /// decl representing a template specialization) as a signed long long.
@@ -2977,12 +3075,11 @@ class LibClang {
   }
 
   late final _clang_Cursor_getTemplateArgumentValue_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_Cursor_getTemplateArgumentValue>>(
+      _lookup<ffi.NativeFunction<ffi.Int64 Function(CXCursor, ffi.Uint32)>>(
           'clang_Cursor_getTemplateArgumentValue');
-  late final _dart_clang_Cursor_getTemplateArgumentValue
-      _clang_Cursor_getTemplateArgumentValue =
+  late final _clang_Cursor_getTemplateArgumentValue =
       _clang_Cursor_getTemplateArgumentValue_ptr
-          .asFunction<_dart_clang_Cursor_getTemplateArgumentValue>();
+          .asFunction<int Function(CXCursor, int)>();
 
   /// Retrieve the value of an Integral TemplateArgument (of a function
   /// decl representing a template specialization) as an unsigned long long.
@@ -3009,14 +3106,12 @@ class LibClang {
     );
   }
 
-  late final _clang_Cursor_getTemplateArgumentUnsignedValue_ptr = _lookup<
-          ffi.NativeFunction<
-              Native_clang_Cursor_getTemplateArgumentUnsignedValue>>(
-      'clang_Cursor_getTemplateArgumentUnsignedValue');
-  late final _dart_clang_Cursor_getTemplateArgumentUnsignedValue
-      _clang_Cursor_getTemplateArgumentUnsignedValue =
+  late final _clang_Cursor_getTemplateArgumentUnsignedValue_ptr =
+      _lookup<ffi.NativeFunction<ffi.Uint64 Function(CXCursor, ffi.Uint32)>>(
+          'clang_Cursor_getTemplateArgumentUnsignedValue');
+  late final _clang_Cursor_getTemplateArgumentUnsignedValue =
       _clang_Cursor_getTemplateArgumentUnsignedValue_ptr
-          .asFunction<_dart_clang_Cursor_getTemplateArgumentUnsignedValue>();
+          .asFunction<int Function(CXCursor, int)>();
 
   /// Determine whether two CXTypes represent the same type.
   ///
@@ -3033,9 +3128,10 @@ class LibClang {
   }
 
   late final _clang_equalTypes_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_equalTypes>>('clang_equalTypes');
-  late final _dart_clang_equalTypes _clang_equalTypes =
-      _clang_equalTypes_ptr.asFunction<_dart_clang_equalTypes>();
+      _lookup<ffi.NativeFunction<ffi.Uint32 Function(CXType, CXType)>>(
+          'clang_equalTypes');
+  late final _clang_equalTypes =
+      _clang_equalTypes_ptr.asFunction<int Function(CXType, CXType)>();
 
   /// Return the canonical type for a CXType.
   ///
@@ -3052,10 +3148,10 @@ class LibClang {
   }
 
   late final _clang_getCanonicalType_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getCanonicalType>>(
+      _lookup<ffi.NativeFunction<CXType Function(CXType)>>(
           'clang_getCanonicalType');
-  late final _dart_clang_getCanonicalType _clang_getCanonicalType =
-      _clang_getCanonicalType_ptr.asFunction<_dart_clang_getCanonicalType>();
+  late final _clang_getCanonicalType =
+      _clang_getCanonicalType_ptr.asFunction<CXType Function(CXType)>();
 
   /// Determine whether a CXType has the "const" qualifier set,
   /// without looking through typedefs that may have added "const" at a
@@ -3069,11 +3165,10 @@ class LibClang {
   }
 
   late final _clang_isConstQualifiedType_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_isConstQualifiedType>>(
+      _lookup<ffi.NativeFunction<ffi.Uint32 Function(CXType)>>(
           'clang_isConstQualifiedType');
-  late final _dart_clang_isConstQualifiedType _clang_isConstQualifiedType =
-      _clang_isConstQualifiedType_ptr
-          .asFunction<_dart_clang_isConstQualifiedType>();
+  late final _clang_isConstQualifiedType =
+      _clang_isConstQualifiedType_ptr.asFunction<int Function(CXType)>();
 
   /// Determine whether a  CXCursor that is a macro, is
   /// function like.
@@ -3086,11 +3181,11 @@ class LibClang {
   }
 
   late final _clang_Cursor_isMacroFunctionLike_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_Cursor_isMacroFunctionLike>>(
+      _lookup<ffi.NativeFunction<ffi.Uint32 Function(CXCursor)>>(
           'clang_Cursor_isMacroFunctionLike');
-  late final _dart_clang_Cursor_isMacroFunctionLike
-      _clang_Cursor_isMacroFunctionLike = _clang_Cursor_isMacroFunctionLike_ptr
-          .asFunction<_dart_clang_Cursor_isMacroFunctionLike>();
+  late final _clang_Cursor_isMacroFunctionLike =
+      _clang_Cursor_isMacroFunctionLike_ptr
+          .asFunction<int Function(CXCursor)>();
 
   /// Determine whether a  CXCursor that is a macro, is a
   /// builtin one.
@@ -3103,11 +3198,10 @@ class LibClang {
   }
 
   late final _clang_Cursor_isMacroBuiltin_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_Cursor_isMacroBuiltin>>(
+      _lookup<ffi.NativeFunction<ffi.Uint32 Function(CXCursor)>>(
           'clang_Cursor_isMacroBuiltin');
-  late final _dart_clang_Cursor_isMacroBuiltin _clang_Cursor_isMacroBuiltin =
-      _clang_Cursor_isMacroBuiltin_ptr
-          .asFunction<_dart_clang_Cursor_isMacroBuiltin>();
+  late final _clang_Cursor_isMacroBuiltin =
+      _clang_Cursor_isMacroBuiltin_ptr.asFunction<int Function(CXCursor)>();
 
   /// Determine whether a  CXCursor that is a function declaration, is an
   /// inline declaration.
@@ -3120,11 +3214,10 @@ class LibClang {
   }
 
   late final _clang_Cursor_isFunctionInlined_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_Cursor_isFunctionInlined>>(
+      _lookup<ffi.NativeFunction<ffi.Uint32 Function(CXCursor)>>(
           'clang_Cursor_isFunctionInlined');
-  late final _dart_clang_Cursor_isFunctionInlined
-      _clang_Cursor_isFunctionInlined = _clang_Cursor_isFunctionInlined_ptr
-          .asFunction<_dart_clang_Cursor_isFunctionInlined>();
+  late final _clang_Cursor_isFunctionInlined =
+      _clang_Cursor_isFunctionInlined_ptr.asFunction<int Function(CXCursor)>();
 
   /// Determine whether a CXType has the "volatile" qualifier set,
   /// without looking through typedefs that may have added "volatile" at
@@ -3138,11 +3231,10 @@ class LibClang {
   }
 
   late final _clang_isVolatileQualifiedType_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_isVolatileQualifiedType>>(
+      _lookup<ffi.NativeFunction<ffi.Uint32 Function(CXType)>>(
           'clang_isVolatileQualifiedType');
-  late final _dart_clang_isVolatileQualifiedType
-      _clang_isVolatileQualifiedType = _clang_isVolatileQualifiedType_ptr
-          .asFunction<_dart_clang_isVolatileQualifiedType>();
+  late final _clang_isVolatileQualifiedType =
+      _clang_isVolatileQualifiedType_ptr.asFunction<int Function(CXType)>();
 
   /// Determine whether a CXType has the "restrict" qualifier set,
   /// without looking through typedefs that may have added "restrict" at a
@@ -3156,11 +3248,10 @@ class LibClang {
   }
 
   late final _clang_isRestrictQualifiedType_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_isRestrictQualifiedType>>(
+      _lookup<ffi.NativeFunction<ffi.Uint32 Function(CXType)>>(
           'clang_isRestrictQualifiedType');
-  late final _dart_clang_isRestrictQualifiedType
-      _clang_isRestrictQualifiedType = _clang_isRestrictQualifiedType_ptr
-          .asFunction<_dart_clang_isRestrictQualifiedType>();
+  late final _clang_isRestrictQualifiedType =
+      _clang_isRestrictQualifiedType_ptr.asFunction<int Function(CXType)>();
 
   /// Returns the address space of the given type.
   int clang_getAddressSpace(
@@ -3172,10 +3263,10 @@ class LibClang {
   }
 
   late final _clang_getAddressSpace_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getAddressSpace>>(
+      _lookup<ffi.NativeFunction<ffi.Uint32 Function(CXType)>>(
           'clang_getAddressSpace');
-  late final _dart_clang_getAddressSpace _clang_getAddressSpace =
-      _clang_getAddressSpace_ptr.asFunction<_dart_clang_getAddressSpace>();
+  late final _clang_getAddressSpace =
+      _clang_getAddressSpace_ptr.asFunction<int Function(CXType)>();
 
   /// Returns the typedef name of the given type.
   CXString clang_getTypedefName(
@@ -3187,10 +3278,10 @@ class LibClang {
   }
 
   late final _clang_getTypedefName_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getTypedefName>>(
+      _lookup<ffi.NativeFunction<CXString Function(CXType)>>(
           'clang_getTypedefName');
-  late final _dart_clang_getTypedefName _clang_getTypedefName =
-      _clang_getTypedefName_ptr.asFunction<_dart_clang_getTypedefName>();
+  late final _clang_getTypedefName =
+      _clang_getTypedefName_ptr.asFunction<CXString Function(CXType)>();
 
   /// For pointer types, returns the type of the pointee.
   CXType clang_getPointeeType(
@@ -3202,10 +3293,10 @@ class LibClang {
   }
 
   late final _clang_getPointeeType_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getPointeeType>>(
+      _lookup<ffi.NativeFunction<CXType Function(CXType)>>(
           'clang_getPointeeType');
-  late final _dart_clang_getPointeeType _clang_getPointeeType =
-      _clang_getPointeeType_ptr.asFunction<_dart_clang_getPointeeType>();
+  late final _clang_getPointeeType =
+      _clang_getPointeeType_ptr.asFunction<CXType Function(CXType)>();
 
   /// Return the cursor for the declaration of the given type.
   CXCursor clang_getTypeDeclaration(
@@ -3217,11 +3308,10 @@ class LibClang {
   }
 
   late final _clang_getTypeDeclaration_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getTypeDeclaration>>(
+      _lookup<ffi.NativeFunction<CXCursor Function(CXType)>>(
           'clang_getTypeDeclaration');
-  late final _dart_clang_getTypeDeclaration _clang_getTypeDeclaration =
-      _clang_getTypeDeclaration_ptr
-          .asFunction<_dart_clang_getTypeDeclaration>();
+  late final _clang_getTypeDeclaration =
+      _clang_getTypeDeclaration_ptr.asFunction<CXCursor Function(CXType)>();
 
   /// Returns the Objective-C type encoding for the specified declaration.
   CXString clang_getDeclObjCTypeEncoding(
@@ -3233,11 +3323,10 @@ class LibClang {
   }
 
   late final _clang_getDeclObjCTypeEncoding_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getDeclObjCTypeEncoding>>(
+      _lookup<ffi.NativeFunction<CXString Function(CXCursor)>>(
           'clang_getDeclObjCTypeEncoding');
-  late final _dart_clang_getDeclObjCTypeEncoding
-      _clang_getDeclObjCTypeEncoding = _clang_getDeclObjCTypeEncoding_ptr
-          .asFunction<_dart_clang_getDeclObjCTypeEncoding>();
+  late final _clang_getDeclObjCTypeEncoding = _clang_getDeclObjCTypeEncoding_ptr
+      .asFunction<CXString Function(CXCursor)>();
 
   /// Returns the Objective-C type encoding for the specified CXType.
   CXString clang_Type_getObjCEncoding(
@@ -3249,11 +3338,10 @@ class LibClang {
   }
 
   late final _clang_Type_getObjCEncoding_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_Type_getObjCEncoding>>(
+      _lookup<ffi.NativeFunction<CXString Function(CXType)>>(
           'clang_Type_getObjCEncoding');
-  late final _dart_clang_Type_getObjCEncoding _clang_Type_getObjCEncoding =
-      _clang_Type_getObjCEncoding_ptr
-          .asFunction<_dart_clang_Type_getObjCEncoding>();
+  late final _clang_Type_getObjCEncoding =
+      _clang_Type_getObjCEncoding_ptr.asFunction<CXString Function(CXType)>();
 
   /// Retrieve the spelling of a given CXTypeKind.
   CXString clang_getTypeKindSpelling(
@@ -3265,11 +3353,10 @@ class LibClang {
   }
 
   late final _clang_getTypeKindSpelling_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getTypeKindSpelling>>(
+      _lookup<ffi.NativeFunction<CXString Function(ffi.Int32)>>(
           'clang_getTypeKindSpelling');
-  late final _dart_clang_getTypeKindSpelling _clang_getTypeKindSpelling =
-      _clang_getTypeKindSpelling_ptr
-          .asFunction<_dart_clang_getTypeKindSpelling>();
+  late final _clang_getTypeKindSpelling =
+      _clang_getTypeKindSpelling_ptr.asFunction<CXString Function(int)>();
 
   /// Retrieve the calling convention associated with a function type.
   ///
@@ -3283,11 +3370,10 @@ class LibClang {
   }
 
   late final _clang_getFunctionTypeCallingConv_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getFunctionTypeCallingConv>>(
+      _lookup<ffi.NativeFunction<ffi.Int32 Function(CXType)>>(
           'clang_getFunctionTypeCallingConv');
-  late final _dart_clang_getFunctionTypeCallingConv
-      _clang_getFunctionTypeCallingConv = _clang_getFunctionTypeCallingConv_ptr
-          .asFunction<_dart_clang_getFunctionTypeCallingConv>();
+  late final _clang_getFunctionTypeCallingConv =
+      _clang_getFunctionTypeCallingConv_ptr.asFunction<int Function(CXType)>();
 
   /// Retrieve the return type associated with a function type.
   ///
@@ -3301,10 +3387,10 @@ class LibClang {
   }
 
   late final _clang_getResultType_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getResultType>>(
+      _lookup<ffi.NativeFunction<CXType Function(CXType)>>(
           'clang_getResultType');
-  late final _dart_clang_getResultType _clang_getResultType =
-      _clang_getResultType_ptr.asFunction<_dart_clang_getResultType>();
+  late final _clang_getResultType =
+      _clang_getResultType_ptr.asFunction<CXType Function(CXType)>();
 
   /// Retrieve the exception specification type associated with a function type.
   /// This is a value of type CXCursor_ExceptionSpecificationKind.
@@ -3319,12 +3405,11 @@ class LibClang {
   }
 
   late final _clang_getExceptionSpecificationType_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getExceptionSpecificationType>>(
+      _lookup<ffi.NativeFunction<ffi.Int32 Function(CXType)>>(
           'clang_getExceptionSpecificationType');
-  late final _dart_clang_getExceptionSpecificationType
-      _clang_getExceptionSpecificationType =
+  late final _clang_getExceptionSpecificationType =
       _clang_getExceptionSpecificationType_ptr
-          .asFunction<_dart_clang_getExceptionSpecificationType>();
+          .asFunction<int Function(CXType)>();
 
   /// Retrieve the number of non-variadic parameters associated with a
   /// function type.
@@ -3339,10 +3424,10 @@ class LibClang {
   }
 
   late final _clang_getNumArgTypes_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getNumArgTypes>>(
+      _lookup<ffi.NativeFunction<ffi.Int32 Function(CXType)>>(
           'clang_getNumArgTypes');
-  late final _dart_clang_getNumArgTypes _clang_getNumArgTypes =
-      _clang_getNumArgTypes_ptr.asFunction<_dart_clang_getNumArgTypes>();
+  late final _clang_getNumArgTypes =
+      _clang_getNumArgTypes_ptr.asFunction<int Function(CXType)>();
 
   /// Retrieve the type of a parameter of a function type.
   ///
@@ -3359,9 +3444,10 @@ class LibClang {
   }
 
   late final _clang_getArgType_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getArgType>>('clang_getArgType');
-  late final _dart_clang_getArgType _clang_getArgType =
-      _clang_getArgType_ptr.asFunction<_dart_clang_getArgType>();
+      _lookup<ffi.NativeFunction<CXType Function(CXType, ffi.Uint32)>>(
+          'clang_getArgType');
+  late final _clang_getArgType =
+      _clang_getArgType_ptr.asFunction<CXType Function(CXType, int)>();
 
   /// Retrieves the base type of the ObjCObjectType.
   ///
@@ -3375,11 +3461,11 @@ class LibClang {
   }
 
   late final _clang_Type_getObjCObjectBaseType_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_Type_getObjCObjectBaseType>>(
+      _lookup<ffi.NativeFunction<CXType Function(CXType)>>(
           'clang_Type_getObjCObjectBaseType');
-  late final _dart_clang_Type_getObjCObjectBaseType
-      _clang_Type_getObjCObjectBaseType = _clang_Type_getObjCObjectBaseType_ptr
-          .asFunction<_dart_clang_Type_getObjCObjectBaseType>();
+  late final _clang_Type_getObjCObjectBaseType =
+      _clang_Type_getObjCObjectBaseType_ptr
+          .asFunction<CXType Function(CXType)>();
 
   /// Retrieve the number of protocol references associated with an ObjC object/id.
   ///
@@ -3393,12 +3479,10 @@ class LibClang {
   }
 
   late final _clang_Type_getNumObjCProtocolRefs_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_Type_getNumObjCProtocolRefs>>(
+      _lookup<ffi.NativeFunction<ffi.Uint32 Function(CXType)>>(
           'clang_Type_getNumObjCProtocolRefs');
-  late final _dart_clang_Type_getNumObjCProtocolRefs
-      _clang_Type_getNumObjCProtocolRefs =
-      _clang_Type_getNumObjCProtocolRefs_ptr
-          .asFunction<_dart_clang_Type_getNumObjCProtocolRefs>();
+  late final _clang_Type_getNumObjCProtocolRefs =
+      _clang_Type_getNumObjCProtocolRefs_ptr.asFunction<int Function(CXType)>();
 
   /// Retrieve the decl for a protocol reference for an ObjC object/id.
   ///
@@ -3415,11 +3499,11 @@ class LibClang {
   }
 
   late final _clang_Type_getObjCProtocolDecl_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_Type_getObjCProtocolDecl>>(
+      _lookup<ffi.NativeFunction<CXCursor Function(CXType, ffi.Uint32)>>(
           'clang_Type_getObjCProtocolDecl');
-  late final _dart_clang_Type_getObjCProtocolDecl
-      _clang_Type_getObjCProtocolDecl = _clang_Type_getObjCProtocolDecl_ptr
-          .asFunction<_dart_clang_Type_getObjCProtocolDecl>();
+  late final _clang_Type_getObjCProtocolDecl =
+      _clang_Type_getObjCProtocolDecl_ptr
+          .asFunction<CXCursor Function(CXType, int)>();
 
   /// Retreive the number of type arguments associated with an ObjC object.
   ///
@@ -3433,11 +3517,10 @@ class LibClang {
   }
 
   late final _clang_Type_getNumObjCTypeArgs_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_Type_getNumObjCTypeArgs>>(
+      _lookup<ffi.NativeFunction<ffi.Uint32 Function(CXType)>>(
           'clang_Type_getNumObjCTypeArgs');
-  late final _dart_clang_Type_getNumObjCTypeArgs
-      _clang_Type_getNumObjCTypeArgs = _clang_Type_getNumObjCTypeArgs_ptr
-          .asFunction<_dart_clang_Type_getNumObjCTypeArgs>();
+  late final _clang_Type_getNumObjCTypeArgs =
+      _clang_Type_getNumObjCTypeArgs_ptr.asFunction<int Function(CXType)>();
 
   /// Retrieve a type argument associated with an ObjC object.
   ///
@@ -3454,11 +3537,10 @@ class LibClang {
   }
 
   late final _clang_Type_getObjCTypeArg_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_Type_getObjCTypeArg>>(
+      _lookup<ffi.NativeFunction<CXType Function(CXType, ffi.Uint32)>>(
           'clang_Type_getObjCTypeArg');
-  late final _dart_clang_Type_getObjCTypeArg _clang_Type_getObjCTypeArg =
-      _clang_Type_getObjCTypeArg_ptr
-          .asFunction<_dart_clang_Type_getObjCTypeArg>();
+  late final _clang_Type_getObjCTypeArg =
+      _clang_Type_getObjCTypeArg_ptr.asFunction<CXType Function(CXType, int)>();
 
   /// Return 1 if the CXType is a variadic function type, and 0 otherwise.
   int clang_isFunctionTypeVariadic(
@@ -3470,11 +3552,10 @@ class LibClang {
   }
 
   late final _clang_isFunctionTypeVariadic_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_isFunctionTypeVariadic>>(
+      _lookup<ffi.NativeFunction<ffi.Uint32 Function(CXType)>>(
           'clang_isFunctionTypeVariadic');
-  late final _dart_clang_isFunctionTypeVariadic _clang_isFunctionTypeVariadic =
-      _clang_isFunctionTypeVariadic_ptr
-          .asFunction<_dart_clang_isFunctionTypeVariadic>();
+  late final _clang_isFunctionTypeVariadic =
+      _clang_isFunctionTypeVariadic_ptr.asFunction<int Function(CXType)>();
 
   /// Retrieve the return type associated with a given cursor.
   ///
@@ -3488,11 +3569,10 @@ class LibClang {
   }
 
   late final _clang_getCursorResultType_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getCursorResultType>>(
+      _lookup<ffi.NativeFunction<CXType Function(CXCursor)>>(
           'clang_getCursorResultType');
-  late final _dart_clang_getCursorResultType _clang_getCursorResultType =
-      _clang_getCursorResultType_ptr
-          .asFunction<_dart_clang_getCursorResultType>();
+  late final _clang_getCursorResultType =
+      _clang_getCursorResultType_ptr.asFunction<CXType Function(CXCursor)>();
 
   /// Retrieve the exception specification type associated with a given cursor.
   /// This is a value of type CXCursor_ExceptionSpecificationKind.
@@ -3506,13 +3586,12 @@ class LibClang {
     );
   }
 
-  late final _clang_getCursorExceptionSpecificationType_ptr = _lookup<
-          ffi.NativeFunction<Native_clang_getCursorExceptionSpecificationType>>(
-      'clang_getCursorExceptionSpecificationType');
-  late final _dart_clang_getCursorExceptionSpecificationType
-      _clang_getCursorExceptionSpecificationType =
+  late final _clang_getCursorExceptionSpecificationType_ptr =
+      _lookup<ffi.NativeFunction<ffi.Int32 Function(CXCursor)>>(
+          'clang_getCursorExceptionSpecificationType');
+  late final _clang_getCursorExceptionSpecificationType =
       _clang_getCursorExceptionSpecificationType_ptr
-          .asFunction<_dart_clang_getCursorExceptionSpecificationType>();
+          .asFunction<int Function(CXCursor)>();
 
   /// Return 1 if the CXType is a POD (plain old data) type, and 0
   /// otherwise.
@@ -3525,9 +3604,10 @@ class LibClang {
   }
 
   late final _clang_isPODType_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_isPODType>>('clang_isPODType');
-  late final _dart_clang_isPODType _clang_isPODType =
-      _clang_isPODType_ptr.asFunction<_dart_clang_isPODType>();
+      _lookup<ffi.NativeFunction<ffi.Uint32 Function(CXType)>>(
+          'clang_isPODType');
+  late final _clang_isPODType =
+      _clang_isPODType_ptr.asFunction<int Function(CXType)>();
 
   /// Return the element type of an array, complex, or vector type.
   ///
@@ -3542,10 +3622,10 @@ class LibClang {
   }
 
   late final _clang_getElementType_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getElementType>>(
+      _lookup<ffi.NativeFunction<CXType Function(CXType)>>(
           'clang_getElementType');
-  late final _dart_clang_getElementType _clang_getElementType =
-      _clang_getElementType_ptr.asFunction<_dart_clang_getElementType>();
+  late final _clang_getElementType =
+      _clang_getElementType_ptr.asFunction<CXType Function(CXType)>();
 
   /// Return the number of elements of an array or vector type.
   ///
@@ -3560,10 +3640,10 @@ class LibClang {
   }
 
   late final _clang_getNumElements_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getNumElements>>(
+      _lookup<ffi.NativeFunction<ffi.Int64 Function(CXType)>>(
           'clang_getNumElements');
-  late final _dart_clang_getNumElements _clang_getNumElements =
-      _clang_getNumElements_ptr.asFunction<_dart_clang_getNumElements>();
+  late final _clang_getNumElements =
+      _clang_getNumElements_ptr.asFunction<int Function(CXType)>();
 
   /// Return the element type of an array type.
   ///
@@ -3577,11 +3657,10 @@ class LibClang {
   }
 
   late final _clang_getArrayElementType_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getArrayElementType>>(
+      _lookup<ffi.NativeFunction<CXType Function(CXType)>>(
           'clang_getArrayElementType');
-  late final _dart_clang_getArrayElementType _clang_getArrayElementType =
-      _clang_getArrayElementType_ptr
-          .asFunction<_dart_clang_getArrayElementType>();
+  late final _clang_getArrayElementType =
+      _clang_getArrayElementType_ptr.asFunction<CXType Function(CXType)>();
 
   /// Return the array size of a constant array.
   ///
@@ -3595,10 +3674,10 @@ class LibClang {
   }
 
   late final _clang_getArraySize_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getArraySize>>(
+      _lookup<ffi.NativeFunction<ffi.Int64 Function(CXType)>>(
           'clang_getArraySize');
-  late final _dart_clang_getArraySize _clang_getArraySize =
-      _clang_getArraySize_ptr.asFunction<_dart_clang_getArraySize>();
+  late final _clang_getArraySize =
+      _clang_getArraySize_ptr.asFunction<int Function(CXType)>();
 
   /// Retrieve the type named by the qualified-id.
   ///
@@ -3612,10 +3691,10 @@ class LibClang {
   }
 
   late final _clang_Type_getNamedType_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_Type_getNamedType>>(
+      _lookup<ffi.NativeFunction<CXType Function(CXType)>>(
           'clang_Type_getNamedType');
-  late final _dart_clang_Type_getNamedType _clang_Type_getNamedType =
-      _clang_Type_getNamedType_ptr.asFunction<_dart_clang_Type_getNamedType>();
+  late final _clang_Type_getNamedType =
+      _clang_Type_getNamedType_ptr.asFunction<CXType Function(CXType)>();
 
   /// Determine if a typedef is 'transparent' tag.
   ///
@@ -3632,12 +3711,11 @@ class LibClang {
   }
 
   late final _clang_Type_isTransparentTagTypedef_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_Type_isTransparentTagTypedef>>(
+      _lookup<ffi.NativeFunction<ffi.Uint32 Function(CXType)>>(
           'clang_Type_isTransparentTagTypedef');
-  late final _dart_clang_Type_isTransparentTagTypedef
-      _clang_Type_isTransparentTagTypedef =
+  late final _clang_Type_isTransparentTagTypedef =
       _clang_Type_isTransparentTagTypedef_ptr
-          .asFunction<_dart_clang_Type_isTransparentTagTypedef>();
+          .asFunction<int Function(CXType)>();
 
   /// Retrieve the nullability kind of a pointer type.
   int clang_Type_getNullability(
@@ -3649,11 +3727,10 @@ class LibClang {
   }
 
   late final _clang_Type_getNullability_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_Type_getNullability>>(
+      _lookup<ffi.NativeFunction<ffi.Int32 Function(CXType)>>(
           'clang_Type_getNullability');
-  late final _dart_clang_Type_getNullability _clang_Type_getNullability =
-      _clang_Type_getNullability_ptr
-          .asFunction<_dart_clang_Type_getNullability>();
+  late final _clang_Type_getNullability =
+      _clang_Type_getNullability_ptr.asFunction<int Function(CXType)>();
 
   /// Return the alignment of a type in bytes as per C++[expr.alignof]
   /// standard.
@@ -3674,10 +3751,10 @@ class LibClang {
   }
 
   late final _clang_Type_getAlignOf_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_Type_getAlignOf>>(
+      _lookup<ffi.NativeFunction<ffi.Int64 Function(CXType)>>(
           'clang_Type_getAlignOf');
-  late final _dart_clang_Type_getAlignOf _clang_Type_getAlignOf =
-      _clang_Type_getAlignOf_ptr.asFunction<_dart_clang_Type_getAlignOf>();
+  late final _clang_Type_getAlignOf =
+      _clang_Type_getAlignOf_ptr.asFunction<int Function(CXType)>();
 
   /// Return the class type of an member pointer type.
   ///
@@ -3691,10 +3768,10 @@ class LibClang {
   }
 
   late final _clang_Type_getClassType_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_Type_getClassType>>(
+      _lookup<ffi.NativeFunction<CXType Function(CXType)>>(
           'clang_Type_getClassType');
-  late final _dart_clang_Type_getClassType _clang_Type_getClassType =
-      _clang_Type_getClassType_ptr.asFunction<_dart_clang_Type_getClassType>();
+  late final _clang_Type_getClassType =
+      _clang_Type_getClassType_ptr.asFunction<CXType Function(CXType)>();
 
   /// Return the size of a type in bytes as per C++[expr.sizeof] standard.
   ///
@@ -3712,10 +3789,10 @@ class LibClang {
   }
 
   late final _clang_Type_getSizeOf_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_Type_getSizeOf>>(
+      _lookup<ffi.NativeFunction<ffi.Int64 Function(CXType)>>(
           'clang_Type_getSizeOf');
-  late final _dart_clang_Type_getSizeOf _clang_Type_getSizeOf =
-      _clang_Type_getSizeOf_ptr.asFunction<_dart_clang_Type_getSizeOf>();
+  late final _clang_Type_getSizeOf =
+      _clang_Type_getSizeOf_ptr.asFunction<int Function(CXType)>();
 
   /// Return the offset of a field named S in a record of type T in bits
   /// as it would be returned by __offsetof__ as per C++11[18.2p4]
@@ -3738,11 +3815,12 @@ class LibClang {
     );
   }
 
-  late final _clang_Type_getOffsetOf_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_Type_getOffsetOf>>(
-          'clang_Type_getOffsetOf');
-  late final _dart_clang_Type_getOffsetOf _clang_Type_getOffsetOf =
-      _clang_Type_getOffsetOf_ptr.asFunction<_dart_clang_Type_getOffsetOf>();
+  late final _clang_Type_getOffsetOf_ptr = _lookup<
+      ffi.NativeFunction<
+          ffi.Int64 Function(
+              CXType, ffi.Pointer<ffi.Int8>)>>('clang_Type_getOffsetOf');
+  late final _clang_Type_getOffsetOf = _clang_Type_getOffsetOf_ptr
+      .asFunction<int Function(CXType, ffi.Pointer<ffi.Int8>)>();
 
   /// Return the type that was modified by this attributed type.
   ///
@@ -3756,11 +3834,10 @@ class LibClang {
   }
 
   late final _clang_Type_getModifiedType_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_Type_getModifiedType>>(
+      _lookup<ffi.NativeFunction<CXType Function(CXType)>>(
           'clang_Type_getModifiedType');
-  late final _dart_clang_Type_getModifiedType _clang_Type_getModifiedType =
-      _clang_Type_getModifiedType_ptr
-          .asFunction<_dart_clang_Type_getModifiedType>();
+  late final _clang_Type_getModifiedType =
+      _clang_Type_getModifiedType_ptr.asFunction<CXType Function(CXType)>();
 
   /// Return the offset of the field represented by the Cursor.
   ///
@@ -3782,11 +3859,10 @@ class LibClang {
   }
 
   late final _clang_Cursor_getOffsetOfField_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_Cursor_getOffsetOfField>>(
+      _lookup<ffi.NativeFunction<ffi.Int64 Function(CXCursor)>>(
           'clang_Cursor_getOffsetOfField');
-  late final _dart_clang_Cursor_getOffsetOfField
-      _clang_Cursor_getOffsetOfField = _clang_Cursor_getOffsetOfField_ptr
-          .asFunction<_dart_clang_Cursor_getOffsetOfField>();
+  late final _clang_Cursor_getOffsetOfField =
+      _clang_Cursor_getOffsetOfField_ptr.asFunction<int Function(CXCursor)>();
 
   /// Determine whether the given cursor represents an anonymous
   /// tag or namespace
@@ -3799,11 +3875,10 @@ class LibClang {
   }
 
   late final _clang_Cursor_isAnonymous_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_Cursor_isAnonymous>>(
+      _lookup<ffi.NativeFunction<ffi.Uint32 Function(CXCursor)>>(
           'clang_Cursor_isAnonymous');
-  late final _dart_clang_Cursor_isAnonymous _clang_Cursor_isAnonymous =
-      _clang_Cursor_isAnonymous_ptr
-          .asFunction<_dart_clang_Cursor_isAnonymous>();
+  late final _clang_Cursor_isAnonymous =
+      _clang_Cursor_isAnonymous_ptr.asFunction<int Function(CXCursor)>();
 
   /// Determine whether the given cursor represents an anonymous record
   /// declaration.
@@ -3816,12 +3891,11 @@ class LibClang {
   }
 
   late final _clang_Cursor_isAnonymousRecordDecl_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_Cursor_isAnonymousRecordDecl>>(
+      _lookup<ffi.NativeFunction<ffi.Uint32 Function(CXCursor)>>(
           'clang_Cursor_isAnonymousRecordDecl');
-  late final _dart_clang_Cursor_isAnonymousRecordDecl
-      _clang_Cursor_isAnonymousRecordDecl =
+  late final _clang_Cursor_isAnonymousRecordDecl =
       _clang_Cursor_isAnonymousRecordDecl_ptr
-          .asFunction<_dart_clang_Cursor_isAnonymousRecordDecl>();
+          .asFunction<int Function(CXCursor)>();
 
   /// Determine whether the given cursor represents an inline namespace
   /// declaration.
@@ -3834,11 +3908,10 @@ class LibClang {
   }
 
   late final _clang_Cursor_isInlineNamespace_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_Cursor_isInlineNamespace>>(
+      _lookup<ffi.NativeFunction<ffi.Uint32 Function(CXCursor)>>(
           'clang_Cursor_isInlineNamespace');
-  late final _dart_clang_Cursor_isInlineNamespace
-      _clang_Cursor_isInlineNamespace = _clang_Cursor_isInlineNamespace_ptr
-          .asFunction<_dart_clang_Cursor_isInlineNamespace>();
+  late final _clang_Cursor_isInlineNamespace =
+      _clang_Cursor_isInlineNamespace_ptr.asFunction<int Function(CXCursor)>();
 
   /// Returns the number of template arguments for given template
   /// specialization, or -1 if type \c T is not a template specialization.
@@ -3851,12 +3924,11 @@ class LibClang {
   }
 
   late final _clang_Type_getNumTemplateArguments_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_Type_getNumTemplateArguments>>(
+      _lookup<ffi.NativeFunction<ffi.Int32 Function(CXType)>>(
           'clang_Type_getNumTemplateArguments');
-  late final _dart_clang_Type_getNumTemplateArguments
-      _clang_Type_getNumTemplateArguments =
+  late final _clang_Type_getNumTemplateArguments =
       _clang_Type_getNumTemplateArguments_ptr
-          .asFunction<_dart_clang_Type_getNumTemplateArguments>();
+          .asFunction<int Function(CXType)>();
 
   /// Returns the type template argument of a template class specialization
   /// at given index.
@@ -3874,12 +3946,11 @@ class LibClang {
   }
 
   late final _clang_Type_getTemplateArgumentAsType_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_Type_getTemplateArgumentAsType>>(
+      _lookup<ffi.NativeFunction<CXType Function(CXType, ffi.Uint32)>>(
           'clang_Type_getTemplateArgumentAsType');
-  late final _dart_clang_Type_getTemplateArgumentAsType
-      _clang_Type_getTemplateArgumentAsType =
+  late final _clang_Type_getTemplateArgumentAsType =
       _clang_Type_getTemplateArgumentAsType_ptr
-          .asFunction<_dart_clang_Type_getTemplateArgumentAsType>();
+          .asFunction<CXType Function(CXType, int)>();
 
   /// Retrieve the ref-qualifier kind of a function or method.
   ///
@@ -3894,11 +3965,10 @@ class LibClang {
   }
 
   late final _clang_Type_getCXXRefQualifier_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_Type_getCXXRefQualifier>>(
+      _lookup<ffi.NativeFunction<ffi.Int32 Function(CXType)>>(
           'clang_Type_getCXXRefQualifier');
-  late final _dart_clang_Type_getCXXRefQualifier
-      _clang_Type_getCXXRefQualifier = _clang_Type_getCXXRefQualifier_ptr
-          .asFunction<_dart_clang_Type_getCXXRefQualifier>();
+  late final _clang_Type_getCXXRefQualifier =
+      _clang_Type_getCXXRefQualifier_ptr.asFunction<int Function(CXType)>();
 
   /// Returns non-zero if the cursor specifies a Record member that is a
   /// bitfield.
@@ -3911,10 +3981,10 @@ class LibClang {
   }
 
   late final _clang_Cursor_isBitField_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_Cursor_isBitField>>(
+      _lookup<ffi.NativeFunction<ffi.Uint32 Function(CXCursor)>>(
           'clang_Cursor_isBitField');
-  late final _dart_clang_Cursor_isBitField _clang_Cursor_isBitField =
-      _clang_Cursor_isBitField_ptr.asFunction<_dart_clang_Cursor_isBitField>();
+  late final _clang_Cursor_isBitField =
+      _clang_Cursor_isBitField_ptr.asFunction<int Function(CXCursor)>();
 
   /// Returns 1 if the base class specified by the cursor with kind
   /// CX_CXXBaseSpecifier is virtual.
@@ -3927,10 +3997,10 @@ class LibClang {
   }
 
   late final _clang_isVirtualBase_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_isVirtualBase>>(
+      _lookup<ffi.NativeFunction<ffi.Uint32 Function(CXCursor)>>(
           'clang_isVirtualBase');
-  late final _dart_clang_isVirtualBase _clang_isVirtualBase =
-      _clang_isVirtualBase_ptr.asFunction<_dart_clang_isVirtualBase>();
+  late final _clang_isVirtualBase =
+      _clang_isVirtualBase_ptr.asFunction<int Function(CXCursor)>();
 
   /// Returns the access control level for the referenced object.
   ///
@@ -3946,11 +4016,10 @@ class LibClang {
   }
 
   late final _clang_getCXXAccessSpecifier_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getCXXAccessSpecifier>>(
+      _lookup<ffi.NativeFunction<ffi.Int32 Function(CXCursor)>>(
           'clang_getCXXAccessSpecifier');
-  late final _dart_clang_getCXXAccessSpecifier _clang_getCXXAccessSpecifier =
-      _clang_getCXXAccessSpecifier_ptr
-          .asFunction<_dart_clang_getCXXAccessSpecifier>();
+  late final _clang_getCXXAccessSpecifier =
+      _clang_getCXXAccessSpecifier_ptr.asFunction<int Function(CXCursor)>();
 
   /// Returns the storage class for a function or variable declaration.
   ///
@@ -3965,11 +4034,10 @@ class LibClang {
   }
 
   late final _clang_Cursor_getStorageClass_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_Cursor_getStorageClass>>(
+      _lookup<ffi.NativeFunction<ffi.Int32 Function(CXCursor)>>(
           'clang_Cursor_getStorageClass');
-  late final _dart_clang_Cursor_getStorageClass _clang_Cursor_getStorageClass =
-      _clang_Cursor_getStorageClass_ptr
-          .asFunction<_dart_clang_Cursor_getStorageClass>();
+  late final _clang_Cursor_getStorageClass =
+      _clang_Cursor_getStorageClass_ptr.asFunction<int Function(CXCursor)>();
 
   /// Determine the number of overloaded declarations referenced by a
   /// \c CXCursor_OverloadedDeclRef cursor.
@@ -3987,11 +4055,10 @@ class LibClang {
   }
 
   late final _clang_getNumOverloadedDecls_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getNumOverloadedDecls>>(
+      _lookup<ffi.NativeFunction<ffi.Uint32 Function(CXCursor)>>(
           'clang_getNumOverloadedDecls');
-  late final _dart_clang_getNumOverloadedDecls _clang_getNumOverloadedDecls =
-      _clang_getNumOverloadedDecls_ptr
-          .asFunction<_dart_clang_getNumOverloadedDecls>();
+  late final _clang_getNumOverloadedDecls =
+      _clang_getNumOverloadedDecls_ptr.asFunction<int Function(CXCursor)>();
 
   /// Retrieve a cursor for one of the overloaded declarations referenced
   /// by a \c CXCursor_OverloadedDeclRef cursor.
@@ -4016,10 +4083,10 @@ class LibClang {
   }
 
   late final _clang_getOverloadedDecl_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getOverloadedDecl>>(
+      _lookup<ffi.NativeFunction<CXCursor Function(CXCursor, ffi.Uint32)>>(
           'clang_getOverloadedDecl');
-  late final _dart_clang_getOverloadedDecl _clang_getOverloadedDecl =
-      _clang_getOverloadedDecl_ptr.asFunction<_dart_clang_getOverloadedDecl>();
+  late final _clang_getOverloadedDecl = _clang_getOverloadedDecl_ptr
+      .asFunction<CXCursor Function(CXCursor, int)>();
 
   /// For cursors representing an iboutletcollection attribute,
   /// this function returns the collection element type.
@@ -4032,11 +4099,11 @@ class LibClang {
   }
 
   late final _clang_getIBOutletCollectionType_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getIBOutletCollectionType>>(
+      _lookup<ffi.NativeFunction<CXType Function(CXCursor)>>(
           'clang_getIBOutletCollectionType');
-  late final _dart_clang_getIBOutletCollectionType
-      _clang_getIBOutletCollectionType = _clang_getIBOutletCollectionType_ptr
-          .asFunction<_dart_clang_getIBOutletCollectionType>();
+  late final _clang_getIBOutletCollectionType =
+      _clang_getIBOutletCollectionType_ptr
+          .asFunction<CXType Function(CXCursor)>();
 
   /// Visit the children of a particular cursor.
   ///
@@ -4060,8 +4127,8 @@ class LibClang {
   /// prematurely by the visitor returning \c CXChildVisit_Break.
   int clang_visitChildren(
     CXCursor parent,
-    ffi.Pointer<ffi.NativeFunction<CXCursorVisitor>> visitor,
-    ffi.Pointer<ffi.Void> client_data,
+    CXCursorVisitor visitor,
+    CXClientData client_data,
   ) {
     return _clang_visitChildren(
       parent,
@@ -4070,11 +4137,12 @@ class LibClang {
     );
   }
 
-  late final _clang_visitChildren_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_visitChildren>>(
-          'clang_visitChildren');
-  late final _dart_clang_visitChildren _clang_visitChildren =
-      _clang_visitChildren_ptr.asFunction<_dart_clang_visitChildren>();
+  late final _clang_visitChildren_ptr = _lookup<
+      ffi.NativeFunction<
+          ffi.Uint32 Function(
+              CXCursor, CXCursorVisitor, CXClientData)>>('clang_visitChildren');
+  late final _clang_visitChildren = _clang_visitChildren_ptr
+      .asFunction<int Function(CXCursor, CXCursorVisitor, CXClientData)>();
 
   /// Retrieve a Unified Symbol Resolution (USR) for the entity referenced
   /// by the given cursor.
@@ -4092,10 +4160,10 @@ class LibClang {
   }
 
   late final _clang_getCursorUSR_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getCursorUSR>>(
+      _lookup<ffi.NativeFunction<CXString Function(CXCursor)>>(
           'clang_getCursorUSR');
-  late final _dart_clang_getCursorUSR _clang_getCursorUSR =
-      _clang_getCursorUSR_ptr.asFunction<_dart_clang_getCursorUSR>();
+  late final _clang_getCursorUSR =
+      _clang_getCursorUSR_ptr.asFunction<CXString Function(CXCursor)>();
 
   /// Construct a USR for a specified Objective-C class.
   CXString clang_constructUSR_ObjCClass(
@@ -4107,11 +4175,10 @@ class LibClang {
   }
 
   late final _clang_constructUSR_ObjCClass_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_constructUSR_ObjCClass>>(
+      _lookup<ffi.NativeFunction<CXString Function(ffi.Pointer<ffi.Int8>)>>(
           'clang_constructUSR_ObjCClass');
-  late final _dart_clang_constructUSR_ObjCClass _clang_constructUSR_ObjCClass =
-      _clang_constructUSR_ObjCClass_ptr
-          .asFunction<_dart_clang_constructUSR_ObjCClass>();
+  late final _clang_constructUSR_ObjCClass = _clang_constructUSR_ObjCClass_ptr
+      .asFunction<CXString Function(ffi.Pointer<ffi.Int8>)>();
 
   /// Construct a USR for a specified Objective-C category.
   CXString clang_constructUSR_ObjCCategory(
@@ -4124,12 +4191,13 @@ class LibClang {
     );
   }
 
-  late final _clang_constructUSR_ObjCCategory_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_constructUSR_ObjCCategory>>(
-          'clang_constructUSR_ObjCCategory');
-  late final _dart_clang_constructUSR_ObjCCategory
-      _clang_constructUSR_ObjCCategory = _clang_constructUSR_ObjCCategory_ptr
-          .asFunction<_dart_clang_constructUSR_ObjCCategory>();
+  late final _clang_constructUSR_ObjCCategory_ptr = _lookup<
+      ffi.NativeFunction<
+          CXString Function(ffi.Pointer<ffi.Int8>,
+              ffi.Pointer<ffi.Int8>)>>('clang_constructUSR_ObjCCategory');
+  late final _clang_constructUSR_ObjCCategory =
+      _clang_constructUSR_ObjCCategory_ptr.asFunction<
+          CXString Function(ffi.Pointer<ffi.Int8>, ffi.Pointer<ffi.Int8>)>();
 
   /// Construct a USR for a specified Objective-C protocol.
   CXString clang_constructUSR_ObjCProtocol(
@@ -4141,11 +4209,11 @@ class LibClang {
   }
 
   late final _clang_constructUSR_ObjCProtocol_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_constructUSR_ObjCProtocol>>(
+      _lookup<ffi.NativeFunction<CXString Function(ffi.Pointer<ffi.Int8>)>>(
           'clang_constructUSR_ObjCProtocol');
-  late final _dart_clang_constructUSR_ObjCProtocol
-      _clang_constructUSR_ObjCProtocol = _clang_constructUSR_ObjCProtocol_ptr
-          .asFunction<_dart_clang_constructUSR_ObjCProtocol>();
+  late final _clang_constructUSR_ObjCProtocol =
+      _clang_constructUSR_ObjCProtocol_ptr
+          .asFunction<CXString Function(ffi.Pointer<ffi.Int8>)>();
 
   /// Construct a USR for a specified Objective-C instance variable and
   /// the USR for its containing class.
@@ -4159,12 +4227,12 @@ class LibClang {
     );
   }
 
-  late final _clang_constructUSR_ObjCIvar_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_constructUSR_ObjCIvar>>(
-          'clang_constructUSR_ObjCIvar');
-  late final _dart_clang_constructUSR_ObjCIvar _clang_constructUSR_ObjCIvar =
-      _clang_constructUSR_ObjCIvar_ptr
-          .asFunction<_dart_clang_constructUSR_ObjCIvar>();
+  late final _clang_constructUSR_ObjCIvar_ptr = _lookup<
+      ffi.NativeFunction<
+          CXString Function(
+              ffi.Pointer<ffi.Int8>, CXString)>>('clang_constructUSR_ObjCIvar');
+  late final _clang_constructUSR_ObjCIvar = _clang_constructUSR_ObjCIvar_ptr
+      .asFunction<CXString Function(ffi.Pointer<ffi.Int8>, CXString)>();
 
   /// Construct a USR for a specified Objective-C method and
   /// the USR for its containing class.
@@ -4180,12 +4248,12 @@ class LibClang {
     );
   }
 
-  late final _clang_constructUSR_ObjCMethod_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_constructUSR_ObjCMethod>>(
-          'clang_constructUSR_ObjCMethod');
-  late final _dart_clang_constructUSR_ObjCMethod
-      _clang_constructUSR_ObjCMethod = _clang_constructUSR_ObjCMethod_ptr
-          .asFunction<_dart_clang_constructUSR_ObjCMethod>();
+  late final _clang_constructUSR_ObjCMethod_ptr = _lookup<
+      ffi.NativeFunction<
+          CXString Function(ffi.Pointer<ffi.Int8>, ffi.Uint32,
+              CXString)>>('clang_constructUSR_ObjCMethod');
+  late final _clang_constructUSR_ObjCMethod = _clang_constructUSR_ObjCMethod_ptr
+      .asFunction<CXString Function(ffi.Pointer<ffi.Int8>, int, CXString)>();
 
   /// Construct a USR for a specified Objective-C property and the USR
   /// for its containing class.
@@ -4199,12 +4267,13 @@ class LibClang {
     );
   }
 
-  late final _clang_constructUSR_ObjCProperty_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_constructUSR_ObjCProperty>>(
-          'clang_constructUSR_ObjCProperty');
-  late final _dart_clang_constructUSR_ObjCProperty
-      _clang_constructUSR_ObjCProperty = _clang_constructUSR_ObjCProperty_ptr
-          .asFunction<_dart_clang_constructUSR_ObjCProperty>();
+  late final _clang_constructUSR_ObjCProperty_ptr = _lookup<
+      ffi.NativeFunction<
+          CXString Function(ffi.Pointer<ffi.Int8>,
+              CXString)>>('clang_constructUSR_ObjCProperty');
+  late final _clang_constructUSR_ObjCProperty =
+      _clang_constructUSR_ObjCProperty_ptr
+          .asFunction<CXString Function(ffi.Pointer<ffi.Int8>, CXString)>();
 
   /// Retrieve a name for the entity referenced by this cursor.
   CXString clang_getCursorSpelling(
@@ -4216,10 +4285,10 @@ class LibClang {
   }
 
   late final _clang_getCursorSpelling_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getCursorSpelling>>(
+      _lookup<ffi.NativeFunction<CXString Function(CXCursor)>>(
           'clang_getCursorSpelling');
-  late final _dart_clang_getCursorSpelling _clang_getCursorSpelling =
-      _clang_getCursorSpelling_ptr.asFunction<_dart_clang_getCursorSpelling>();
+  late final _clang_getCursorSpelling =
+      _clang_getCursorSpelling_ptr.asFunction<CXString Function(CXCursor)>();
 
   /// Retrieve a range for a piece that forms the cursors spelling name.
   /// Most of the times there is only one range for the complete spelling but for
@@ -4242,17 +4311,17 @@ class LibClang {
     );
   }
 
-  late final _clang_Cursor_getSpellingNameRange_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_Cursor_getSpellingNameRange>>(
-          'clang_Cursor_getSpellingNameRange');
-  late final _dart_clang_Cursor_getSpellingNameRange
-      _clang_Cursor_getSpellingNameRange =
+  late final _clang_Cursor_getSpellingNameRange_ptr = _lookup<
+      ffi.NativeFunction<
+          CXSourceRange Function(CXCursor, ffi.Uint32,
+              ffi.Uint32)>>('clang_Cursor_getSpellingNameRange');
+  late final _clang_Cursor_getSpellingNameRange =
       _clang_Cursor_getSpellingNameRange_ptr
-          .asFunction<_dart_clang_Cursor_getSpellingNameRange>();
+          .asFunction<CXSourceRange Function(CXCursor, int, int)>();
 
   /// Get a property value for the given printing policy.
   int clang_PrintingPolicy_getProperty(
-    ffi.Pointer<ffi.Void> Policy,
+    CXPrintingPolicy Policy,
     int Property,
   ) {
     return _clang_PrintingPolicy_getProperty(
@@ -4261,16 +4330,16 @@ class LibClang {
     );
   }
 
-  late final _clang_PrintingPolicy_getProperty_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_PrintingPolicy_getProperty>>(
-          'clang_PrintingPolicy_getProperty');
-  late final _dart_clang_PrintingPolicy_getProperty
-      _clang_PrintingPolicy_getProperty = _clang_PrintingPolicy_getProperty_ptr
-          .asFunction<_dart_clang_PrintingPolicy_getProperty>();
+  late final _clang_PrintingPolicy_getProperty_ptr = _lookup<
+          ffi.NativeFunction<ffi.Uint32 Function(CXPrintingPolicy, ffi.Int32)>>(
+      'clang_PrintingPolicy_getProperty');
+  late final _clang_PrintingPolicy_getProperty =
+      _clang_PrintingPolicy_getProperty_ptr
+          .asFunction<int Function(CXPrintingPolicy, int)>();
 
   /// Set a property value for the given printing policy.
   void clang_PrintingPolicy_setProperty(
-    ffi.Pointer<ffi.Void> Policy,
+    CXPrintingPolicy Policy,
     int Property,
     int Value,
   ) {
@@ -4281,18 +4350,19 @@ class LibClang {
     );
   }
 
-  late final _clang_PrintingPolicy_setProperty_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_PrintingPolicy_setProperty>>(
-          'clang_PrintingPolicy_setProperty');
-  late final _dart_clang_PrintingPolicy_setProperty
-      _clang_PrintingPolicy_setProperty = _clang_PrintingPolicy_setProperty_ptr
-          .asFunction<_dart_clang_PrintingPolicy_setProperty>();
+  late final _clang_PrintingPolicy_setProperty_ptr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(CXPrintingPolicy, ffi.Int32,
+              ffi.Uint32)>>('clang_PrintingPolicy_setProperty');
+  late final _clang_PrintingPolicy_setProperty =
+      _clang_PrintingPolicy_setProperty_ptr
+          .asFunction<void Function(CXPrintingPolicy, int, int)>();
 
   /// Retrieve the default policy for the cursor.
   ///
   /// The policy should be released after use with \c
   /// clang_PrintingPolicy_dispose.
-  ffi.Pointer<ffi.Void> clang_getCursorPrintingPolicy(
+  CXPrintingPolicy clang_getCursorPrintingPolicy(
     CXCursor arg0,
   ) {
     return _clang_getCursorPrintingPolicy(
@@ -4301,15 +4371,14 @@ class LibClang {
   }
 
   late final _clang_getCursorPrintingPolicy_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getCursorPrintingPolicy>>(
+      _lookup<ffi.NativeFunction<CXPrintingPolicy Function(CXCursor)>>(
           'clang_getCursorPrintingPolicy');
-  late final _dart_clang_getCursorPrintingPolicy
-      _clang_getCursorPrintingPolicy = _clang_getCursorPrintingPolicy_ptr
-          .asFunction<_dart_clang_getCursorPrintingPolicy>();
+  late final _clang_getCursorPrintingPolicy = _clang_getCursorPrintingPolicy_ptr
+      .asFunction<CXPrintingPolicy Function(CXCursor)>();
 
   /// Release a printing policy.
   void clang_PrintingPolicy_dispose(
-    ffi.Pointer<ffi.Void> Policy,
+    CXPrintingPolicy Policy,
   ) {
     return _clang_PrintingPolicy_dispose(
       Policy,
@@ -4317,11 +4386,10 @@ class LibClang {
   }
 
   late final _clang_PrintingPolicy_dispose_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_PrintingPolicy_dispose>>(
+      _lookup<ffi.NativeFunction<ffi.Void Function(CXPrintingPolicy)>>(
           'clang_PrintingPolicy_dispose');
-  late final _dart_clang_PrintingPolicy_dispose _clang_PrintingPolicy_dispose =
-      _clang_PrintingPolicy_dispose_ptr
-          .asFunction<_dart_clang_PrintingPolicy_dispose>();
+  late final _clang_PrintingPolicy_dispose = _clang_PrintingPolicy_dispose_ptr
+      .asFunction<void Function(CXPrintingPolicy)>();
 
   /// Pretty print declarations.
   ///
@@ -4334,7 +4402,7 @@ class LibClang {
   /// other cursors.
   CXString clang_getCursorPrettyPrinted(
     CXCursor Cursor,
-    ffi.Pointer<ffi.Void> Policy,
+    CXPrintingPolicy Policy,
   ) {
     return _clang_getCursorPrettyPrinted(
       Cursor,
@@ -4342,12 +4410,11 @@ class LibClang {
     );
   }
 
-  late final _clang_getCursorPrettyPrinted_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getCursorPrettyPrinted>>(
-          'clang_getCursorPrettyPrinted');
-  late final _dart_clang_getCursorPrettyPrinted _clang_getCursorPrettyPrinted =
-      _clang_getCursorPrettyPrinted_ptr
-          .asFunction<_dart_clang_getCursorPrettyPrinted>();
+  late final _clang_getCursorPrettyPrinted_ptr = _lookup<
+          ffi.NativeFunction<CXString Function(CXCursor, CXPrintingPolicy)>>(
+      'clang_getCursorPrettyPrinted');
+  late final _clang_getCursorPrettyPrinted = _clang_getCursorPrettyPrinted_ptr
+      .asFunction<CXString Function(CXCursor, CXPrintingPolicy)>();
 
   /// Retrieve the display name for the entity referenced by this cursor.
   ///
@@ -4363,11 +4430,10 @@ class LibClang {
   }
 
   late final _clang_getCursorDisplayName_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getCursorDisplayName>>(
+      _lookup<ffi.NativeFunction<CXString Function(CXCursor)>>(
           'clang_getCursorDisplayName');
-  late final _dart_clang_getCursorDisplayName _clang_getCursorDisplayName =
-      _clang_getCursorDisplayName_ptr
-          .asFunction<_dart_clang_getCursorDisplayName>();
+  late final _clang_getCursorDisplayName =
+      _clang_getCursorDisplayName_ptr.asFunction<CXString Function(CXCursor)>();
 
   /// For a cursor that is a reference, retrieve a cursor representing the
   /// entity that it references.
@@ -4387,11 +4453,10 @@ class LibClang {
   }
 
   late final _clang_getCursorReferenced_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getCursorReferenced>>(
+      _lookup<ffi.NativeFunction<CXCursor Function(CXCursor)>>(
           'clang_getCursorReferenced');
-  late final _dart_clang_getCursorReferenced _clang_getCursorReferenced =
-      _clang_getCursorReferenced_ptr
-          .asFunction<_dart_clang_getCursorReferenced>();
+  late final _clang_getCursorReferenced =
+      _clang_getCursorReferenced_ptr.asFunction<CXCursor Function(CXCursor)>();
 
   /// For a cursor that is either a reference to or a declaration
   /// of some entity, retrieve a cursor that describes the definition of
@@ -4428,11 +4493,10 @@ class LibClang {
   }
 
   late final _clang_getCursorDefinition_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getCursorDefinition>>(
+      _lookup<ffi.NativeFunction<CXCursor Function(CXCursor)>>(
           'clang_getCursorDefinition');
-  late final _dart_clang_getCursorDefinition _clang_getCursorDefinition =
-      _clang_getCursorDefinition_ptr
-          .asFunction<_dart_clang_getCursorDefinition>();
+  late final _clang_getCursorDefinition =
+      _clang_getCursorDefinition_ptr.asFunction<CXCursor Function(CXCursor)>();
 
   /// Determine whether the declaration pointed to by this cursor
   /// is also a definition of that entity.
@@ -4445,11 +4509,10 @@ class LibClang {
   }
 
   late final _clang_isCursorDefinition_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_isCursorDefinition>>(
+      _lookup<ffi.NativeFunction<ffi.Uint32 Function(CXCursor)>>(
           'clang_isCursorDefinition');
-  late final _dart_clang_isCursorDefinition _clang_isCursorDefinition =
-      _clang_isCursorDefinition_ptr
-          .asFunction<_dart_clang_isCursorDefinition>();
+  late final _clang_isCursorDefinition =
+      _clang_isCursorDefinition_ptr.asFunction<int Function(CXCursor)>();
 
   /// Retrieve the canonical cursor corresponding to the given cursor.
   ///
@@ -4482,11 +4545,10 @@ class LibClang {
   }
 
   late final _clang_getCanonicalCursor_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getCanonicalCursor>>(
+      _lookup<ffi.NativeFunction<CXCursor Function(CXCursor)>>(
           'clang_getCanonicalCursor');
-  late final _dart_clang_getCanonicalCursor _clang_getCanonicalCursor =
-      _clang_getCanonicalCursor_ptr
-          .asFunction<_dart_clang_getCanonicalCursor>();
+  late final _clang_getCanonicalCursor =
+      _clang_getCanonicalCursor_ptr.asFunction<CXCursor Function(CXCursor)>();
 
   /// If the cursor points to a selector identifier in an Objective-C
   /// method or message expression, this returns the selector index.
@@ -4506,12 +4568,11 @@ class LibClang {
   }
 
   late final _clang_Cursor_getObjCSelectorIndex_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_Cursor_getObjCSelectorIndex>>(
+      _lookup<ffi.NativeFunction<ffi.Int32 Function(CXCursor)>>(
           'clang_Cursor_getObjCSelectorIndex');
-  late final _dart_clang_Cursor_getObjCSelectorIndex
-      _clang_Cursor_getObjCSelectorIndex =
+  late final _clang_Cursor_getObjCSelectorIndex =
       _clang_Cursor_getObjCSelectorIndex_ptr
-          .asFunction<_dart_clang_Cursor_getObjCSelectorIndex>();
+          .asFunction<int Function(CXCursor)>();
 
   /// Given a cursor pointing to a C++ method call or an Objective-C
   /// message, returns non-zero if the method/message is "dynamic", meaning:
@@ -4531,11 +4592,10 @@ class LibClang {
   }
 
   late final _clang_Cursor_isDynamicCall_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_Cursor_isDynamicCall>>(
+      _lookup<ffi.NativeFunction<ffi.Int32 Function(CXCursor)>>(
           'clang_Cursor_isDynamicCall');
-  late final _dart_clang_Cursor_isDynamicCall _clang_Cursor_isDynamicCall =
-      _clang_Cursor_isDynamicCall_ptr
-          .asFunction<_dart_clang_Cursor_isDynamicCall>();
+  late final _clang_Cursor_isDynamicCall =
+      _clang_Cursor_isDynamicCall_ptr.asFunction<int Function(CXCursor)>();
 
   /// Given a cursor pointing to an Objective-C message or property
   /// reference, or C++ method call, returns the CXType of the receiver.
@@ -4548,11 +4608,10 @@ class LibClang {
   }
 
   late final _clang_Cursor_getReceiverType_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_Cursor_getReceiverType>>(
+      _lookup<ffi.NativeFunction<CXType Function(CXCursor)>>(
           'clang_Cursor_getReceiverType');
-  late final _dart_clang_Cursor_getReceiverType _clang_Cursor_getReceiverType =
-      _clang_Cursor_getReceiverType_ptr
-          .asFunction<_dart_clang_Cursor_getReceiverType>();
+  late final _clang_Cursor_getReceiverType =
+      _clang_Cursor_getReceiverType_ptr.asFunction<CXType Function(CXCursor)>();
 
   /// Given a cursor that represents a property declaration, return the
   /// associated property attributes. The bits are formed from
@@ -4569,13 +4628,12 @@ class LibClang {
     );
   }
 
-  late final _clang_Cursor_getObjCPropertyAttributes_ptr = _lookup<
-          ffi.NativeFunction<Native_clang_Cursor_getObjCPropertyAttributes>>(
-      'clang_Cursor_getObjCPropertyAttributes');
-  late final _dart_clang_Cursor_getObjCPropertyAttributes
-      _clang_Cursor_getObjCPropertyAttributes =
+  late final _clang_Cursor_getObjCPropertyAttributes_ptr =
+      _lookup<ffi.NativeFunction<ffi.Uint32 Function(CXCursor, ffi.Uint32)>>(
+          'clang_Cursor_getObjCPropertyAttributes');
+  late final _clang_Cursor_getObjCPropertyAttributes =
       _clang_Cursor_getObjCPropertyAttributes_ptr
-          .asFunction<_dart_clang_Cursor_getObjCPropertyAttributes>();
+          .asFunction<int Function(CXCursor, int)>();
 
   /// Given a cursor that represents a property declaration, return the
   /// name of the method that implements the getter.
@@ -4587,13 +4645,12 @@ class LibClang {
     );
   }
 
-  late final _clang_Cursor_getObjCPropertyGetterName_ptr = _lookup<
-          ffi.NativeFunction<Native_clang_Cursor_getObjCPropertyGetterName>>(
-      'clang_Cursor_getObjCPropertyGetterName');
-  late final _dart_clang_Cursor_getObjCPropertyGetterName
-      _clang_Cursor_getObjCPropertyGetterName =
+  late final _clang_Cursor_getObjCPropertyGetterName_ptr =
+      _lookup<ffi.NativeFunction<CXString Function(CXCursor)>>(
+          'clang_Cursor_getObjCPropertyGetterName');
+  late final _clang_Cursor_getObjCPropertyGetterName =
       _clang_Cursor_getObjCPropertyGetterName_ptr
-          .asFunction<_dart_clang_Cursor_getObjCPropertyGetterName>();
+          .asFunction<CXString Function(CXCursor)>();
 
   /// Given a cursor that represents a property declaration, return the
   /// name of the method that implements the setter, if any.
@@ -4605,13 +4662,12 @@ class LibClang {
     );
   }
 
-  late final _clang_Cursor_getObjCPropertySetterName_ptr = _lookup<
-          ffi.NativeFunction<Native_clang_Cursor_getObjCPropertySetterName>>(
-      'clang_Cursor_getObjCPropertySetterName');
-  late final _dart_clang_Cursor_getObjCPropertySetterName
-      _clang_Cursor_getObjCPropertySetterName =
+  late final _clang_Cursor_getObjCPropertySetterName_ptr =
+      _lookup<ffi.NativeFunction<CXString Function(CXCursor)>>(
+          'clang_Cursor_getObjCPropertySetterName');
+  late final _clang_Cursor_getObjCPropertySetterName =
       _clang_Cursor_getObjCPropertySetterName_ptr
-          .asFunction<_dart_clang_Cursor_getObjCPropertySetterName>();
+          .asFunction<CXString Function(CXCursor)>();
 
   /// Given a cursor that represents an Objective-C method or parameter
   /// declaration, return the associated Objective-C qualifiers for the return
@@ -4626,12 +4682,11 @@ class LibClang {
   }
 
   late final _clang_Cursor_getObjCDeclQualifiers_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_Cursor_getObjCDeclQualifiers>>(
+      _lookup<ffi.NativeFunction<ffi.Uint32 Function(CXCursor)>>(
           'clang_Cursor_getObjCDeclQualifiers');
-  late final _dart_clang_Cursor_getObjCDeclQualifiers
-      _clang_Cursor_getObjCDeclQualifiers =
+  late final _clang_Cursor_getObjCDeclQualifiers =
       _clang_Cursor_getObjCDeclQualifiers_ptr
-          .asFunction<_dart_clang_Cursor_getObjCDeclQualifiers>();
+          .asFunction<int Function(CXCursor)>();
 
   /// Given a cursor that represents an Objective-C method or property
   /// declaration, return non-zero if the declaration was affected by "\@optional".
@@ -4645,11 +4700,10 @@ class LibClang {
   }
 
   late final _clang_Cursor_isObjCOptional_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_Cursor_isObjCOptional>>(
+      _lookup<ffi.NativeFunction<ffi.Uint32 Function(CXCursor)>>(
           'clang_Cursor_isObjCOptional');
-  late final _dart_clang_Cursor_isObjCOptional _clang_Cursor_isObjCOptional =
-      _clang_Cursor_isObjCOptional_ptr
-          .asFunction<_dart_clang_Cursor_isObjCOptional>();
+  late final _clang_Cursor_isObjCOptional =
+      _clang_Cursor_isObjCOptional_ptr.asFunction<int Function(CXCursor)>();
 
   /// Returns non-zero if the given cursor is a variadic function or method.
   int clang_Cursor_isVariadic(
@@ -4661,10 +4715,10 @@ class LibClang {
   }
 
   late final _clang_Cursor_isVariadic_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_Cursor_isVariadic>>(
+      _lookup<ffi.NativeFunction<ffi.Uint32 Function(CXCursor)>>(
           'clang_Cursor_isVariadic');
-  late final _dart_clang_Cursor_isVariadic _clang_Cursor_isVariadic =
-      _clang_Cursor_isVariadic_ptr.asFunction<_dart_clang_Cursor_isVariadic>();
+  late final _clang_Cursor_isVariadic =
+      _clang_Cursor_isVariadic_ptr.asFunction<int Function(CXCursor)>();
 
   /// Returns non-zero if the given cursor points to a symbol marked with
   /// external_source_symbol attribute.
@@ -4691,12 +4745,17 @@ class LibClang {
     );
   }
 
-  late final _clang_Cursor_isExternalSymbol_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_Cursor_isExternalSymbol>>(
-          'clang_Cursor_isExternalSymbol');
-  late final _dart_clang_Cursor_isExternalSymbol
-      _clang_Cursor_isExternalSymbol = _clang_Cursor_isExternalSymbol_ptr
-          .asFunction<_dart_clang_Cursor_isExternalSymbol>();
+  late final _clang_Cursor_isExternalSymbol_ptr = _lookup<
+      ffi.NativeFunction<
+          ffi.Uint32 Function(
+              CXCursor,
+              ffi.Pointer<CXString>,
+              ffi.Pointer<CXString>,
+              ffi.Pointer<ffi.Uint32>)>>('clang_Cursor_isExternalSymbol');
+  late final _clang_Cursor_isExternalSymbol =
+      _clang_Cursor_isExternalSymbol_ptr.asFunction<
+          int Function(CXCursor, ffi.Pointer<CXString>, ffi.Pointer<CXString>,
+              ffi.Pointer<ffi.Uint32>)>();
 
   /// Given a cursor that represents a declaration, return the associated
   /// comment's source range.  The range may include multiple consecutive comments
@@ -4710,11 +4769,10 @@ class LibClang {
   }
 
   late final _clang_Cursor_getCommentRange_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_Cursor_getCommentRange>>(
+      _lookup<ffi.NativeFunction<CXSourceRange Function(CXCursor)>>(
           'clang_Cursor_getCommentRange');
-  late final _dart_clang_Cursor_getCommentRange _clang_Cursor_getCommentRange =
-      _clang_Cursor_getCommentRange_ptr
-          .asFunction<_dart_clang_Cursor_getCommentRange>();
+  late final _clang_Cursor_getCommentRange = _clang_Cursor_getCommentRange_ptr
+      .asFunction<CXSourceRange Function(CXCursor)>();
 
   /// Given a cursor that represents a declaration, return the associated
   /// comment text, including comment markers.
@@ -4727,11 +4785,11 @@ class LibClang {
   }
 
   late final _clang_Cursor_getRawCommentText_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_Cursor_getRawCommentText>>(
+      _lookup<ffi.NativeFunction<CXString Function(CXCursor)>>(
           'clang_Cursor_getRawCommentText');
-  late final _dart_clang_Cursor_getRawCommentText
-      _clang_Cursor_getRawCommentText = _clang_Cursor_getRawCommentText_ptr
-          .asFunction<_dart_clang_Cursor_getRawCommentText>();
+  late final _clang_Cursor_getRawCommentText =
+      _clang_Cursor_getRawCommentText_ptr
+          .asFunction<CXString Function(CXCursor)>();
 
   /// Given a cursor that represents a documentable entity (e.g.,
   /// declaration), return the associated \paragraph; otherwise return the
@@ -4745,11 +4803,11 @@ class LibClang {
   }
 
   late final _clang_Cursor_getBriefCommentText_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_Cursor_getBriefCommentText>>(
+      _lookup<ffi.NativeFunction<CXString Function(CXCursor)>>(
           'clang_Cursor_getBriefCommentText');
-  late final _dart_clang_Cursor_getBriefCommentText
-      _clang_Cursor_getBriefCommentText = _clang_Cursor_getBriefCommentText_ptr
-          .asFunction<_dart_clang_Cursor_getBriefCommentText>();
+  late final _clang_Cursor_getBriefCommentText =
+      _clang_Cursor_getBriefCommentText_ptr
+          .asFunction<CXString Function(CXCursor)>();
 
   /// Retrieve the CXString representing the mangled name of the cursor.
   CXString clang_Cursor_getMangling(
@@ -4761,11 +4819,10 @@ class LibClang {
   }
 
   late final _clang_Cursor_getMangling_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_Cursor_getMangling>>(
+      _lookup<ffi.NativeFunction<CXString Function(CXCursor)>>(
           'clang_Cursor_getMangling');
-  late final _dart_clang_Cursor_getMangling _clang_Cursor_getMangling =
-      _clang_Cursor_getMangling_ptr
-          .asFunction<_dart_clang_Cursor_getMangling>();
+  late final _clang_Cursor_getMangling =
+      _clang_Cursor_getMangling_ptr.asFunction<CXString Function(CXCursor)>();
 
   /// Retrieve the CXStrings representing the mangled symbols of the C++
   /// constructor or destructor at the cursor.
@@ -4778,11 +4835,10 @@ class LibClang {
   }
 
   late final _clang_Cursor_getCXXManglings_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_Cursor_getCXXManglings>>(
+      _lookup<ffi.NativeFunction<ffi.Pointer<CXStringSet> Function(CXCursor)>>(
           'clang_Cursor_getCXXManglings');
-  late final _dart_clang_Cursor_getCXXManglings _clang_Cursor_getCXXManglings =
-      _clang_Cursor_getCXXManglings_ptr
-          .asFunction<_dart_clang_Cursor_getCXXManglings>();
+  late final _clang_Cursor_getCXXManglings = _clang_Cursor_getCXXManglings_ptr
+      .asFunction<ffi.Pointer<CXStringSet> Function(CXCursor)>();
 
   /// Retrieve the CXStrings representing the mangled symbols of the ObjC
   /// class interface or implementation at the cursor.
@@ -4795,14 +4851,13 @@ class LibClang {
   }
 
   late final _clang_Cursor_getObjCManglings_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_Cursor_getObjCManglings>>(
+      _lookup<ffi.NativeFunction<ffi.Pointer<CXStringSet> Function(CXCursor)>>(
           'clang_Cursor_getObjCManglings');
-  late final _dart_clang_Cursor_getObjCManglings
-      _clang_Cursor_getObjCManglings = _clang_Cursor_getObjCManglings_ptr
-          .asFunction<_dart_clang_Cursor_getObjCManglings>();
+  late final _clang_Cursor_getObjCManglings = _clang_Cursor_getObjCManglings_ptr
+      .asFunction<ffi.Pointer<CXStringSet> Function(CXCursor)>();
 
   /// Given a CXCursor_ModuleImportDecl cursor, return the associated module.
-  ffi.Pointer<ffi.Void> clang_Cursor_getModule(
+  CXModule clang_Cursor_getModule(
     CXCursor C,
   ) {
     return _clang_Cursor_getModule(
@@ -4811,16 +4866,16 @@ class LibClang {
   }
 
   late final _clang_Cursor_getModule_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_Cursor_getModule>>(
+      _lookup<ffi.NativeFunction<CXModule Function(CXCursor)>>(
           'clang_Cursor_getModule');
-  late final _dart_clang_Cursor_getModule _clang_Cursor_getModule =
-      _clang_Cursor_getModule_ptr.asFunction<_dart_clang_Cursor_getModule>();
+  late final _clang_Cursor_getModule =
+      _clang_Cursor_getModule_ptr.asFunction<CXModule Function(CXCursor)>();
 
   /// Given a CXFile header file, return the module that contains it, if one
   /// exists.
-  ffi.Pointer<ffi.Void> clang_getModuleForFile(
-    ffi.Pointer<CXTranslationUnitImpl> arg0,
-    ffi.Pointer<ffi.Void> arg1,
+  CXModule clang_getModuleForFile(
+    CXTranslationUnit arg0,
+    CXFile arg1,
   ) {
     return _clang_getModuleForFile(
       arg0,
@@ -4829,16 +4884,16 @@ class LibClang {
   }
 
   late final _clang_getModuleForFile_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getModuleForFile>>(
+      _lookup<ffi.NativeFunction<CXModule Function(CXTranslationUnit, CXFile)>>(
           'clang_getModuleForFile');
-  late final _dart_clang_getModuleForFile _clang_getModuleForFile =
-      _clang_getModuleForFile_ptr.asFunction<_dart_clang_getModuleForFile>();
+  late final _clang_getModuleForFile = _clang_getModuleForFile_ptr
+      .asFunction<CXModule Function(CXTranslationUnit, CXFile)>();
 
   /// \param Module a module object.
   ///
   /// \returns the module file where the provided module object came from.
-  ffi.Pointer<ffi.Void> clang_Module_getASTFile(
-    ffi.Pointer<ffi.Void> Module,
+  CXFile clang_Module_getASTFile(
+    CXModule Module,
   ) {
     return _clang_Module_getASTFile(
       Module,
@@ -4846,17 +4901,17 @@ class LibClang {
   }
 
   late final _clang_Module_getASTFile_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_Module_getASTFile>>(
+      _lookup<ffi.NativeFunction<CXFile Function(CXModule)>>(
           'clang_Module_getASTFile');
-  late final _dart_clang_Module_getASTFile _clang_Module_getASTFile =
-      _clang_Module_getASTFile_ptr.asFunction<_dart_clang_Module_getASTFile>();
+  late final _clang_Module_getASTFile =
+      _clang_Module_getASTFile_ptr.asFunction<CXFile Function(CXModule)>();
 
   /// \param Module a module object.
   ///
   /// \returns the parent of a sub-module or NULL if the given module is top-level,
   /// e.g. for 'std.vector' it will return the 'std' module.
-  ffi.Pointer<ffi.Void> clang_Module_getParent(
-    ffi.Pointer<ffi.Void> Module,
+  CXModule clang_Module_getParent(
+    CXModule Module,
   ) {
     return _clang_Module_getParent(
       Module,
@@ -4864,17 +4919,17 @@ class LibClang {
   }
 
   late final _clang_Module_getParent_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_Module_getParent>>(
+      _lookup<ffi.NativeFunction<CXModule Function(CXModule)>>(
           'clang_Module_getParent');
-  late final _dart_clang_Module_getParent _clang_Module_getParent =
-      _clang_Module_getParent_ptr.asFunction<_dart_clang_Module_getParent>();
+  late final _clang_Module_getParent =
+      _clang_Module_getParent_ptr.asFunction<CXModule Function(CXModule)>();
 
   /// \param Module a module object.
   ///
   /// \returns the name of the module, e.g. for the 'std.vector' sub-module it
   /// will return "vector".
   CXString clang_Module_getName(
-    ffi.Pointer<ffi.Void> Module,
+    CXModule Module,
   ) {
     return _clang_Module_getName(
       Module,
@@ -4882,16 +4937,16 @@ class LibClang {
   }
 
   late final _clang_Module_getName_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_Module_getName>>(
+      _lookup<ffi.NativeFunction<CXString Function(CXModule)>>(
           'clang_Module_getName');
-  late final _dart_clang_Module_getName _clang_Module_getName =
-      _clang_Module_getName_ptr.asFunction<_dart_clang_Module_getName>();
+  late final _clang_Module_getName =
+      _clang_Module_getName_ptr.asFunction<CXString Function(CXModule)>();
 
   /// \param Module a module object.
   ///
   /// \returns the full name of the module, e.g. "std.vector".
   CXString clang_Module_getFullName(
-    ffi.Pointer<ffi.Void> Module,
+    CXModule Module,
   ) {
     return _clang_Module_getFullName(
       Module,
@@ -4899,17 +4954,16 @@ class LibClang {
   }
 
   late final _clang_Module_getFullName_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_Module_getFullName>>(
+      _lookup<ffi.NativeFunction<CXString Function(CXModule)>>(
           'clang_Module_getFullName');
-  late final _dart_clang_Module_getFullName _clang_Module_getFullName =
-      _clang_Module_getFullName_ptr
-          .asFunction<_dart_clang_Module_getFullName>();
+  late final _clang_Module_getFullName =
+      _clang_Module_getFullName_ptr.asFunction<CXString Function(CXModule)>();
 
   /// \param Module a module object.
   ///
   /// \returns non-zero if the module is a system one.
   int clang_Module_isSystem(
-    ffi.Pointer<ffi.Void> Module,
+    CXModule Module,
   ) {
     return _clang_Module_isSystem(
       Module,
@@ -4917,17 +4971,17 @@ class LibClang {
   }
 
   late final _clang_Module_isSystem_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_Module_isSystem>>(
+      _lookup<ffi.NativeFunction<ffi.Int32 Function(CXModule)>>(
           'clang_Module_isSystem');
-  late final _dart_clang_Module_isSystem _clang_Module_isSystem =
-      _clang_Module_isSystem_ptr.asFunction<_dart_clang_Module_isSystem>();
+  late final _clang_Module_isSystem =
+      _clang_Module_isSystem_ptr.asFunction<int Function(CXModule)>();
 
   /// \param Module a module object.
   ///
   /// \returns the number of top level headers associated with this module.
   int clang_Module_getNumTopLevelHeaders(
-    ffi.Pointer<CXTranslationUnitImpl> arg0,
-    ffi.Pointer<ffi.Void> Module,
+    CXTranslationUnit arg0,
+    CXModule Module,
   ) {
     return _clang_Module_getNumTopLevelHeaders(
       arg0,
@@ -4935,22 +4989,21 @@ class LibClang {
     );
   }
 
-  late final _clang_Module_getNumTopLevelHeaders_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_Module_getNumTopLevelHeaders>>(
-          'clang_Module_getNumTopLevelHeaders');
-  late final _dart_clang_Module_getNumTopLevelHeaders
-      _clang_Module_getNumTopLevelHeaders =
+  late final _clang_Module_getNumTopLevelHeaders_ptr = _lookup<
+          ffi.NativeFunction<ffi.Uint32 Function(CXTranslationUnit, CXModule)>>(
+      'clang_Module_getNumTopLevelHeaders');
+  late final _clang_Module_getNumTopLevelHeaders =
       _clang_Module_getNumTopLevelHeaders_ptr
-          .asFunction<_dart_clang_Module_getNumTopLevelHeaders>();
+          .asFunction<int Function(CXTranslationUnit, CXModule)>();
 
   /// \param Module a module object.
   ///
   /// \param Index top level header index (zero-based).
   ///
   /// \returns the specified top level header associated with the module.
-  ffi.Pointer<ffi.Void> clang_Module_getTopLevelHeader(
-    ffi.Pointer<CXTranslationUnitImpl> arg0,
-    ffi.Pointer<ffi.Void> Module,
+  CXFile clang_Module_getTopLevelHeader(
+    CXTranslationUnit arg0,
+    CXModule Module,
     int Index,
   ) {
     return _clang_Module_getTopLevelHeader(
@@ -4960,12 +5013,13 @@ class LibClang {
     );
   }
 
-  late final _clang_Module_getTopLevelHeader_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_Module_getTopLevelHeader>>(
-          'clang_Module_getTopLevelHeader');
-  late final _dart_clang_Module_getTopLevelHeader
-      _clang_Module_getTopLevelHeader = _clang_Module_getTopLevelHeader_ptr
-          .asFunction<_dart_clang_Module_getTopLevelHeader>();
+  late final _clang_Module_getTopLevelHeader_ptr = _lookup<
+      ffi.NativeFunction<
+          CXFile Function(CXTranslationUnit, CXModule,
+              ffi.Uint32)>>('clang_Module_getTopLevelHeader');
+  late final _clang_Module_getTopLevelHeader =
+      _clang_Module_getTopLevelHeader_ptr
+          .asFunction<CXFile Function(CXTranslationUnit, CXModule, int)>();
 
   /// Determine if a C++ constructor is a converting constructor.
   int clang_CXXConstructor_isConvertingConstructor(
@@ -4976,14 +5030,12 @@ class LibClang {
     );
   }
 
-  late final _clang_CXXConstructor_isConvertingConstructor_ptr = _lookup<
-          ffi.NativeFunction<
-              Native_clang_CXXConstructor_isConvertingConstructor>>(
-      'clang_CXXConstructor_isConvertingConstructor');
-  late final _dart_clang_CXXConstructor_isConvertingConstructor
-      _clang_CXXConstructor_isConvertingConstructor =
+  late final _clang_CXXConstructor_isConvertingConstructor_ptr =
+      _lookup<ffi.NativeFunction<ffi.Uint32 Function(CXCursor)>>(
+          'clang_CXXConstructor_isConvertingConstructor');
+  late final _clang_CXXConstructor_isConvertingConstructor =
       _clang_CXXConstructor_isConvertingConstructor_ptr
-          .asFunction<_dart_clang_CXXConstructor_isConvertingConstructor>();
+          .asFunction<int Function(CXCursor)>();
 
   /// Determine if a C++ constructor is a copy constructor.
   int clang_CXXConstructor_isCopyConstructor(
@@ -4994,13 +5046,12 @@ class LibClang {
     );
   }
 
-  late final _clang_CXXConstructor_isCopyConstructor_ptr = _lookup<
-          ffi.NativeFunction<Native_clang_CXXConstructor_isCopyConstructor>>(
-      'clang_CXXConstructor_isCopyConstructor');
-  late final _dart_clang_CXXConstructor_isCopyConstructor
-      _clang_CXXConstructor_isCopyConstructor =
+  late final _clang_CXXConstructor_isCopyConstructor_ptr =
+      _lookup<ffi.NativeFunction<ffi.Uint32 Function(CXCursor)>>(
+          'clang_CXXConstructor_isCopyConstructor');
+  late final _clang_CXXConstructor_isCopyConstructor =
       _clang_CXXConstructor_isCopyConstructor_ptr
-          .asFunction<_dart_clang_CXXConstructor_isCopyConstructor>();
+          .asFunction<int Function(CXCursor)>();
 
   /// Determine if a C++ constructor is the default constructor.
   int clang_CXXConstructor_isDefaultConstructor(
@@ -5011,13 +5062,12 @@ class LibClang {
     );
   }
 
-  late final _clang_CXXConstructor_isDefaultConstructor_ptr = _lookup<
-          ffi.NativeFunction<Native_clang_CXXConstructor_isDefaultConstructor>>(
-      'clang_CXXConstructor_isDefaultConstructor');
-  late final _dart_clang_CXXConstructor_isDefaultConstructor
-      _clang_CXXConstructor_isDefaultConstructor =
+  late final _clang_CXXConstructor_isDefaultConstructor_ptr =
+      _lookup<ffi.NativeFunction<ffi.Uint32 Function(CXCursor)>>(
+          'clang_CXXConstructor_isDefaultConstructor');
+  late final _clang_CXXConstructor_isDefaultConstructor =
       _clang_CXXConstructor_isDefaultConstructor_ptr
-          .asFunction<_dart_clang_CXXConstructor_isDefaultConstructor>();
+          .asFunction<int Function(CXCursor)>();
 
   /// Determine if a C++ constructor is a move constructor.
   int clang_CXXConstructor_isMoveConstructor(
@@ -5028,13 +5078,12 @@ class LibClang {
     );
   }
 
-  late final _clang_CXXConstructor_isMoveConstructor_ptr = _lookup<
-          ffi.NativeFunction<Native_clang_CXXConstructor_isMoveConstructor>>(
-      'clang_CXXConstructor_isMoveConstructor');
-  late final _dart_clang_CXXConstructor_isMoveConstructor
-      _clang_CXXConstructor_isMoveConstructor =
+  late final _clang_CXXConstructor_isMoveConstructor_ptr =
+      _lookup<ffi.NativeFunction<ffi.Uint32 Function(CXCursor)>>(
+          'clang_CXXConstructor_isMoveConstructor');
+  late final _clang_CXXConstructor_isMoveConstructor =
       _clang_CXXConstructor_isMoveConstructor_ptr
-          .asFunction<_dart_clang_CXXConstructor_isMoveConstructor>();
+          .asFunction<int Function(CXCursor)>();
 
   /// Determine if a C++ field is declared 'mutable'.
   int clang_CXXField_isMutable(
@@ -5046,11 +5095,10 @@ class LibClang {
   }
 
   late final _clang_CXXField_isMutable_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_CXXField_isMutable>>(
+      _lookup<ffi.NativeFunction<ffi.Uint32 Function(CXCursor)>>(
           'clang_CXXField_isMutable');
-  late final _dart_clang_CXXField_isMutable _clang_CXXField_isMutable =
-      _clang_CXXField_isMutable_ptr
-          .asFunction<_dart_clang_CXXField_isMutable>();
+  late final _clang_CXXField_isMutable =
+      _clang_CXXField_isMutable_ptr.asFunction<int Function(CXCursor)>();
 
   /// Determine if a C++ method is declared '= default'.
   int clang_CXXMethod_isDefaulted(
@@ -5062,11 +5110,10 @@ class LibClang {
   }
 
   late final _clang_CXXMethod_isDefaulted_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_CXXMethod_isDefaulted>>(
+      _lookup<ffi.NativeFunction<ffi.Uint32 Function(CXCursor)>>(
           'clang_CXXMethod_isDefaulted');
-  late final _dart_clang_CXXMethod_isDefaulted _clang_CXXMethod_isDefaulted =
-      _clang_CXXMethod_isDefaulted_ptr
-          .asFunction<_dart_clang_CXXMethod_isDefaulted>();
+  late final _clang_CXXMethod_isDefaulted =
+      _clang_CXXMethod_isDefaulted_ptr.asFunction<int Function(CXCursor)>();
 
   /// Determine if a C++ member function or member function template is
   /// pure virtual.
@@ -5079,11 +5126,10 @@ class LibClang {
   }
 
   late final _clang_CXXMethod_isPureVirtual_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_CXXMethod_isPureVirtual>>(
+      _lookup<ffi.NativeFunction<ffi.Uint32 Function(CXCursor)>>(
           'clang_CXXMethod_isPureVirtual');
-  late final _dart_clang_CXXMethod_isPureVirtual
-      _clang_CXXMethod_isPureVirtual = _clang_CXXMethod_isPureVirtual_ptr
-          .asFunction<_dart_clang_CXXMethod_isPureVirtual>();
+  late final _clang_CXXMethod_isPureVirtual =
+      _clang_CXXMethod_isPureVirtual_ptr.asFunction<int Function(CXCursor)>();
 
   /// Determine if a C++ member function or member function template is
   /// declared 'static'.
@@ -5096,11 +5142,10 @@ class LibClang {
   }
 
   late final _clang_CXXMethod_isStatic_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_CXXMethod_isStatic>>(
+      _lookup<ffi.NativeFunction<ffi.Uint32 Function(CXCursor)>>(
           'clang_CXXMethod_isStatic');
-  late final _dart_clang_CXXMethod_isStatic _clang_CXXMethod_isStatic =
-      _clang_CXXMethod_isStatic_ptr
-          .asFunction<_dart_clang_CXXMethod_isStatic>();
+  late final _clang_CXXMethod_isStatic =
+      _clang_CXXMethod_isStatic_ptr.asFunction<int Function(CXCursor)>();
 
   /// Determine if a C++ member function or member function template is
   /// explicitly declared 'virtual' or if it overrides a virtual method from
@@ -5114,11 +5159,10 @@ class LibClang {
   }
 
   late final _clang_CXXMethod_isVirtual_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_CXXMethod_isVirtual>>(
+      _lookup<ffi.NativeFunction<ffi.Uint32 Function(CXCursor)>>(
           'clang_CXXMethod_isVirtual');
-  late final _dart_clang_CXXMethod_isVirtual _clang_CXXMethod_isVirtual =
-      _clang_CXXMethod_isVirtual_ptr
-          .asFunction<_dart_clang_CXXMethod_isVirtual>();
+  late final _clang_CXXMethod_isVirtual =
+      _clang_CXXMethod_isVirtual_ptr.asFunction<int Function(CXCursor)>();
 
   /// Determine if a C++ record is abstract, i.e. whether a class or struct
   /// has a pure virtual member function.
@@ -5131,11 +5175,10 @@ class LibClang {
   }
 
   late final _clang_CXXRecord_isAbstract_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_CXXRecord_isAbstract>>(
+      _lookup<ffi.NativeFunction<ffi.Uint32 Function(CXCursor)>>(
           'clang_CXXRecord_isAbstract');
-  late final _dart_clang_CXXRecord_isAbstract _clang_CXXRecord_isAbstract =
-      _clang_CXXRecord_isAbstract_ptr
-          .asFunction<_dart_clang_CXXRecord_isAbstract>();
+  late final _clang_CXXRecord_isAbstract =
+      _clang_CXXRecord_isAbstract_ptr.asFunction<int Function(CXCursor)>();
 
   /// Determine if an enum declaration refers to a scoped enum.
   int clang_EnumDecl_isScoped(
@@ -5147,10 +5190,10 @@ class LibClang {
   }
 
   late final _clang_EnumDecl_isScoped_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_EnumDecl_isScoped>>(
+      _lookup<ffi.NativeFunction<ffi.Uint32 Function(CXCursor)>>(
           'clang_EnumDecl_isScoped');
-  late final _dart_clang_EnumDecl_isScoped _clang_EnumDecl_isScoped =
-      _clang_EnumDecl_isScoped_ptr.asFunction<_dart_clang_EnumDecl_isScoped>();
+  late final _clang_EnumDecl_isScoped =
+      _clang_EnumDecl_isScoped_ptr.asFunction<int Function(CXCursor)>();
 
   /// Determine if a C++ member function or member function template is
   /// declared 'const'.
@@ -5163,10 +5206,10 @@ class LibClang {
   }
 
   late final _clang_CXXMethod_isConst_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_CXXMethod_isConst>>(
+      _lookup<ffi.NativeFunction<ffi.Uint32 Function(CXCursor)>>(
           'clang_CXXMethod_isConst');
-  late final _dart_clang_CXXMethod_isConst _clang_CXXMethod_isConst =
-      _clang_CXXMethod_isConst_ptr.asFunction<_dart_clang_CXXMethod_isConst>();
+  late final _clang_CXXMethod_isConst =
+      _clang_CXXMethod_isConst_ptr.asFunction<int Function(CXCursor)>();
 
   /// Given a cursor that represents a template, determine
   /// the cursor kind of the specializations would be generated by instantiating
@@ -5192,11 +5235,10 @@ class LibClang {
   }
 
   late final _clang_getTemplateCursorKind_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getTemplateCursorKind>>(
+      _lookup<ffi.NativeFunction<ffi.Int32 Function(CXCursor)>>(
           'clang_getTemplateCursorKind');
-  late final _dart_clang_getTemplateCursorKind _clang_getTemplateCursorKind =
-      _clang_getTemplateCursorKind_ptr
-          .asFunction<_dart_clang_getTemplateCursorKind>();
+  late final _clang_getTemplateCursorKind =
+      _clang_getTemplateCursorKind_ptr.asFunction<int Function(CXCursor)>();
 
   /// Given a cursor that may represent a specialization or instantiation
   /// of a template, retrieve the cursor that represents the template that it
@@ -5233,12 +5275,11 @@ class LibClang {
   }
 
   late final _clang_getSpecializedCursorTemplate_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getSpecializedCursorTemplate>>(
+      _lookup<ffi.NativeFunction<CXCursor Function(CXCursor)>>(
           'clang_getSpecializedCursorTemplate');
-  late final _dart_clang_getSpecializedCursorTemplate
-      _clang_getSpecializedCursorTemplate =
+  late final _clang_getSpecializedCursorTemplate =
       _clang_getSpecializedCursorTemplate_ptr
-          .asFunction<_dart_clang_getSpecializedCursorTemplate>();
+          .asFunction<CXCursor Function(CXCursor)>();
 
   /// Given a cursor that references something else, return the source range
   /// covering that reference.
@@ -5268,13 +5309,13 @@ class LibClang {
     );
   }
 
-  late final _clang_getCursorReferenceNameRange_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getCursorReferenceNameRange>>(
-          'clang_getCursorReferenceNameRange');
-  late final _dart_clang_getCursorReferenceNameRange
-      _clang_getCursorReferenceNameRange =
+  late final _clang_getCursorReferenceNameRange_ptr = _lookup<
+      ffi.NativeFunction<
+          CXSourceRange Function(CXCursor, ffi.Uint32,
+              ffi.Uint32)>>('clang_getCursorReferenceNameRange');
+  late final _clang_getCursorReferenceNameRange =
       _clang_getCursorReferenceNameRange_ptr
-          .asFunction<_dart_clang_getCursorReferenceNameRange>();
+          .asFunction<CXSourceRange Function(CXCursor, int, int)>();
 
   /// Get the raw lexical token starting with the given location.
   ///
@@ -5286,7 +5327,7 @@ class LibClang {
   /// exist. The returned pointer must be freed with clang_disposeTokens before the
   /// translation unit is destroyed.
   ffi.Pointer<CXToken> clang_getToken(
-    ffi.Pointer<CXTranslationUnitImpl> TU,
+    CXTranslationUnit TU,
     CXSourceLocation Location,
   ) {
     return _clang_getToken(
@@ -5295,10 +5336,12 @@ class LibClang {
     );
   }
 
-  late final _clang_getToken_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getToken>>('clang_getToken');
-  late final _dart_clang_getToken _clang_getToken =
-      _clang_getToken_ptr.asFunction<_dart_clang_getToken>();
+  late final _clang_getToken_ptr = _lookup<
+      ffi.NativeFunction<
+          ffi.Pointer<CXToken> Function(
+              CXTranslationUnit, CXSourceLocation)>>('clang_getToken');
+  late final _clang_getToken = _clang_getToken_ptr.asFunction<
+      ffi.Pointer<CXToken> Function(CXTranslationUnit, CXSourceLocation)>();
 
   /// Determine the kind of the given token.
   int clang_getTokenKind(
@@ -5310,17 +5353,17 @@ class LibClang {
   }
 
   late final _clang_getTokenKind_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getTokenKind>>(
+      _lookup<ffi.NativeFunction<CXTokenKind Function(CXToken)>>(
           'clang_getTokenKind');
-  late final _dart_clang_getTokenKind _clang_getTokenKind =
-      _clang_getTokenKind_ptr.asFunction<_dart_clang_getTokenKind>();
+  late final _clang_getTokenKind =
+      _clang_getTokenKind_ptr.asFunction<int Function(CXToken)>();
 
   /// Determine the spelling of the given token.
   ///
   /// The spelling of a token is the textual representation of that token, e.g.,
   /// the text of an identifier or keyword.
   CXString clang_getTokenSpelling(
-    ffi.Pointer<CXTranslationUnitImpl> arg0,
+    CXTranslationUnit arg0,
     CXToken arg1,
   ) {
     return _clang_getTokenSpelling(
@@ -5329,15 +5372,15 @@ class LibClang {
     );
   }
 
-  late final _clang_getTokenSpelling_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getTokenSpelling>>(
-          'clang_getTokenSpelling');
-  late final _dart_clang_getTokenSpelling _clang_getTokenSpelling =
-      _clang_getTokenSpelling_ptr.asFunction<_dart_clang_getTokenSpelling>();
+  late final _clang_getTokenSpelling_ptr = _lookup<
+          ffi.NativeFunction<CXString Function(CXTranslationUnit, CXToken)>>(
+      'clang_getTokenSpelling');
+  late final _clang_getTokenSpelling = _clang_getTokenSpelling_ptr
+      .asFunction<CXString Function(CXTranslationUnit, CXToken)>();
 
   /// Retrieve the source location of the given token.
   CXSourceLocation clang_getTokenLocation(
-    ffi.Pointer<CXTranslationUnitImpl> arg0,
+    CXTranslationUnit arg0,
     CXToken arg1,
   ) {
     return _clang_getTokenLocation(
@@ -5346,15 +5389,16 @@ class LibClang {
     );
   }
 
-  late final _clang_getTokenLocation_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getTokenLocation>>(
-          'clang_getTokenLocation');
-  late final _dart_clang_getTokenLocation _clang_getTokenLocation =
-      _clang_getTokenLocation_ptr.asFunction<_dart_clang_getTokenLocation>();
+  late final _clang_getTokenLocation_ptr = _lookup<
+      ffi.NativeFunction<
+          CXSourceLocation Function(
+              CXTranslationUnit, CXToken)>>('clang_getTokenLocation');
+  late final _clang_getTokenLocation = _clang_getTokenLocation_ptr
+      .asFunction<CXSourceLocation Function(CXTranslationUnit, CXToken)>();
 
   /// Retrieve a source range that covers the given token.
   CXSourceRange clang_getTokenExtent(
-    ffi.Pointer<CXTranslationUnitImpl> arg0,
+    CXTranslationUnit arg0,
     CXToken arg1,
   ) {
     return _clang_getTokenExtent(
@@ -5363,11 +5407,12 @@ class LibClang {
     );
   }
 
-  late final _clang_getTokenExtent_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getTokenExtent>>(
-          'clang_getTokenExtent');
-  late final _dart_clang_getTokenExtent _clang_getTokenExtent =
-      _clang_getTokenExtent_ptr.asFunction<_dart_clang_getTokenExtent>();
+  late final _clang_getTokenExtent_ptr = _lookup<
+      ffi.NativeFunction<
+          CXSourceRange Function(
+              CXTranslationUnit, CXToken)>>('clang_getTokenExtent');
+  late final _clang_getTokenExtent = _clang_getTokenExtent_ptr
+      .asFunction<CXSourceRange Function(CXTranslationUnit, CXToken)>();
 
   /// Tokenize the source code described by the given range into raw
   /// lexical tokens.
@@ -5384,7 +5429,7 @@ class LibClang {
   /// \param NumTokens will be set to the number of tokens in the \c *Tokens
   /// array.
   void clang_tokenize(
-    ffi.Pointer<CXTranslationUnitImpl> TU,
+    CXTranslationUnit TU,
     CXSourceRange Range,
     ffi.Pointer<ffi.Pointer<CXToken>> Tokens,
     ffi.Pointer<ffi.Uint32> NumTokens,
@@ -5397,10 +5442,16 @@ class LibClang {
     );
   }
 
-  late final _clang_tokenize_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_tokenize>>('clang_tokenize');
-  late final _dart_clang_tokenize _clang_tokenize =
-      _clang_tokenize_ptr.asFunction<_dart_clang_tokenize>();
+  late final _clang_tokenize_ptr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              CXTranslationUnit,
+              CXSourceRange,
+              ffi.Pointer<ffi.Pointer<CXToken>>,
+              ffi.Pointer<ffi.Uint32>)>>('clang_tokenize');
+  late final _clang_tokenize = _clang_tokenize_ptr.asFunction<
+      void Function(CXTranslationUnit, CXSourceRange,
+          ffi.Pointer<ffi.Pointer<CXToken>>, ffi.Pointer<ffi.Uint32>)>();
 
   /// Annotate the given set of tokens by providing cursors for each token
   /// that can be mapped to a specific entity within the abstract syntax tree.
@@ -5431,7 +5482,7 @@ class LibClang {
   /// \param Cursors an array of \p NumTokens cursors, whose contents will be
   /// replaced with the cursors corresponding to each token.
   void clang_annotateTokens(
-    ffi.Pointer<CXTranslationUnitImpl> TU,
+    CXTranslationUnit TU,
     ffi.Pointer<CXToken> Tokens,
     int NumTokens,
     ffi.Pointer<CXCursor> Cursors,
@@ -5444,15 +5495,17 @@ class LibClang {
     );
   }
 
-  late final _clang_annotateTokens_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_annotateTokens>>(
-          'clang_annotateTokens');
-  late final _dart_clang_annotateTokens _clang_annotateTokens =
-      _clang_annotateTokens_ptr.asFunction<_dart_clang_annotateTokens>();
+  late final _clang_annotateTokens_ptr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(CXTranslationUnit, ffi.Pointer<CXToken>, ffi.Uint32,
+              ffi.Pointer<CXCursor>)>>('clang_annotateTokens');
+  late final _clang_annotateTokens = _clang_annotateTokens_ptr.asFunction<
+      void Function(CXTranslationUnit, ffi.Pointer<CXToken>, int,
+          ffi.Pointer<CXCursor>)>();
 
   /// Free the given set of tokens.
   void clang_disposeTokens(
-    ffi.Pointer<CXTranslationUnitImpl> TU,
+    CXTranslationUnit TU,
     ffi.Pointer<CXToken> Tokens,
     int NumTokens,
   ) {
@@ -5463,11 +5516,12 @@ class LibClang {
     );
   }
 
-  late final _clang_disposeTokens_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_disposeTokens>>(
-          'clang_disposeTokens');
-  late final _dart_clang_disposeTokens _clang_disposeTokens =
-      _clang_disposeTokens_ptr.asFunction<_dart_clang_disposeTokens>();
+  late final _clang_disposeTokens_ptr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(CXTranslationUnit, ffi.Pointer<CXToken>,
+              ffi.Uint32)>>('clang_disposeTokens');
+  late final _clang_disposeTokens = _clang_disposeTokens_ptr.asFunction<
+      void Function(CXTranslationUnit, ffi.Pointer<CXToken>, int)>();
 
   /// \defgroup CINDEX_DEBUG Debugging facilities
   ///
@@ -5484,11 +5538,10 @@ class LibClang {
   }
 
   late final _clang_getCursorKindSpelling_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getCursorKindSpelling>>(
+      _lookup<ffi.NativeFunction<CXString Function(ffi.Int32)>>(
           'clang_getCursorKindSpelling');
-  late final _dart_clang_getCursorKindSpelling _clang_getCursorKindSpelling =
-      _clang_getCursorKindSpelling_ptr
-          .asFunction<_dart_clang_getCursorKindSpelling>();
+  late final _clang_getCursorKindSpelling =
+      _clang_getCursorKindSpelling_ptr.asFunction<CXString Function(int)>();
 
   void clang_getDefinitionSpellingAndExtent(
     CXCursor arg0,
@@ -5510,26 +5563,41 @@ class LibClang {
     );
   }
 
-  late final _clang_getDefinitionSpellingAndExtent_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getDefinitionSpellingAndExtent>>(
-          'clang_getDefinitionSpellingAndExtent');
-  late final _dart_clang_getDefinitionSpellingAndExtent
-      _clang_getDefinitionSpellingAndExtent =
-      _clang_getDefinitionSpellingAndExtent_ptr
-          .asFunction<_dart_clang_getDefinitionSpellingAndExtent>();
+  late final _clang_getDefinitionSpellingAndExtent_ptr = _lookup<
+          ffi.NativeFunction<
+              ffi.Void Function(
+                  CXCursor,
+                  ffi.Pointer<ffi.Pointer<ffi.Int8>>,
+                  ffi.Pointer<ffi.Pointer<ffi.Int8>>,
+                  ffi.Pointer<ffi.Uint32>,
+                  ffi.Pointer<ffi.Uint32>,
+                  ffi.Pointer<ffi.Uint32>,
+                  ffi.Pointer<ffi.Uint32>)>>(
+      'clang_getDefinitionSpellingAndExtent');
+  late final _clang_getDefinitionSpellingAndExtent =
+      _clang_getDefinitionSpellingAndExtent_ptr.asFunction<
+          void Function(
+              CXCursor,
+              ffi.Pointer<ffi.Pointer<ffi.Int8>>,
+              ffi.Pointer<ffi.Pointer<ffi.Int8>>,
+              ffi.Pointer<ffi.Uint32>,
+              ffi.Pointer<ffi.Uint32>,
+              ffi.Pointer<ffi.Uint32>,
+              ffi.Pointer<ffi.Uint32>)>();
 
   void clang_enableStackTraces() {
     return _clang_enableStackTraces();
   }
 
   late final _clang_enableStackTraces_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_enableStackTraces>>(
+      _lookup<ffi.NativeFunction<ffi.Void Function()>>(
           'clang_enableStackTraces');
-  late final _dart_clang_enableStackTraces _clang_enableStackTraces =
-      _clang_enableStackTraces_ptr.asFunction<_dart_clang_enableStackTraces>();
+  late final _clang_enableStackTraces =
+      _clang_enableStackTraces_ptr.asFunction<void Function()>();
 
   void clang_executeOnThread(
-    ffi.Pointer<ffi.NativeFunction<_typedefC_1>> fn,
+    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>
+        fn,
     ffi.Pointer<ffi.Void> user_data,
     int stack_size,
   ) {
@@ -5540,11 +5608,19 @@ class LibClang {
     );
   }
 
-  late final _clang_executeOnThread_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_executeOnThread>>(
-          'clang_executeOnThread');
-  late final _dart_clang_executeOnThread _clang_executeOnThread =
-      _clang_executeOnThread_ptr.asFunction<_dart_clang_executeOnThread>();
+  late final _clang_executeOnThread_ptr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              ffi.Pointer<
+                  ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>,
+              ffi.Pointer<ffi.Void>,
+              ffi.Uint32)>>('clang_executeOnThread');
+  late final _clang_executeOnThread = _clang_executeOnThread_ptr.asFunction<
+      void Function(
+          ffi.Pointer<
+              ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>,
+          ffi.Pointer<ffi.Void>,
+          int)>();
 
   /// Determine the kind of a particular chunk within a completion string.
   ///
@@ -5554,7 +5630,7 @@ class LibClang {
   ///
   /// \returns the kind of the chunk at the index \c chunk_number.
   int clang_getCompletionChunkKind(
-    ffi.Pointer<ffi.Void> completion_string,
+    CXCompletionString completion_string,
     int chunk_number,
   ) {
     return _clang_getCompletionChunkKind(
@@ -5563,12 +5639,12 @@ class LibClang {
     );
   }
 
-  late final _clang_getCompletionChunkKind_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getCompletionChunkKind>>(
-          'clang_getCompletionChunkKind');
-  late final _dart_clang_getCompletionChunkKind _clang_getCompletionChunkKind =
-      _clang_getCompletionChunkKind_ptr
-          .asFunction<_dart_clang_getCompletionChunkKind>();
+  late final _clang_getCompletionChunkKind_ptr = _lookup<
+      ffi.NativeFunction<
+          ffi.Int32 Function(
+              CXCompletionString, ffi.Uint32)>>('clang_getCompletionChunkKind');
+  late final _clang_getCompletionChunkKind = _clang_getCompletionChunkKind_ptr
+      .asFunction<int Function(CXCompletionString, int)>();
 
   /// Retrieve the text associated with a particular chunk within a
   /// completion string.
@@ -5579,7 +5655,7 @@ class LibClang {
   ///
   /// \returns the text associated with the chunk at index \c chunk_number.
   CXString clang_getCompletionChunkText(
-    ffi.Pointer<ffi.Void> completion_string,
+    CXCompletionString completion_string,
     int chunk_number,
   ) {
     return _clang_getCompletionChunkText(
@@ -5588,12 +5664,12 @@ class LibClang {
     );
   }
 
-  late final _clang_getCompletionChunkText_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getCompletionChunkText>>(
-          'clang_getCompletionChunkText');
-  late final _dart_clang_getCompletionChunkText _clang_getCompletionChunkText =
-      _clang_getCompletionChunkText_ptr
-          .asFunction<_dart_clang_getCompletionChunkText>();
+  late final _clang_getCompletionChunkText_ptr = _lookup<
+      ffi.NativeFunction<
+          CXString Function(
+              CXCompletionString, ffi.Uint32)>>('clang_getCompletionChunkText');
+  late final _clang_getCompletionChunkText = _clang_getCompletionChunkText_ptr
+      .asFunction<CXString Function(CXCompletionString, int)>();
 
   /// Retrieve the completion string associated with a particular chunk
   /// within a completion string.
@@ -5604,8 +5680,8 @@ class LibClang {
   ///
   /// \returns the completion string associated with the chunk at index
   /// \c chunk_number.
-  ffi.Pointer<ffi.Void> clang_getCompletionChunkCompletionString(
-    ffi.Pointer<ffi.Void> completion_string,
+  CXCompletionString clang_getCompletionChunkCompletionString(
+    CXCompletionString completion_string,
     int chunk_number,
   ) {
     return _clang_getCompletionChunkCompletionString(
@@ -5615,16 +5691,16 @@ class LibClang {
   }
 
   late final _clang_getCompletionChunkCompletionString_ptr = _lookup<
-          ffi.NativeFunction<Native_clang_getCompletionChunkCompletionString>>(
-      'clang_getCompletionChunkCompletionString');
-  late final _dart_clang_getCompletionChunkCompletionString
-      _clang_getCompletionChunkCompletionString =
+      ffi.NativeFunction<
+          CXCompletionString Function(CXCompletionString,
+              ffi.Uint32)>>('clang_getCompletionChunkCompletionString');
+  late final _clang_getCompletionChunkCompletionString =
       _clang_getCompletionChunkCompletionString_ptr
-          .asFunction<_dart_clang_getCompletionChunkCompletionString>();
+          .asFunction<CXCompletionString Function(CXCompletionString, int)>();
 
   /// Retrieve the number of chunks in the given code-completion string.
   int clang_getNumCompletionChunks(
-    ffi.Pointer<ffi.Void> completion_string,
+    CXCompletionString completion_string,
   ) {
     return _clang_getNumCompletionChunks(
       completion_string,
@@ -5632,11 +5708,10 @@ class LibClang {
   }
 
   late final _clang_getNumCompletionChunks_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getNumCompletionChunks>>(
+      _lookup<ffi.NativeFunction<ffi.Uint32 Function(CXCompletionString)>>(
           'clang_getNumCompletionChunks');
-  late final _dart_clang_getNumCompletionChunks _clang_getNumCompletionChunks =
-      _clang_getNumCompletionChunks_ptr
-          .asFunction<_dart_clang_getNumCompletionChunks>();
+  late final _clang_getNumCompletionChunks = _clang_getNumCompletionChunks_ptr
+      .asFunction<int Function(CXCompletionString)>();
 
   /// Determine the priority of this code completion.
   ///
@@ -5649,7 +5724,7 @@ class LibClang {
   /// \returns The priority of this completion string. Smaller values indicate
   /// higher-priority (more likely) completions.
   int clang_getCompletionPriority(
-    ffi.Pointer<ffi.Void> completion_string,
+    CXCompletionString completion_string,
   ) {
     return _clang_getCompletionPriority(
       completion_string,
@@ -5657,11 +5732,10 @@ class LibClang {
   }
 
   late final _clang_getCompletionPriority_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getCompletionPriority>>(
+      _lookup<ffi.NativeFunction<ffi.Uint32 Function(CXCompletionString)>>(
           'clang_getCompletionPriority');
-  late final _dart_clang_getCompletionPriority _clang_getCompletionPriority =
-      _clang_getCompletionPriority_ptr
-          .asFunction<_dart_clang_getCompletionPriority>();
+  late final _clang_getCompletionPriority = _clang_getCompletionPriority_ptr
+      .asFunction<int Function(CXCompletionString)>();
 
   /// Determine the availability of the entity that this code-completion
   /// string refers to.
@@ -5670,7 +5744,7 @@ class LibClang {
   ///
   /// \returns The availability of the completion string.
   int clang_getCompletionAvailability(
-    ffi.Pointer<ffi.Void> completion_string,
+    CXCompletionString completion_string,
   ) {
     return _clang_getCompletionAvailability(
       completion_string,
@@ -5678,11 +5752,11 @@ class LibClang {
   }
 
   late final _clang_getCompletionAvailability_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getCompletionAvailability>>(
+      _lookup<ffi.NativeFunction<ffi.Int32 Function(CXCompletionString)>>(
           'clang_getCompletionAvailability');
-  late final _dart_clang_getCompletionAvailability
-      _clang_getCompletionAvailability = _clang_getCompletionAvailability_ptr
-          .asFunction<_dart_clang_getCompletionAvailability>();
+  late final _clang_getCompletionAvailability =
+      _clang_getCompletionAvailability_ptr
+          .asFunction<int Function(CXCompletionString)>();
 
   /// Retrieve the number of annotations associated with the given
   /// completion string.
@@ -5692,7 +5766,7 @@ class LibClang {
   /// \returns the number of annotations associated with the given completion
   /// string.
   int clang_getCompletionNumAnnotations(
-    ffi.Pointer<ffi.Void> completion_string,
+    CXCompletionString completion_string,
   ) {
     return _clang_getCompletionNumAnnotations(
       completion_string,
@@ -5700,12 +5774,11 @@ class LibClang {
   }
 
   late final _clang_getCompletionNumAnnotations_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getCompletionNumAnnotations>>(
+      _lookup<ffi.NativeFunction<ffi.Uint32 Function(CXCompletionString)>>(
           'clang_getCompletionNumAnnotations');
-  late final _dart_clang_getCompletionNumAnnotations
-      _clang_getCompletionNumAnnotations =
+  late final _clang_getCompletionNumAnnotations =
       _clang_getCompletionNumAnnotations_ptr
-          .asFunction<_dart_clang_getCompletionNumAnnotations>();
+          .asFunction<int Function(CXCompletionString)>();
 
   /// Retrieve the annotation associated with the given completion string.
   ///
@@ -5717,7 +5790,7 @@ class LibClang {
   /// \returns annotation string associated with the completion at index
   /// \c annotation_number, or a NULL string if that annotation is not available.
   CXString clang_getCompletionAnnotation(
-    ffi.Pointer<ffi.Void> completion_string,
+    CXCompletionString completion_string,
     int annotation_number,
   ) {
     return _clang_getCompletionAnnotation(
@@ -5726,12 +5799,12 @@ class LibClang {
     );
   }
 
-  late final _clang_getCompletionAnnotation_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getCompletionAnnotation>>(
-          'clang_getCompletionAnnotation');
-  late final _dart_clang_getCompletionAnnotation
-      _clang_getCompletionAnnotation = _clang_getCompletionAnnotation_ptr
-          .asFunction<_dart_clang_getCompletionAnnotation>();
+  late final _clang_getCompletionAnnotation_ptr = _lookup<
+      ffi.NativeFunction<
+          CXString Function(CXCompletionString,
+              ffi.Uint32)>>('clang_getCompletionAnnotation');
+  late final _clang_getCompletionAnnotation = _clang_getCompletionAnnotation_ptr
+      .asFunction<CXString Function(CXCompletionString, int)>();
 
   /// Retrieve the parent context of the given completion string.
   ///
@@ -5748,7 +5821,7 @@ class LibClang {
   /// \returns The name of the completion parent, e.g., "NSObject" if
   /// the completion string represents a method in the NSObject class.
   CXString clang_getCompletionParent(
-    ffi.Pointer<ffi.Void> completion_string,
+    CXCompletionString completion_string,
     ffi.Pointer<ffi.Int32> kind,
   ) {
     return _clang_getCompletionParent(
@@ -5757,17 +5830,18 @@ class LibClang {
     );
   }
 
-  late final _clang_getCompletionParent_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getCompletionParent>>(
-          'clang_getCompletionParent');
-  late final _dart_clang_getCompletionParent _clang_getCompletionParent =
-      _clang_getCompletionParent_ptr
-          .asFunction<_dart_clang_getCompletionParent>();
+  late final _clang_getCompletionParent_ptr = _lookup<
+      ffi.NativeFunction<
+          CXString Function(CXCompletionString,
+              ffi.Pointer<ffi.Int32>)>>('clang_getCompletionParent');
+  late final _clang_getCompletionParent =
+      _clang_getCompletionParent_ptr.asFunction<
+          CXString Function(CXCompletionString, ffi.Pointer<ffi.Int32>)>();
 
   /// Retrieve the brief documentation comment attached to the declaration
   /// that corresponds to the given completion string.
   CXString clang_getCompletionBriefComment(
-    ffi.Pointer<ffi.Void> completion_string,
+    CXCompletionString completion_string,
   ) {
     return _clang_getCompletionBriefComment(
       completion_string,
@@ -5775,11 +5849,11 @@ class LibClang {
   }
 
   late final _clang_getCompletionBriefComment_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getCompletionBriefComment>>(
+      _lookup<ffi.NativeFunction<CXString Function(CXCompletionString)>>(
           'clang_getCompletionBriefComment');
-  late final _dart_clang_getCompletionBriefComment
-      _clang_getCompletionBriefComment = _clang_getCompletionBriefComment_ptr
-          .asFunction<_dart_clang_getCompletionBriefComment>();
+  late final _clang_getCompletionBriefComment =
+      _clang_getCompletionBriefComment_ptr
+          .asFunction<CXString Function(CXCompletionString)>();
 
   /// Retrieve a completion string for an arbitrary declaration or macro
   /// definition cursor.
@@ -5788,7 +5862,7 @@ class LibClang {
   ///
   /// \returns A non-context-sensitive completion string for declaration and macro
   /// definition cursors, or NULL for other kinds of cursors.
-  ffi.Pointer<ffi.Void> clang_getCursorCompletionString(
+  CXCompletionString clang_getCursorCompletionString(
     CXCursor cursor,
   ) {
     return _clang_getCursorCompletionString(
@@ -5797,11 +5871,11 @@ class LibClang {
   }
 
   late final _clang_getCursorCompletionString_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getCursorCompletionString>>(
+      _lookup<ffi.NativeFunction<CXCompletionString Function(CXCursor)>>(
           'clang_getCursorCompletionString');
-  late final _dart_clang_getCursorCompletionString
-      _clang_getCursorCompletionString = _clang_getCursorCompletionString_ptr
-          .asFunction<_dart_clang_getCursorCompletionString>();
+  late final _clang_getCursorCompletionString =
+      _clang_getCursorCompletionString_ptr
+          .asFunction<CXCompletionString Function(CXCursor)>();
 
   /// Retrieve the number of fix-its for the given completion index.
   ///
@@ -5824,12 +5898,12 @@ class LibClang {
     );
   }
 
-  late final _clang_getCompletionNumFixIts_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getCompletionNumFixIts>>(
-          'clang_getCompletionNumFixIts');
-  late final _dart_clang_getCompletionNumFixIts _clang_getCompletionNumFixIts =
-      _clang_getCompletionNumFixIts_ptr
-          .asFunction<_dart_clang_getCompletionNumFixIts>();
+  late final _clang_getCompletionNumFixIts_ptr = _lookup<
+      ffi.NativeFunction<
+          ffi.Uint32 Function(ffi.Pointer<CXCodeCompleteResults>,
+              ffi.Uint32)>>('clang_getCompletionNumFixIts');
+  late final _clang_getCompletionNumFixIts = _clang_getCompletionNumFixIts_ptr
+      .asFunction<int Function(ffi.Pointer<CXCodeCompleteResults>, int)>();
 
   /// Fix-its that *must* be applied before inserting the text for the
   /// corresponding completion.
@@ -5886,12 +5960,17 @@ class LibClang {
     );
   }
 
-  late final _clang_getCompletionFixIt_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getCompletionFixIt>>(
-          'clang_getCompletionFixIt');
-  late final _dart_clang_getCompletionFixIt _clang_getCompletionFixIt =
-      _clang_getCompletionFixIt_ptr
-          .asFunction<_dart_clang_getCompletionFixIt>();
+  late final _clang_getCompletionFixIt_ptr = _lookup<
+      ffi.NativeFunction<
+          CXString Function(
+              ffi.Pointer<CXCodeCompleteResults>,
+              ffi.Uint32,
+              ffi.Uint32,
+              ffi.Pointer<CXSourceRange>)>>('clang_getCompletionFixIt');
+  late final _clang_getCompletionFixIt =
+      _clang_getCompletionFixIt_ptr.asFunction<
+          CXString Function(ffi.Pointer<CXCodeCompleteResults>, int, int,
+              ffi.Pointer<CXSourceRange>)>();
 
   /// Returns a default set of code-completion options that can be
   /// passed to\c clang_codeCompleteAt().
@@ -5900,11 +5979,10 @@ class LibClang {
   }
 
   late final _clang_defaultCodeCompleteOptions_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_defaultCodeCompleteOptions>>(
+      _lookup<ffi.NativeFunction<ffi.Uint32 Function()>>(
           'clang_defaultCodeCompleteOptions');
-  late final _dart_clang_defaultCodeCompleteOptions
-      _clang_defaultCodeCompleteOptions = _clang_defaultCodeCompleteOptions_ptr
-          .asFunction<_dart_clang_defaultCodeCompleteOptions>();
+  late final _clang_defaultCodeCompleteOptions =
+      _clang_defaultCodeCompleteOptions_ptr.asFunction<int Function()>();
 
   /// Perform code completion at a given location in a translation unit.
   ///
@@ -5973,7 +6051,7 @@ class LibClang {
   /// freed with \c clang_disposeCodeCompleteResults(). If code
   /// completion fails, returns NULL.
   ffi.Pointer<CXCodeCompleteResults> clang_codeCompleteAt(
-    ffi.Pointer<CXTranslationUnitImpl> TU,
+    CXTranslationUnit TU,
     ffi.Pointer<ffi.Int8> complete_filename,
     int complete_line,
     int complete_column,
@@ -5992,11 +6070,25 @@ class LibClang {
     );
   }
 
-  late final _clang_codeCompleteAt_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_codeCompleteAt>>(
-          'clang_codeCompleteAt');
-  late final _dart_clang_codeCompleteAt _clang_codeCompleteAt =
-      _clang_codeCompleteAt_ptr.asFunction<_dart_clang_codeCompleteAt>();
+  late final _clang_codeCompleteAt_ptr = _lookup<
+      ffi.NativeFunction<
+          ffi.Pointer<CXCodeCompleteResults> Function(
+              CXTranslationUnit,
+              ffi.Pointer<ffi.Int8>,
+              ffi.Uint32,
+              ffi.Uint32,
+              ffi.Pointer<CXUnsavedFile>,
+              ffi.Uint32,
+              ffi.Uint32)>>('clang_codeCompleteAt');
+  late final _clang_codeCompleteAt = _clang_codeCompleteAt_ptr.asFunction<
+      ffi.Pointer<CXCodeCompleteResults> Function(
+          CXTranslationUnit,
+          ffi.Pointer<ffi.Int8>,
+          int,
+          int,
+          ffi.Pointer<CXUnsavedFile>,
+          int,
+          int)>();
 
   /// Sort the code-completion results in case-insensitive alphabetical
   /// order.
@@ -6013,12 +6105,13 @@ class LibClang {
     );
   }
 
-  late final _clang_sortCodeCompletionResults_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_sortCodeCompletionResults>>(
-          'clang_sortCodeCompletionResults');
-  late final _dart_clang_sortCodeCompletionResults
-      _clang_sortCodeCompletionResults = _clang_sortCodeCompletionResults_ptr
-          .asFunction<_dart_clang_sortCodeCompletionResults>();
+  late final _clang_sortCodeCompletionResults_ptr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(ffi.Pointer<CXCompletionResult>,
+              ffi.Uint32)>>('clang_sortCodeCompletionResults');
+  late final _clang_sortCodeCompletionResults =
+      _clang_sortCodeCompletionResults_ptr
+          .asFunction<void Function(ffi.Pointer<CXCompletionResult>, int)>();
 
   /// Free the given set of code-completion results.
   void clang_disposeCodeCompleteResults(
@@ -6029,12 +6122,13 @@ class LibClang {
     );
   }
 
-  late final _clang_disposeCodeCompleteResults_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_disposeCodeCompleteResults>>(
-          'clang_disposeCodeCompleteResults');
-  late final _dart_clang_disposeCodeCompleteResults
-      _clang_disposeCodeCompleteResults = _clang_disposeCodeCompleteResults_ptr
-          .asFunction<_dart_clang_disposeCodeCompleteResults>();
+  late final _clang_disposeCodeCompleteResults_ptr = _lookup<
+          ffi.NativeFunction<
+              ffi.Void Function(ffi.Pointer<CXCodeCompleteResults>)>>(
+      'clang_disposeCodeCompleteResults');
+  late final _clang_disposeCodeCompleteResults =
+      _clang_disposeCodeCompleteResults_ptr
+          .asFunction<void Function(ffi.Pointer<CXCodeCompleteResults>)>();
 
   /// Determine the number of diagnostics produced prior to the
   /// location where code completion was performed.
@@ -6046,13 +6140,13 @@ class LibClang {
     );
   }
 
-  late final _clang_codeCompleteGetNumDiagnostics_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_codeCompleteGetNumDiagnostics>>(
-          'clang_codeCompleteGetNumDiagnostics');
-  late final _dart_clang_codeCompleteGetNumDiagnostics
-      _clang_codeCompleteGetNumDiagnostics =
+  late final _clang_codeCompleteGetNumDiagnostics_ptr = _lookup<
+          ffi.NativeFunction<
+              ffi.Uint32 Function(ffi.Pointer<CXCodeCompleteResults>)>>(
+      'clang_codeCompleteGetNumDiagnostics');
+  late final _clang_codeCompleteGetNumDiagnostics =
       _clang_codeCompleteGetNumDiagnostics_ptr
-          .asFunction<_dart_clang_codeCompleteGetNumDiagnostics>();
+          .asFunction<int Function(ffi.Pointer<CXCodeCompleteResults>)>();
 
   /// Retrieve a diagnostic associated with the given code completion.
   ///
@@ -6061,7 +6155,7 @@ class LibClang {
   ///
   /// \returns the requested diagnostic. This diagnostic must be freed
   /// via a call to \c clang_disposeDiagnostic().
-  ffi.Pointer<ffi.Void> clang_codeCompleteGetDiagnostic(
+  CXDiagnostic clang_codeCompleteGetDiagnostic(
     ffi.Pointer<CXCodeCompleteResults> Results,
     int Index,
   ) {
@@ -6071,12 +6165,13 @@ class LibClang {
     );
   }
 
-  late final _clang_codeCompleteGetDiagnostic_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_codeCompleteGetDiagnostic>>(
-          'clang_codeCompleteGetDiagnostic');
-  late final _dart_clang_codeCompleteGetDiagnostic
-      _clang_codeCompleteGetDiagnostic = _clang_codeCompleteGetDiagnostic_ptr
-          .asFunction<_dart_clang_codeCompleteGetDiagnostic>();
+  late final _clang_codeCompleteGetDiagnostic_ptr = _lookup<
+      ffi.NativeFunction<
+          CXDiagnostic Function(ffi.Pointer<CXCodeCompleteResults>,
+              ffi.Uint32)>>('clang_codeCompleteGetDiagnostic');
+  late final _clang_codeCompleteGetDiagnostic =
+      _clang_codeCompleteGetDiagnostic_ptr.asFunction<
+          CXDiagnostic Function(ffi.Pointer<CXCodeCompleteResults>, int)>();
 
   /// Determines what completions are appropriate for the context
   /// the given code completion.
@@ -6093,12 +6188,12 @@ class LibClang {
     );
   }
 
-  late final _clang_codeCompleteGetContexts_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_codeCompleteGetContexts>>(
-          'clang_codeCompleteGetContexts');
-  late final _dart_clang_codeCompleteGetContexts
-      _clang_codeCompleteGetContexts = _clang_codeCompleteGetContexts_ptr
-          .asFunction<_dart_clang_codeCompleteGetContexts>();
+  late final _clang_codeCompleteGetContexts_ptr = _lookup<
+          ffi.NativeFunction<
+              ffi.Uint64 Function(ffi.Pointer<CXCodeCompleteResults>)>>(
+      'clang_codeCompleteGetContexts');
+  late final _clang_codeCompleteGetContexts = _clang_codeCompleteGetContexts_ptr
+      .asFunction<int Function(ffi.Pointer<CXCodeCompleteResults>)>();
 
   /// Returns the cursor kind for the container for the current code
   /// completion context. The container is only guaranteed to be set for
@@ -6124,13 +6219,14 @@ class LibClang {
     );
   }
 
-  late final _clang_codeCompleteGetContainerKind_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_codeCompleteGetContainerKind>>(
-          'clang_codeCompleteGetContainerKind');
-  late final _dart_clang_codeCompleteGetContainerKind
-      _clang_codeCompleteGetContainerKind =
-      _clang_codeCompleteGetContainerKind_ptr
-          .asFunction<_dart_clang_codeCompleteGetContainerKind>();
+  late final _clang_codeCompleteGetContainerKind_ptr = _lookup<
+      ffi.NativeFunction<
+          ffi.Int32 Function(ffi.Pointer<CXCodeCompleteResults>,
+              ffi.Pointer<ffi.Uint32>)>>('clang_codeCompleteGetContainerKind');
+  late final _clang_codeCompleteGetContainerKind =
+      _clang_codeCompleteGetContainerKind_ptr.asFunction<
+          int Function(
+              ffi.Pointer<CXCodeCompleteResults>, ffi.Pointer<ffi.Uint32>)>();
 
   /// Returns the USR for the container for the current code completion
   /// context. If there is not a container for the current context, this
@@ -6147,13 +6243,13 @@ class LibClang {
     );
   }
 
-  late final _clang_codeCompleteGetContainerUSR_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_codeCompleteGetContainerUSR>>(
-          'clang_codeCompleteGetContainerUSR');
-  late final _dart_clang_codeCompleteGetContainerUSR
-      _clang_codeCompleteGetContainerUSR =
+  late final _clang_codeCompleteGetContainerUSR_ptr = _lookup<
+          ffi.NativeFunction<
+              CXString Function(ffi.Pointer<CXCodeCompleteResults>)>>(
+      'clang_codeCompleteGetContainerUSR');
+  late final _clang_codeCompleteGetContainerUSR =
       _clang_codeCompleteGetContainerUSR_ptr
-          .asFunction<_dart_clang_codeCompleteGetContainerUSR>();
+          .asFunction<CXString Function(ffi.Pointer<CXCodeCompleteResults>)>();
 
   /// Returns the currently-entered selector for an Objective-C message
   /// send, formatted like "initWithFoo:bar:". Only guaranteed to return a
@@ -6172,13 +6268,13 @@ class LibClang {
     );
   }
 
-  late final _clang_codeCompleteGetObjCSelector_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_codeCompleteGetObjCSelector>>(
-          'clang_codeCompleteGetObjCSelector');
-  late final _dart_clang_codeCompleteGetObjCSelector
-      _clang_codeCompleteGetObjCSelector =
+  late final _clang_codeCompleteGetObjCSelector_ptr = _lookup<
+          ffi.NativeFunction<
+              CXString Function(ffi.Pointer<CXCodeCompleteResults>)>>(
+      'clang_codeCompleteGetObjCSelector');
+  late final _clang_codeCompleteGetObjCSelector =
       _clang_codeCompleteGetObjCSelector_ptr
-          .asFunction<_dart_clang_codeCompleteGetObjCSelector>();
+          .asFunction<CXString Function(ffi.Pointer<CXCodeCompleteResults>)>();
 
   /// Return a version string, suitable for showing to a user, but not
   /// intended to be parsed (the format is not guaranteed to be stable).
@@ -6187,10 +6283,9 @@ class LibClang {
   }
 
   late final _clang_getClangVersion_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getClangVersion>>(
-          'clang_getClangVersion');
-  late final _dart_clang_getClangVersion _clang_getClangVersion =
-      _clang_getClangVersion_ptr.asFunction<_dart_clang_getClangVersion>();
+      _lookup<ffi.NativeFunction<CXString Function()>>('clang_getClangVersion');
+  late final _clang_getClangVersion =
+      _clang_getClangVersion_ptr.asFunction<CXString Function()>();
 
   /// Enable/disable crash recovery.
   ///
@@ -6205,20 +6300,19 @@ class LibClang {
   }
 
   late final _clang_toggleCrashRecovery_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_toggleCrashRecovery>>(
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Uint32)>>(
           'clang_toggleCrashRecovery');
-  late final _dart_clang_toggleCrashRecovery _clang_toggleCrashRecovery =
-      _clang_toggleCrashRecovery_ptr
-          .asFunction<_dart_clang_toggleCrashRecovery>();
+  late final _clang_toggleCrashRecovery =
+      _clang_toggleCrashRecovery_ptr.asFunction<void Function(int)>();
 
   /// Visit the set of preprocessor inclusions in a translation unit.
   /// The visitor function is called with the provided data for every included
   /// file.  This does not include headers included by the PCH file (unless one
   /// is inspecting the inclusions in the PCH file itself).
   void clang_getInclusions(
-    ffi.Pointer<CXTranslationUnitImpl> tu,
-    ffi.Pointer<ffi.NativeFunction<CXInclusionVisitor>> visitor,
-    ffi.Pointer<ffi.Void> client_data,
+    CXTranslationUnit tu,
+    CXInclusionVisitor visitor,
+    CXClientData client_data,
   ) {
     return _clang_getInclusions(
       tu,
@@ -6227,16 +6321,17 @@ class LibClang {
     );
   }
 
-  late final _clang_getInclusions_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getInclusions>>(
-          'clang_getInclusions');
-  late final _dart_clang_getInclusions _clang_getInclusions =
-      _clang_getInclusions_ptr.asFunction<_dart_clang_getInclusions>();
+  late final _clang_getInclusions_ptr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(CXTranslationUnit, CXInclusionVisitor,
+              CXClientData)>>('clang_getInclusions');
+  late final _clang_getInclusions = _clang_getInclusions_ptr.asFunction<
+      void Function(CXTranslationUnit, CXInclusionVisitor, CXClientData)>();
 
   /// If cursor is a statement declaration tries to evaluate the
   /// statement and if its variable, tries to evaluate its initializer,
   /// into its corresponding type.
-  ffi.Pointer<ffi.Void> clang_Cursor_Evaluate(
+  CXEvalResult clang_Cursor_Evaluate(
     CXCursor C,
   ) {
     return _clang_Cursor_Evaluate(
@@ -6245,14 +6340,14 @@ class LibClang {
   }
 
   late final _clang_Cursor_Evaluate_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_Cursor_Evaluate>>(
+      _lookup<ffi.NativeFunction<CXEvalResult Function(CXCursor)>>(
           'clang_Cursor_Evaluate');
-  late final _dart_clang_Cursor_Evaluate _clang_Cursor_Evaluate =
-      _clang_Cursor_Evaluate_ptr.asFunction<_dart_clang_Cursor_Evaluate>();
+  late final _clang_Cursor_Evaluate =
+      _clang_Cursor_Evaluate_ptr.asFunction<CXEvalResult Function(CXCursor)>();
 
   /// Returns the kind of the evaluated result.
   int clang_EvalResult_getKind(
-    ffi.Pointer<ffi.Void> E,
+    CXEvalResult E,
   ) {
     return _clang_EvalResult_getKind(
       E,
@@ -6260,16 +6355,15 @@ class LibClang {
   }
 
   late final _clang_EvalResult_getKind_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_EvalResult_getKind>>(
+      _lookup<ffi.NativeFunction<CXEvalResultKind Function(CXEvalResult)>>(
           'clang_EvalResult_getKind');
-  late final _dart_clang_EvalResult_getKind _clang_EvalResult_getKind =
-      _clang_EvalResult_getKind_ptr
-          .asFunction<_dart_clang_EvalResult_getKind>();
+  late final _clang_EvalResult_getKind =
+      _clang_EvalResult_getKind_ptr.asFunction<int Function(CXEvalResult)>();
 
   /// Returns the evaluation result as integer if the
   /// kind is Int.
   int clang_EvalResult_getAsInt(
-    ffi.Pointer<ffi.Void> E,
+    CXEvalResult E,
   ) {
     return _clang_EvalResult_getAsInt(
       E,
@@ -6277,17 +6371,16 @@ class LibClang {
   }
 
   late final _clang_EvalResult_getAsInt_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_EvalResult_getAsInt>>(
+      _lookup<ffi.NativeFunction<ffi.Int32 Function(CXEvalResult)>>(
           'clang_EvalResult_getAsInt');
-  late final _dart_clang_EvalResult_getAsInt _clang_EvalResult_getAsInt =
-      _clang_EvalResult_getAsInt_ptr
-          .asFunction<_dart_clang_EvalResult_getAsInt>();
+  late final _clang_EvalResult_getAsInt =
+      _clang_EvalResult_getAsInt_ptr.asFunction<int Function(CXEvalResult)>();
 
   /// Returns the evaluation result as a long long integer if the
   /// kind is Int. This prevents overflows that may happen if the result is
   /// returned with clang_EvalResult_getAsInt.
   int clang_EvalResult_getAsLongLong(
-    ffi.Pointer<ffi.Void> E,
+    CXEvalResult E,
   ) {
     return _clang_EvalResult_getAsLongLong(
       E,
@@ -6295,16 +6388,16 @@ class LibClang {
   }
 
   late final _clang_EvalResult_getAsLongLong_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_EvalResult_getAsLongLong>>(
+      _lookup<ffi.NativeFunction<ffi.Int64 Function(CXEvalResult)>>(
           'clang_EvalResult_getAsLongLong');
-  late final _dart_clang_EvalResult_getAsLongLong
-      _clang_EvalResult_getAsLongLong = _clang_EvalResult_getAsLongLong_ptr
-          .asFunction<_dart_clang_EvalResult_getAsLongLong>();
+  late final _clang_EvalResult_getAsLongLong =
+      _clang_EvalResult_getAsLongLong_ptr
+          .asFunction<int Function(CXEvalResult)>();
 
   /// Returns a non-zero value if the kind is Int and the evaluation
   /// result resulted in an unsigned integer.
   int clang_EvalResult_isUnsignedInt(
-    ffi.Pointer<ffi.Void> E,
+    CXEvalResult E,
   ) {
     return _clang_EvalResult_isUnsignedInt(
       E,
@@ -6312,16 +6405,16 @@ class LibClang {
   }
 
   late final _clang_EvalResult_isUnsignedInt_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_EvalResult_isUnsignedInt>>(
+      _lookup<ffi.NativeFunction<ffi.Uint32 Function(CXEvalResult)>>(
           'clang_EvalResult_isUnsignedInt');
-  late final _dart_clang_EvalResult_isUnsignedInt
-      _clang_EvalResult_isUnsignedInt = _clang_EvalResult_isUnsignedInt_ptr
-          .asFunction<_dart_clang_EvalResult_isUnsignedInt>();
+  late final _clang_EvalResult_isUnsignedInt =
+      _clang_EvalResult_isUnsignedInt_ptr
+          .asFunction<int Function(CXEvalResult)>();
 
   /// Returns the evaluation result as an unsigned integer if
   /// the kind is Int and clang_EvalResult_isUnsignedInt is non-zero.
   int clang_EvalResult_getAsUnsigned(
-    ffi.Pointer<ffi.Void> E,
+    CXEvalResult E,
   ) {
     return _clang_EvalResult_getAsUnsigned(
       E,
@@ -6329,16 +6422,16 @@ class LibClang {
   }
 
   late final _clang_EvalResult_getAsUnsigned_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_EvalResult_getAsUnsigned>>(
+      _lookup<ffi.NativeFunction<ffi.Uint64 Function(CXEvalResult)>>(
           'clang_EvalResult_getAsUnsigned');
-  late final _dart_clang_EvalResult_getAsUnsigned
-      _clang_EvalResult_getAsUnsigned = _clang_EvalResult_getAsUnsigned_ptr
-          .asFunction<_dart_clang_EvalResult_getAsUnsigned>();
+  late final _clang_EvalResult_getAsUnsigned =
+      _clang_EvalResult_getAsUnsigned_ptr
+          .asFunction<int Function(CXEvalResult)>();
 
   /// Returns the evaluation result as double if the
   /// kind is double.
   double clang_EvalResult_getAsDouble(
-    ffi.Pointer<ffi.Void> E,
+    CXEvalResult E,
   ) {
     return _clang_EvalResult_getAsDouble(
       E,
@@ -6346,18 +6439,17 @@ class LibClang {
   }
 
   late final _clang_EvalResult_getAsDouble_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_EvalResult_getAsDouble>>(
+      _lookup<ffi.NativeFunction<ffi.Double Function(CXEvalResult)>>(
           'clang_EvalResult_getAsDouble');
-  late final _dart_clang_EvalResult_getAsDouble _clang_EvalResult_getAsDouble =
-      _clang_EvalResult_getAsDouble_ptr
-          .asFunction<_dart_clang_EvalResult_getAsDouble>();
+  late final _clang_EvalResult_getAsDouble = _clang_EvalResult_getAsDouble_ptr
+      .asFunction<double Function(CXEvalResult)>();
 
   /// Returns the evaluation result as a constant string if the
   /// kind is other than Int or float. User must not free this pointer,
   /// instead call clang_EvalResult_dispose on the CXEvalResult returned
   /// by clang_Cursor_Evaluate.
   ffi.Pointer<ffi.Int8> clang_EvalResult_getAsStr(
-    ffi.Pointer<ffi.Void> E,
+    CXEvalResult E,
   ) {
     return _clang_EvalResult_getAsStr(
       E,
@@ -6365,15 +6457,14 @@ class LibClang {
   }
 
   late final _clang_EvalResult_getAsStr_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_EvalResult_getAsStr>>(
+      _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Int8> Function(CXEvalResult)>>(
           'clang_EvalResult_getAsStr');
-  late final _dart_clang_EvalResult_getAsStr _clang_EvalResult_getAsStr =
-      _clang_EvalResult_getAsStr_ptr
-          .asFunction<_dart_clang_EvalResult_getAsStr>();
+  late final _clang_EvalResult_getAsStr = _clang_EvalResult_getAsStr_ptr
+      .asFunction<ffi.Pointer<ffi.Int8> Function(CXEvalResult)>();
 
   /// Disposes the created Eval memory.
   void clang_EvalResult_dispose(
-    ffi.Pointer<ffi.Void> E,
+    CXEvalResult E,
   ) {
     return _clang_EvalResult_dispose(
       E,
@@ -6381,11 +6472,10 @@ class LibClang {
   }
 
   late final _clang_EvalResult_dispose_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_EvalResult_dispose>>(
+      _lookup<ffi.NativeFunction<ffi.Void Function(CXEvalResult)>>(
           'clang_EvalResult_dispose');
-  late final _dart_clang_EvalResult_dispose _clang_EvalResult_dispose =
-      _clang_EvalResult_dispose_ptr
-          .asFunction<_dart_clang_EvalResult_dispose>();
+  late final _clang_EvalResult_dispose =
+      _clang_EvalResult_dispose_ptr.asFunction<void Function(CXEvalResult)>();
 
   /// Retrieve a remapping.
   ///
@@ -6393,7 +6483,7 @@ class LibClang {
   ///
   /// \returns the requested remapping. This remapping must be freed
   /// via a call to \c clang_remap_dispose(). Can return NULL if an error occurred.
-  ffi.Pointer<ffi.Void> clang_getRemappings(
+  CXRemapping clang_getRemappings(
     ffi.Pointer<ffi.Int8> path,
   ) {
     return _clang_getRemappings(
@@ -6402,10 +6492,10 @@ class LibClang {
   }
 
   late final _clang_getRemappings_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getRemappings>>(
+      _lookup<ffi.NativeFunction<CXRemapping Function(ffi.Pointer<ffi.Int8>)>>(
           'clang_getRemappings');
-  late final _dart_clang_getRemappings _clang_getRemappings =
-      _clang_getRemappings_ptr.asFunction<_dart_clang_getRemappings>();
+  late final _clang_getRemappings = _clang_getRemappings_ptr
+      .asFunction<CXRemapping Function(ffi.Pointer<ffi.Int8>)>();
 
   /// Retrieve a remapping.
   ///
@@ -6415,7 +6505,7 @@ class LibClang {
   ///
   /// \returns the requested remapping. This remapping must be freed
   /// via a call to \c clang_remap_dispose(). Can return NULL if an error occurred.
-  ffi.Pointer<ffi.Void> clang_getRemappingsFromFileList(
+  CXRemapping clang_getRemappingsFromFileList(
     ffi.Pointer<ffi.Pointer<ffi.Int8>> filePaths,
     int numFiles,
   ) {
@@ -6425,16 +6515,17 @@ class LibClang {
     );
   }
 
-  late final _clang_getRemappingsFromFileList_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_getRemappingsFromFileList>>(
-          'clang_getRemappingsFromFileList');
-  late final _dart_clang_getRemappingsFromFileList
-      _clang_getRemappingsFromFileList = _clang_getRemappingsFromFileList_ptr
-          .asFunction<_dart_clang_getRemappingsFromFileList>();
+  late final _clang_getRemappingsFromFileList_ptr = _lookup<
+      ffi.NativeFunction<
+          CXRemapping Function(ffi.Pointer<ffi.Pointer<ffi.Int8>>,
+              ffi.Uint32)>>('clang_getRemappingsFromFileList');
+  late final _clang_getRemappingsFromFileList =
+      _clang_getRemappingsFromFileList_ptr.asFunction<
+          CXRemapping Function(ffi.Pointer<ffi.Pointer<ffi.Int8>>, int)>();
 
   /// Determine the number of remappings.
   int clang_remap_getNumFiles(
-    ffi.Pointer<ffi.Void> arg0,
+    CXRemapping arg0,
   ) {
     return _clang_remap_getNumFiles(
       arg0,
@@ -6442,10 +6533,10 @@ class LibClang {
   }
 
   late final _clang_remap_getNumFiles_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_remap_getNumFiles>>(
+      _lookup<ffi.NativeFunction<ffi.Uint32 Function(CXRemapping)>>(
           'clang_remap_getNumFiles');
-  late final _dart_clang_remap_getNumFiles _clang_remap_getNumFiles =
-      _clang_remap_getNumFiles_ptr.asFunction<_dart_clang_remap_getNumFiles>();
+  late final _clang_remap_getNumFiles =
+      _clang_remap_getNumFiles_ptr.asFunction<int Function(CXRemapping)>();
 
   /// Get the original and the associated filename from the remapping.
   ///
@@ -6454,7 +6545,7 @@ class LibClang {
   /// \param transformed If non-NULL, will be set to the filename that the original
   /// is associated with.
   void clang_remap_getFilenames(
-    ffi.Pointer<ffi.Void> arg0,
+    CXRemapping arg0,
     int index,
     ffi.Pointer<CXString> original,
     ffi.Pointer<CXString> transformed,
@@ -6467,16 +6558,18 @@ class LibClang {
     );
   }
 
-  late final _clang_remap_getFilenames_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_remap_getFilenames>>(
-          'clang_remap_getFilenames');
-  late final _dart_clang_remap_getFilenames _clang_remap_getFilenames =
-      _clang_remap_getFilenames_ptr
-          .asFunction<_dart_clang_remap_getFilenames>();
+  late final _clang_remap_getFilenames_ptr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(CXRemapping, ffi.Uint32, ffi.Pointer<CXString>,
+              ffi.Pointer<CXString>)>>('clang_remap_getFilenames');
+  late final _clang_remap_getFilenames =
+      _clang_remap_getFilenames_ptr.asFunction<
+          void Function(CXRemapping, int, ffi.Pointer<CXString>,
+              ffi.Pointer<CXString>)>();
 
   /// Dispose the remapping.
   void clang_remap_dispose(
-    ffi.Pointer<ffi.Void> arg0,
+    CXRemapping arg0,
   ) {
     return _clang_remap_dispose(
       arg0,
@@ -6484,10 +6577,10 @@ class LibClang {
   }
 
   late final _clang_remap_dispose_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_remap_dispose>>(
+      _lookup<ffi.NativeFunction<ffi.Void Function(CXRemapping)>>(
           'clang_remap_dispose');
-  late final _dart_clang_remap_dispose _clang_remap_dispose =
-      _clang_remap_dispose_ptr.asFunction<_dart_clang_remap_dispose>();
+  late final _clang_remap_dispose =
+      _clang_remap_dispose_ptr.asFunction<void Function(CXRemapping)>();
 
   /// Find references of a declaration in a specific file.
   ///
@@ -6503,7 +6596,7 @@ class LibClang {
   /// \returns one of the CXResult enumerators.
   int clang_findReferencesInFile(
     CXCursor cursor,
-    ffi.Pointer<ffi.Void> file,
+    CXFile file,
     CXCursorAndRangeVisitor visitor,
   ) {
     return _clang_findReferencesInFile(
@@ -6513,12 +6606,12 @@ class LibClang {
     );
   }
 
-  late final _clang_findReferencesInFile_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_findReferencesInFile>>(
-          'clang_findReferencesInFile');
-  late final _dart_clang_findReferencesInFile _clang_findReferencesInFile =
-      _clang_findReferencesInFile_ptr
-          .asFunction<_dart_clang_findReferencesInFile>();
+  late final _clang_findReferencesInFile_ptr = _lookup<
+      ffi.NativeFunction<
+          CXResult Function(CXCursor, CXFile,
+              CXCursorAndRangeVisitor)>>('clang_findReferencesInFile');
+  late final _clang_findReferencesInFile = _clang_findReferencesInFile_ptr
+      .asFunction<int Function(CXCursor, CXFile, CXCursorAndRangeVisitor)>();
 
   /// Find #import/#include directives in a specific file.
   ///
@@ -6531,8 +6624,8 @@ class LibClang {
   ///
   /// \returns one of the CXResult enumerators.
   int clang_findIncludesInFile(
-    ffi.Pointer<CXTranslationUnitImpl> TU,
-    ffi.Pointer<ffi.Void> file,
+    CXTranslationUnit TU,
+    CXFile file,
     CXCursorAndRangeVisitor visitor,
   ) {
     return _clang_findIncludesInFile(
@@ -6542,12 +6635,13 @@ class LibClang {
     );
   }
 
-  late final _clang_findIncludesInFile_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_findIncludesInFile>>(
-          'clang_findIncludesInFile');
-  late final _dart_clang_findIncludesInFile _clang_findIncludesInFile =
-      _clang_findIncludesInFile_ptr
-          .asFunction<_dart_clang_findIncludesInFile>();
+  late final _clang_findIncludesInFile_ptr = _lookup<
+      ffi.NativeFunction<
+          CXResult Function(CXTranslationUnit, CXFile,
+              CXCursorAndRangeVisitor)>>('clang_findIncludesInFile');
+  late final _clang_findIncludesInFile =
+      _clang_findIncludesInFile_ptr.asFunction<
+          int Function(CXTranslationUnit, CXFile, CXCursorAndRangeVisitor)>();
 
   int clang_index_isEntityObjCContainerKind(
     int arg0,
@@ -6558,12 +6652,11 @@ class LibClang {
   }
 
   late final _clang_index_isEntityObjCContainerKind_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_index_isEntityObjCContainerKind>>(
+      _lookup<ffi.NativeFunction<ffi.Int32 Function(CXIdxEntityKind)>>(
           'clang_index_isEntityObjCContainerKind');
-  late final _dart_clang_index_isEntityObjCContainerKind
-      _clang_index_isEntityObjCContainerKind =
+  late final _clang_index_isEntityObjCContainerKind =
       _clang_index_isEntityObjCContainerKind_ptr
-          .asFunction<_dart_clang_index_isEntityObjCContainerKind>();
+          .asFunction<int Function(int)>();
 
   ffi.Pointer<CXIdxObjCContainerDeclInfo> clang_index_getObjCContainerDeclInfo(
     ffi.Pointer<CXIdxDeclInfo> arg0,
@@ -6573,13 +6666,15 @@ class LibClang {
     );
   }
 
-  late final _clang_index_getObjCContainerDeclInfo_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_index_getObjCContainerDeclInfo>>(
-          'clang_index_getObjCContainerDeclInfo');
-  late final _dart_clang_index_getObjCContainerDeclInfo
-      _clang_index_getObjCContainerDeclInfo =
-      _clang_index_getObjCContainerDeclInfo_ptr
-          .asFunction<_dart_clang_index_getObjCContainerDeclInfo>();
+  late final _clang_index_getObjCContainerDeclInfo_ptr = _lookup<
+          ffi.NativeFunction<
+              ffi.Pointer<CXIdxObjCContainerDeclInfo> Function(
+                  ffi.Pointer<CXIdxDeclInfo>)>>(
+      'clang_index_getObjCContainerDeclInfo');
+  late final _clang_index_getObjCContainerDeclInfo =
+      _clang_index_getObjCContainerDeclInfo_ptr.asFunction<
+          ffi.Pointer<CXIdxObjCContainerDeclInfo> Function(
+              ffi.Pointer<CXIdxDeclInfo>)>();
 
   ffi.Pointer<CXIdxObjCInterfaceDeclInfo> clang_index_getObjCInterfaceDeclInfo(
     ffi.Pointer<CXIdxDeclInfo> arg0,
@@ -6589,13 +6684,15 @@ class LibClang {
     );
   }
 
-  late final _clang_index_getObjCInterfaceDeclInfo_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_index_getObjCInterfaceDeclInfo>>(
-          'clang_index_getObjCInterfaceDeclInfo');
-  late final _dart_clang_index_getObjCInterfaceDeclInfo
-      _clang_index_getObjCInterfaceDeclInfo =
-      _clang_index_getObjCInterfaceDeclInfo_ptr
-          .asFunction<_dart_clang_index_getObjCInterfaceDeclInfo>();
+  late final _clang_index_getObjCInterfaceDeclInfo_ptr = _lookup<
+          ffi.NativeFunction<
+              ffi.Pointer<CXIdxObjCInterfaceDeclInfo> Function(
+                  ffi.Pointer<CXIdxDeclInfo>)>>(
+      'clang_index_getObjCInterfaceDeclInfo');
+  late final _clang_index_getObjCInterfaceDeclInfo =
+      _clang_index_getObjCInterfaceDeclInfo_ptr.asFunction<
+          ffi.Pointer<CXIdxObjCInterfaceDeclInfo> Function(
+              ffi.Pointer<CXIdxDeclInfo>)>();
 
   ffi.Pointer<CXIdxObjCCategoryDeclInfo> clang_index_getObjCCategoryDeclInfo(
     ffi.Pointer<CXIdxDeclInfo> arg0,
@@ -6605,13 +6702,15 @@ class LibClang {
     );
   }
 
-  late final _clang_index_getObjCCategoryDeclInfo_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_index_getObjCCategoryDeclInfo>>(
-          'clang_index_getObjCCategoryDeclInfo');
-  late final _dart_clang_index_getObjCCategoryDeclInfo
-      _clang_index_getObjCCategoryDeclInfo =
-      _clang_index_getObjCCategoryDeclInfo_ptr
-          .asFunction<_dart_clang_index_getObjCCategoryDeclInfo>();
+  late final _clang_index_getObjCCategoryDeclInfo_ptr = _lookup<
+          ffi.NativeFunction<
+              ffi.Pointer<CXIdxObjCCategoryDeclInfo> Function(
+                  ffi.Pointer<CXIdxDeclInfo>)>>(
+      'clang_index_getObjCCategoryDeclInfo');
+  late final _clang_index_getObjCCategoryDeclInfo =
+      _clang_index_getObjCCategoryDeclInfo_ptr.asFunction<
+          ffi.Pointer<CXIdxObjCCategoryDeclInfo> Function(
+              ffi.Pointer<CXIdxDeclInfo>)>();
 
   ffi.Pointer<CXIdxObjCProtocolRefListInfo>
       clang_index_getObjCProtocolRefListInfo(
@@ -6623,12 +6722,14 @@ class LibClang {
   }
 
   late final _clang_index_getObjCProtocolRefListInfo_ptr = _lookup<
-          ffi.NativeFunction<Native_clang_index_getObjCProtocolRefListInfo>>(
+          ffi.NativeFunction<
+              ffi.Pointer<CXIdxObjCProtocolRefListInfo> Function(
+                  ffi.Pointer<CXIdxDeclInfo>)>>(
       'clang_index_getObjCProtocolRefListInfo');
-  late final _dart_clang_index_getObjCProtocolRefListInfo
-      _clang_index_getObjCProtocolRefListInfo =
-      _clang_index_getObjCProtocolRefListInfo_ptr
-          .asFunction<_dart_clang_index_getObjCProtocolRefListInfo>();
+  late final _clang_index_getObjCProtocolRefListInfo =
+      _clang_index_getObjCProtocolRefListInfo_ptr.asFunction<
+          ffi.Pointer<CXIdxObjCProtocolRefListInfo> Function(
+              ffi.Pointer<CXIdxDeclInfo>)>();
 
   ffi.Pointer<CXIdxObjCPropertyDeclInfo> clang_index_getObjCPropertyDeclInfo(
     ffi.Pointer<CXIdxDeclInfo> arg0,
@@ -6638,13 +6739,15 @@ class LibClang {
     );
   }
 
-  late final _clang_index_getObjCPropertyDeclInfo_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_index_getObjCPropertyDeclInfo>>(
-          'clang_index_getObjCPropertyDeclInfo');
-  late final _dart_clang_index_getObjCPropertyDeclInfo
-      _clang_index_getObjCPropertyDeclInfo =
-      _clang_index_getObjCPropertyDeclInfo_ptr
-          .asFunction<_dart_clang_index_getObjCPropertyDeclInfo>();
+  late final _clang_index_getObjCPropertyDeclInfo_ptr = _lookup<
+          ffi.NativeFunction<
+              ffi.Pointer<CXIdxObjCPropertyDeclInfo> Function(
+                  ffi.Pointer<CXIdxDeclInfo>)>>(
+      'clang_index_getObjCPropertyDeclInfo');
+  late final _clang_index_getObjCPropertyDeclInfo =
+      _clang_index_getObjCPropertyDeclInfo_ptr.asFunction<
+          ffi.Pointer<CXIdxObjCPropertyDeclInfo> Function(
+              ffi.Pointer<CXIdxDeclInfo>)>();
 
   ffi.Pointer<CXIdxIBOutletCollectionAttrInfo>
       clang_index_getIBOutletCollectionAttrInfo(
@@ -6656,12 +6759,14 @@ class LibClang {
   }
 
   late final _clang_index_getIBOutletCollectionAttrInfo_ptr = _lookup<
-          ffi.NativeFunction<Native_clang_index_getIBOutletCollectionAttrInfo>>(
+          ffi.NativeFunction<
+              ffi.Pointer<CXIdxIBOutletCollectionAttrInfo> Function(
+                  ffi.Pointer<CXIdxAttrInfo>)>>(
       'clang_index_getIBOutletCollectionAttrInfo');
-  late final _dart_clang_index_getIBOutletCollectionAttrInfo
-      _clang_index_getIBOutletCollectionAttrInfo =
-      _clang_index_getIBOutletCollectionAttrInfo_ptr
-          .asFunction<_dart_clang_index_getIBOutletCollectionAttrInfo>();
+  late final _clang_index_getIBOutletCollectionAttrInfo =
+      _clang_index_getIBOutletCollectionAttrInfo_ptr.asFunction<
+          ffi.Pointer<CXIdxIBOutletCollectionAttrInfo> Function(
+              ffi.Pointer<CXIdxAttrInfo>)>();
 
   ffi.Pointer<CXIdxCXXClassDeclInfo> clang_index_getCXXClassDeclInfo(
     ffi.Pointer<CXIdxDeclInfo> arg0,
@@ -6671,16 +6776,18 @@ class LibClang {
     );
   }
 
-  late final _clang_index_getCXXClassDeclInfo_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_index_getCXXClassDeclInfo>>(
-          'clang_index_getCXXClassDeclInfo');
-  late final _dart_clang_index_getCXXClassDeclInfo
-      _clang_index_getCXXClassDeclInfo = _clang_index_getCXXClassDeclInfo_ptr
-          .asFunction<_dart_clang_index_getCXXClassDeclInfo>();
+  late final _clang_index_getCXXClassDeclInfo_ptr = _lookup<
+      ffi.NativeFunction<
+          ffi.Pointer<CXIdxCXXClassDeclInfo> Function(
+              ffi.Pointer<CXIdxDeclInfo>)>>('clang_index_getCXXClassDeclInfo');
+  late final _clang_index_getCXXClassDeclInfo =
+      _clang_index_getCXXClassDeclInfo_ptr.asFunction<
+          ffi.Pointer<CXIdxCXXClassDeclInfo> Function(
+              ffi.Pointer<CXIdxDeclInfo>)>();
 
   /// For retrieving a custom CXIdxClientContainer attached to a
   /// container.
-  ffi.Pointer<ffi.Void> clang_index_getClientContainer(
+  CXIdxClientContainer clang_index_getClientContainer(
     ffi.Pointer<CXIdxContainerInfo> arg0,
   ) {
     return _clang_index_getClientContainer(
@@ -6688,18 +6795,19 @@ class LibClang {
     );
   }
 
-  late final _clang_index_getClientContainer_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_index_getClientContainer>>(
-          'clang_index_getClientContainer');
-  late final _dart_clang_index_getClientContainer
-      _clang_index_getClientContainer = _clang_index_getClientContainer_ptr
-          .asFunction<_dart_clang_index_getClientContainer>();
+  late final _clang_index_getClientContainer_ptr = _lookup<
+          ffi.NativeFunction<
+              CXIdxClientContainer Function(ffi.Pointer<CXIdxContainerInfo>)>>(
+      'clang_index_getClientContainer');
+  late final _clang_index_getClientContainer =
+      _clang_index_getClientContainer_ptr.asFunction<
+          CXIdxClientContainer Function(ffi.Pointer<CXIdxContainerInfo>)>();
 
   /// For setting a custom CXIdxClientContainer attached to a
   /// container.
   void clang_index_setClientContainer(
     ffi.Pointer<CXIdxContainerInfo> arg0,
-    ffi.Pointer<ffi.Void> arg1,
+    CXIdxClientContainer arg1,
   ) {
     return _clang_index_setClientContainer(
       arg0,
@@ -6707,15 +6815,17 @@ class LibClang {
     );
   }
 
-  late final _clang_index_setClientContainer_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_index_setClientContainer>>(
-          'clang_index_setClientContainer');
-  late final _dart_clang_index_setClientContainer
-      _clang_index_setClientContainer = _clang_index_setClientContainer_ptr
-          .asFunction<_dart_clang_index_setClientContainer>();
+  late final _clang_index_setClientContainer_ptr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(ffi.Pointer<CXIdxContainerInfo>,
+              CXIdxClientContainer)>>('clang_index_setClientContainer');
+  late final _clang_index_setClientContainer =
+      _clang_index_setClientContainer_ptr.asFunction<
+          void Function(
+              ffi.Pointer<CXIdxContainerInfo>, CXIdxClientContainer)>();
 
   /// For retrieving a custom CXIdxClientEntity attached to an entity.
-  ffi.Pointer<ffi.Void> clang_index_getClientEntity(
+  CXIdxClientEntity clang_index_getClientEntity(
     ffi.Pointer<CXIdxEntityInfo> arg0,
   ) {
     return _clang_index_getClientEntity(
@@ -6723,17 +6833,17 @@ class LibClang {
     );
   }
 
-  late final _clang_index_getClientEntity_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_index_getClientEntity>>(
-          'clang_index_getClientEntity');
-  late final _dart_clang_index_getClientEntity _clang_index_getClientEntity =
-      _clang_index_getClientEntity_ptr
-          .asFunction<_dart_clang_index_getClientEntity>();
+  late final _clang_index_getClientEntity_ptr = _lookup<
+      ffi.NativeFunction<
+          CXIdxClientEntity Function(
+              ffi.Pointer<CXIdxEntityInfo>)>>('clang_index_getClientEntity');
+  late final _clang_index_getClientEntity = _clang_index_getClientEntity_ptr
+      .asFunction<CXIdxClientEntity Function(ffi.Pointer<CXIdxEntityInfo>)>();
 
   /// For setting a custom CXIdxClientEntity attached to an entity.
   void clang_index_setClientEntity(
     ffi.Pointer<CXIdxEntityInfo> arg0,
-    ffi.Pointer<ffi.Void> arg1,
+    CXIdxClientEntity arg1,
   ) {
     return _clang_index_setClientEntity(
       arg0,
@@ -6741,19 +6851,20 @@ class LibClang {
     );
   }
 
-  late final _clang_index_setClientEntity_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_index_setClientEntity>>(
-          'clang_index_setClientEntity');
-  late final _dart_clang_index_setClientEntity _clang_index_setClientEntity =
-      _clang_index_setClientEntity_ptr
-          .asFunction<_dart_clang_index_setClientEntity>();
+  late final _clang_index_setClientEntity_ptr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(ffi.Pointer<CXIdxEntityInfo>,
+              CXIdxClientEntity)>>('clang_index_setClientEntity');
+  late final _clang_index_setClientEntity =
+      _clang_index_setClientEntity_ptr.asFunction<
+          void Function(ffi.Pointer<CXIdxEntityInfo>, CXIdxClientEntity)>();
 
   /// An indexing action/session, to be applied to one or multiple
   /// translation units.
   ///
   /// \param CIdx The index object with which the index action will be associated.
-  ffi.Pointer<ffi.Void> clang_IndexAction_create(
-    ffi.Pointer<ffi.Void> CIdx,
+  CXIndexAction clang_IndexAction_create(
+    CXIndex CIdx,
   ) {
     return _clang_IndexAction_create(
       CIdx,
@@ -6761,18 +6872,17 @@ class LibClang {
   }
 
   late final _clang_IndexAction_create_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_IndexAction_create>>(
+      _lookup<ffi.NativeFunction<CXIndexAction Function(CXIndex)>>(
           'clang_IndexAction_create');
-  late final _dart_clang_IndexAction_create _clang_IndexAction_create =
-      _clang_IndexAction_create_ptr
-          .asFunction<_dart_clang_IndexAction_create>();
+  late final _clang_IndexAction_create = _clang_IndexAction_create_ptr
+      .asFunction<CXIndexAction Function(CXIndex)>();
 
   /// Destroy the given index action.
   ///
   /// The index action must not be destroyed until all of the translation units
   /// created within that index action have been destroyed.
   void clang_IndexAction_dispose(
-    ffi.Pointer<ffi.Void> arg0,
+    CXIndexAction arg0,
   ) {
     return _clang_IndexAction_dispose(
       arg0,
@@ -6780,11 +6890,10 @@ class LibClang {
   }
 
   late final _clang_IndexAction_dispose_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_IndexAction_dispose>>(
+      _lookup<ffi.NativeFunction<ffi.Void Function(CXIndexAction)>>(
           'clang_IndexAction_dispose');
-  late final _dart_clang_IndexAction_dispose _clang_IndexAction_dispose =
-      _clang_IndexAction_dispose_ptr
-          .asFunction<_dart_clang_IndexAction_dispose>();
+  late final _clang_IndexAction_dispose =
+      _clang_IndexAction_dispose_ptr.asFunction<void Function(CXIndexAction)>();
 
   /// Index the given source file and the translation unit corresponding
   /// to that file via callbacks implemented through #IndexerCallbacks.
@@ -6810,8 +6919,8 @@ class LibClang {
   ///
   /// The rest of the parameters are the same as #clang_parseTranslationUnit.
   int clang_indexSourceFile(
-    ffi.Pointer<ffi.Void> arg0,
-    ffi.Pointer<ffi.Void> client_data,
+    CXIndexAction arg0,
+    CXClientData client_data,
     ffi.Pointer<IndexerCallbacks> index_callbacks,
     int index_callbacks_size,
     int index_options,
@@ -6820,7 +6929,7 @@ class LibClang {
     int num_command_line_args,
     ffi.Pointer<CXUnsavedFile> unsaved_files,
     int num_unsaved_files,
-    ffi.Pointer<ffi.Pointer<CXTranslationUnitImpl>> out_TU,
+    ffi.Pointer<CXTranslationUnit> out_TU,
     int TU_options,
   ) {
     return _clang_indexSourceFile(
@@ -6839,18 +6948,42 @@ class LibClang {
     );
   }
 
-  late final _clang_indexSourceFile_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_indexSourceFile>>(
-          'clang_indexSourceFile');
-  late final _dart_clang_indexSourceFile _clang_indexSourceFile =
-      _clang_indexSourceFile_ptr.asFunction<_dart_clang_indexSourceFile>();
+  late final _clang_indexSourceFile_ptr = _lookup<
+      ffi.NativeFunction<
+          ffi.Int32 Function(
+              CXIndexAction,
+              CXClientData,
+              ffi.Pointer<IndexerCallbacks>,
+              ffi.Uint32,
+              ffi.Uint32,
+              ffi.Pointer<ffi.Int8>,
+              ffi.Pointer<ffi.Pointer<ffi.Int8>>,
+              ffi.Int32,
+              ffi.Pointer<CXUnsavedFile>,
+              ffi.Uint32,
+              ffi.Pointer<CXTranslationUnit>,
+              ffi.Uint32)>>('clang_indexSourceFile');
+  late final _clang_indexSourceFile = _clang_indexSourceFile_ptr.asFunction<
+      int Function(
+          CXIndexAction,
+          CXClientData,
+          ffi.Pointer<IndexerCallbacks>,
+          int,
+          int,
+          ffi.Pointer<ffi.Int8>,
+          ffi.Pointer<ffi.Pointer<ffi.Int8>>,
+          int,
+          ffi.Pointer<CXUnsavedFile>,
+          int,
+          ffi.Pointer<CXTranslationUnit>,
+          int)>();
 
   /// Same as clang_indexSourceFile but requires a full command line
   /// for \c command_line_args including argv[0]. This is useful if the standard
   /// library paths are relative to the binary.
   int clang_indexSourceFileFullArgv(
-    ffi.Pointer<ffi.Void> arg0,
-    ffi.Pointer<ffi.Void> client_data,
+    CXIndexAction arg0,
+    CXClientData client_data,
     ffi.Pointer<IndexerCallbacks> index_callbacks,
     int index_callbacks_size,
     int index_options,
@@ -6859,7 +6992,7 @@ class LibClang {
     int num_command_line_args,
     ffi.Pointer<CXUnsavedFile> unsaved_files,
     int num_unsaved_files,
-    ffi.Pointer<ffi.Pointer<CXTranslationUnitImpl>> out_TU,
+    ffi.Pointer<CXTranslationUnit> out_TU,
     int TU_options,
   ) {
     return _clang_indexSourceFileFullArgv(
@@ -6878,12 +7011,36 @@ class LibClang {
     );
   }
 
-  late final _clang_indexSourceFileFullArgv_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_indexSourceFileFullArgv>>(
-          'clang_indexSourceFileFullArgv');
-  late final _dart_clang_indexSourceFileFullArgv
-      _clang_indexSourceFileFullArgv = _clang_indexSourceFileFullArgv_ptr
-          .asFunction<_dart_clang_indexSourceFileFullArgv>();
+  late final _clang_indexSourceFileFullArgv_ptr = _lookup<
+      ffi.NativeFunction<
+          ffi.Int32 Function(
+              CXIndexAction,
+              CXClientData,
+              ffi.Pointer<IndexerCallbacks>,
+              ffi.Uint32,
+              ffi.Uint32,
+              ffi.Pointer<ffi.Int8>,
+              ffi.Pointer<ffi.Pointer<ffi.Int8>>,
+              ffi.Int32,
+              ffi.Pointer<CXUnsavedFile>,
+              ffi.Uint32,
+              ffi.Pointer<CXTranslationUnit>,
+              ffi.Uint32)>>('clang_indexSourceFileFullArgv');
+  late final _clang_indexSourceFileFullArgv =
+      _clang_indexSourceFileFullArgv_ptr.asFunction<
+          int Function(
+              CXIndexAction,
+              CXClientData,
+              ffi.Pointer<IndexerCallbacks>,
+              int,
+              int,
+              ffi.Pointer<ffi.Int8>,
+              ffi.Pointer<ffi.Pointer<ffi.Int8>>,
+              int,
+              ffi.Pointer<CXUnsavedFile>,
+              int,
+              ffi.Pointer<CXTranslationUnit>,
+              int)>();
 
   /// Index the given translation unit via callbacks implemented through
   /// #IndexerCallbacks.
@@ -6900,12 +7057,12 @@ class LibClang {
   /// \returns If there is a failure from which there is no recovery, returns
   /// non-zero, otherwise returns 0.
   int clang_indexTranslationUnit(
-    ffi.Pointer<ffi.Void> arg0,
-    ffi.Pointer<ffi.Void> client_data,
+    CXIndexAction arg0,
+    CXClientData client_data,
     ffi.Pointer<IndexerCallbacks> index_callbacks,
     int index_callbacks_size,
     int index_options,
-    ffi.Pointer<CXTranslationUnitImpl> arg5,
+    CXTranslationUnit arg5,
   ) {
     return _clang_indexTranslationUnit(
       arg0,
@@ -6917,12 +7074,19 @@ class LibClang {
     );
   }
 
-  late final _clang_indexTranslationUnit_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_indexTranslationUnit>>(
-          'clang_indexTranslationUnit');
-  late final _dart_clang_indexTranslationUnit _clang_indexTranslationUnit =
-      _clang_indexTranslationUnit_ptr
-          .asFunction<_dart_clang_indexTranslationUnit>();
+  late final _clang_indexTranslationUnit_ptr = _lookup<
+      ffi.NativeFunction<
+          ffi.Int32 Function(
+              CXIndexAction,
+              CXClientData,
+              ffi.Pointer<IndexerCallbacks>,
+              ffi.Uint32,
+              ffi.Uint32,
+              CXTranslationUnit)>>('clang_indexTranslationUnit');
+  late final _clang_indexTranslationUnit =
+      _clang_indexTranslationUnit_ptr.asFunction<
+          int Function(CXIndexAction, CXClientData,
+              ffi.Pointer<IndexerCallbacks>, int, int, CXTranslationUnit)>();
 
   /// Retrieve the CXIdxFile, file, line, column, and offset represented by
   /// the given CXIdxLoc.
@@ -6932,8 +7096,8 @@ class LibClang {
   /// retrieves the location of the argument.
   void clang_indexLoc_getFileLocation(
     CXIdxLoc loc,
-    ffi.Pointer<ffi.Pointer<ffi.Void>> indexFile,
-    ffi.Pointer<ffi.Pointer<ffi.Void>> file,
+    ffi.Pointer<CXIdxClientFile> indexFile,
+    ffi.Pointer<CXFile> file,
     ffi.Pointer<ffi.Uint32> line,
     ffi.Pointer<ffi.Uint32> column,
     ffi.Pointer<ffi.Uint32> offset,
@@ -6948,12 +7112,24 @@ class LibClang {
     );
   }
 
-  late final _clang_indexLoc_getFileLocation_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_indexLoc_getFileLocation>>(
-          'clang_indexLoc_getFileLocation');
-  late final _dart_clang_indexLoc_getFileLocation
-      _clang_indexLoc_getFileLocation = _clang_indexLoc_getFileLocation_ptr
-          .asFunction<_dart_clang_indexLoc_getFileLocation>();
+  late final _clang_indexLoc_getFileLocation_ptr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              CXIdxLoc,
+              ffi.Pointer<CXIdxClientFile>,
+              ffi.Pointer<CXFile>,
+              ffi.Pointer<ffi.Uint32>,
+              ffi.Pointer<ffi.Uint32>,
+              ffi.Pointer<ffi.Uint32>)>>('clang_indexLoc_getFileLocation');
+  late final _clang_indexLoc_getFileLocation =
+      _clang_indexLoc_getFileLocation_ptr.asFunction<
+          void Function(
+              CXIdxLoc,
+              ffi.Pointer<CXIdxClientFile>,
+              ffi.Pointer<CXFile>,
+              ffi.Pointer<ffi.Uint32>,
+              ffi.Pointer<ffi.Uint32>,
+              ffi.Pointer<ffi.Uint32>)>();
 
   /// Retrieve the CXSourceLocation represented by the given CXIdxLoc.
   CXSourceLocation clang_indexLoc_getCXSourceLocation(
@@ -6965,12 +7141,11 @@ class LibClang {
   }
 
   late final _clang_indexLoc_getCXSourceLocation_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_indexLoc_getCXSourceLocation>>(
+      _lookup<ffi.NativeFunction<CXSourceLocation Function(CXIdxLoc)>>(
           'clang_indexLoc_getCXSourceLocation');
-  late final _dart_clang_indexLoc_getCXSourceLocation
-      _clang_indexLoc_getCXSourceLocation =
+  late final _clang_indexLoc_getCXSourceLocation =
       _clang_indexLoc_getCXSourceLocation_ptr
-          .asFunction<_dart_clang_indexLoc_getCXSourceLocation>();
+          .asFunction<CXSourceLocation Function(CXIdxLoc)>();
 
   /// Visit the fields of a particular type.
   ///
@@ -6991,8 +7166,8 @@ class LibClang {
   /// prematurely by the visitor returning \c CXFieldVisit_Break.
   int clang_Type_visitFields(
     CXType T,
-    ffi.Pointer<ffi.NativeFunction<CXFieldVisitor>> visitor,
-    ffi.Pointer<ffi.Void> client_data,
+    CXFieldVisitor visitor,
+    CXClientData client_data,
   ) {
     return _clang_Type_visitFields(
       T,
@@ -7001,11 +7176,12 @@ class LibClang {
     );
   }
 
-  late final _clang_Type_visitFields_ptr =
-      _lookup<ffi.NativeFunction<Native_clang_Type_visitFields>>(
-          'clang_Type_visitFields');
-  late final _dart_clang_Type_visitFields _clang_Type_visitFields =
-      _clang_Type_visitFields_ptr.asFunction<_dart_clang_Type_visitFields>();
+  late final _clang_Type_visitFields_ptr = _lookup<
+      ffi.NativeFunction<
+          ffi.Uint32 Function(
+              CXType, CXFieldVisitor, CXClientData)>>('clang_Type_visitFields');
+  late final _clang_Type_visitFields = _clang_Type_visitFields_ptr
+      .asFunction<int Function(CXType, CXFieldVisitor, CXClientData)>();
 
   late final addresses = _SymbolAddresses(this);
 }
@@ -7013,829 +7189,1144 @@ class LibClang {
 class _SymbolAddresses {
   final LibClang _library;
   _SymbolAddresses(this._library);
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getCString>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Pointer<ffi.Int8> Function(CXString)>>
       get clang_getCString => _library._clang_getCString_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_disposeString>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Void Function(CXString)>>
       get clang_disposeString => _library._clang_disposeString_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_disposeStringSet>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<CXStringSet>)>>
       get clang_disposeStringSet => _library._clang_disposeStringSet_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_createIndex>>
+  ffi.Pointer<ffi.NativeFunction<CXIndex Function(ffi.Int32, ffi.Int32)>>
       get clang_createIndex => _library._clang_createIndex_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_disposeIndex>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Void Function(CXIndex)>>
       get clang_disposeIndex => _library._clang_disposeIndex_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_CXIndex_setGlobalOptions>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Void Function(CXIndex, ffi.Uint32)>>
       get clang_CXIndex_setGlobalOptions =>
           _library._clang_CXIndex_setGlobalOptions_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_CXIndex_getGlobalOptions>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Uint32 Function(CXIndex)>>
       get clang_CXIndex_getGlobalOptions =>
           _library._clang_CXIndex_getGlobalOptions_ptr;
   ffi.Pointer<
-          ffi.NativeFunction<
-              Native_clang_CXIndex_setInvocationEmissionPathOption>>
+          ffi.NativeFunction<ffi.Void Function(CXIndex, ffi.Pointer<ffi.Int8>)>>
       get clang_CXIndex_setInvocationEmissionPathOption =>
           _library._clang_CXIndex_setInvocationEmissionPathOption_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getFileName>>
+  ffi.Pointer<ffi.NativeFunction<CXString Function(CXFile)>>
       get clang_getFileName => _library._clang_getFileName_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getFileTime>>
+  ffi.Pointer<ffi.NativeFunction<time_t Function(CXFile)>>
       get clang_getFileTime => _library._clang_getFileTime_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getFileUniqueID>>
+  ffi.Pointer<
+          ffi.NativeFunction<
+              ffi.Int32 Function(CXFile, ffi.Pointer<CXFileUniqueID>)>>
       get clang_getFileUniqueID => _library._clang_getFileUniqueID_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_isFileMultipleIncludeGuarded>>
+  ffi.Pointer<
+          ffi.NativeFunction<ffi.Uint32 Function(CXTranslationUnit, CXFile)>>
       get clang_isFileMultipleIncludeGuarded =>
           _library._clang_isFileMultipleIncludeGuarded_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getFile>> get clang_getFile =>
-      _library._clang_getFile_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getFileContents>>
+  ffi.Pointer<
+          ffi.NativeFunction<
+              CXFile Function(CXTranslationUnit, ffi.Pointer<ffi.Int8>)>>
+      get clang_getFile => _library._clang_getFile_ptr;
+  ffi.Pointer<
+          ffi.NativeFunction<
+              ffi.Pointer<ffi.Int8> Function(
+                  CXTranslationUnit, CXFile, ffi.Pointer<size_t>)>>
       get clang_getFileContents => _library._clang_getFileContents_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_File_isEqual>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Int32 Function(CXFile, CXFile)>>
       get clang_File_isEqual => _library._clang_File_isEqual_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_File_tryGetRealPathName>>
+  ffi.Pointer<ffi.NativeFunction<CXString Function(CXFile)>>
       get clang_File_tryGetRealPathName =>
           _library._clang_File_tryGetRealPathName_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getNullLocation>>
+  ffi.Pointer<ffi.NativeFunction<CXSourceLocation Function()>>
       get clang_getNullLocation => _library._clang_getNullLocation_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_equalLocations>>
+  ffi.Pointer<
+          ffi.NativeFunction<
+              ffi.Uint32 Function(CXSourceLocation, CXSourceLocation)>>
       get clang_equalLocations => _library._clang_equalLocations_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getLocation>>
+  ffi.Pointer<
+          ffi.NativeFunction<
+              CXSourceLocation Function(
+                  CXTranslationUnit, CXFile, ffi.Uint32, ffi.Uint32)>>
       get clang_getLocation => _library._clang_getLocation_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getLocationForOffset>>
+  ffi.Pointer<
+          ffi.NativeFunction<
+              CXSourceLocation Function(CXTranslationUnit, CXFile, ffi.Uint32)>>
       get clang_getLocationForOffset =>
           _library._clang_getLocationForOffset_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_Location_isInSystemHeader>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Int32 Function(CXSourceLocation)>>
       get clang_Location_isInSystemHeader =>
           _library._clang_Location_isInSystemHeader_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_Location_isFromMainFile>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Int32 Function(CXSourceLocation)>>
       get clang_Location_isFromMainFile =>
           _library._clang_Location_isFromMainFile_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getNullRange>>
+  ffi.Pointer<ffi.NativeFunction<CXSourceRange Function()>>
       get clang_getNullRange => _library._clang_getNullRange_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getRange>> get clang_getRange =>
-      _library._clang_getRange_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_equalRanges>>
+  ffi.Pointer<
+          ffi.NativeFunction<
+              CXSourceRange Function(CXSourceLocation, CXSourceLocation)>>
+      get clang_getRange => _library._clang_getRange_ptr;
+  ffi.Pointer<
+          ffi.NativeFunction<ffi.Uint32 Function(CXSourceRange, CXSourceRange)>>
       get clang_equalRanges => _library._clang_equalRanges_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_Range_isNull>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Int32 Function(CXSourceRange)>>
       get clang_Range_isNull => _library._clang_Range_isNull_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getExpansionLocation>>
-      get clang_getExpansionLocation =>
-          _library._clang_getExpansionLocation_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getPresumedLocation>>
-      get clang_getPresumedLocation => _library._clang_getPresumedLocation_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getInstantiationLocation>>
-      get clang_getInstantiationLocation =>
-          _library._clang_getInstantiationLocation_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getSpellingLocation>>
-      get clang_getSpellingLocation => _library._clang_getSpellingLocation_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getFileLocation>>
-      get clang_getFileLocation => _library._clang_getFileLocation_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getRangeStart>>
+  ffi.Pointer<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              CXSourceLocation,
+              ffi.Pointer<CXFile>,
+              ffi.Pointer<ffi.Uint32>,
+              ffi.Pointer<ffi.Uint32>,
+              ffi.Pointer<ffi.Uint32>)>> get clang_getExpansionLocation =>
+      _library._clang_getExpansionLocation_ptr;
+  ffi.Pointer<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              CXSourceLocation,
+              ffi.Pointer<CXString>,
+              ffi.Pointer<ffi.Uint32>,
+              ffi.Pointer<ffi.Uint32>)>> get clang_getPresumedLocation =>
+      _library._clang_getPresumedLocation_ptr;
+  ffi.Pointer<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              CXSourceLocation,
+              ffi.Pointer<CXFile>,
+              ffi.Pointer<ffi.Uint32>,
+              ffi.Pointer<ffi.Uint32>,
+              ffi.Pointer<ffi.Uint32>)>> get clang_getInstantiationLocation =>
+      _library._clang_getInstantiationLocation_ptr;
+  ffi.Pointer<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              CXSourceLocation,
+              ffi.Pointer<CXFile>,
+              ffi.Pointer<ffi.Uint32>,
+              ffi.Pointer<ffi.Uint32>,
+              ffi.Pointer<ffi.Uint32>)>> get clang_getSpellingLocation =>
+      _library._clang_getSpellingLocation_ptr;
+  ffi.Pointer<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              CXSourceLocation,
+              ffi.Pointer<CXFile>,
+              ffi.Pointer<ffi.Uint32>,
+              ffi.Pointer<ffi.Uint32>,
+              ffi.Pointer<ffi.Uint32>)>> get clang_getFileLocation =>
+      _library._clang_getFileLocation_ptr;
+  ffi.Pointer<ffi.NativeFunction<CXSourceLocation Function(CXSourceRange)>>
       get clang_getRangeStart => _library._clang_getRangeStart_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getRangeEnd>>
+  ffi.Pointer<ffi.NativeFunction<CXSourceLocation Function(CXSourceRange)>>
       get clang_getRangeEnd => _library._clang_getRangeEnd_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getSkippedRanges>>
-      get clang_getSkippedRanges => _library._clang_getSkippedRanges_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getAllSkippedRanges>>
+  ffi.Pointer<
+      ffi.NativeFunction<
+          ffi.Pointer<CXSourceRangeList> Function(
+              CXTranslationUnit, CXFile)>> get clang_getSkippedRanges =>
+      _library._clang_getSkippedRanges_ptr;
+  ffi.Pointer<
+          ffi.NativeFunction<
+              ffi.Pointer<CXSourceRangeList> Function(CXTranslationUnit)>>
       get clang_getAllSkippedRanges => _library._clang_getAllSkippedRanges_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_disposeSourceRangeList>>
+  ffi.Pointer<
+          ffi.NativeFunction<ffi.Void Function(ffi.Pointer<CXSourceRangeList>)>>
       get clang_disposeSourceRangeList =>
           _library._clang_disposeSourceRangeList_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getNumDiagnosticsInSet>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Uint32 Function(CXDiagnosticSet)>>
       get clang_getNumDiagnosticsInSet =>
           _library._clang_getNumDiagnosticsInSet_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getDiagnosticInSet>>
+  ffi.Pointer<
+          ffi.NativeFunction<
+              CXDiagnostic Function(CXDiagnosticSet, ffi.Uint32)>>
       get clang_getDiagnosticInSet => _library._clang_getDiagnosticInSet_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_loadDiagnostics>>
-      get clang_loadDiagnostics => _library._clang_loadDiagnostics_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_disposeDiagnosticSet>>
+  ffi.Pointer<
+      ffi.NativeFunction<
+          CXDiagnosticSet Function(
+              ffi.Pointer<ffi.Int8>,
+              ffi.Pointer<ffi.Int32>,
+              ffi.Pointer<CXString>)>> get clang_loadDiagnostics =>
+      _library._clang_loadDiagnostics_ptr;
+  ffi.Pointer<ffi.NativeFunction<ffi.Void Function(CXDiagnosticSet)>>
       get clang_disposeDiagnosticSet =>
           _library._clang_disposeDiagnosticSet_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getChildDiagnostics>>
+  ffi.Pointer<ffi.NativeFunction<CXDiagnosticSet Function(CXDiagnostic)>>
       get clang_getChildDiagnostics => _library._clang_getChildDiagnostics_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getNumDiagnostics>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Uint32 Function(CXTranslationUnit)>>
       get clang_getNumDiagnostics => _library._clang_getNumDiagnostics_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getDiagnostic>>
+  ffi.Pointer<
+          ffi.NativeFunction<
+              CXDiagnostic Function(CXTranslationUnit, ffi.Uint32)>>
       get clang_getDiagnostic => _library._clang_getDiagnostic_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getDiagnosticSetFromTU>>
+  ffi.Pointer<ffi.NativeFunction<CXDiagnosticSet Function(CXTranslationUnit)>>
       get clang_getDiagnosticSetFromTU =>
           _library._clang_getDiagnosticSetFromTU_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_disposeDiagnostic>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Void Function(CXDiagnostic)>>
       get clang_disposeDiagnostic => _library._clang_disposeDiagnostic_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_formatDiagnostic>>
+  ffi.Pointer<ffi.NativeFunction<CXString Function(CXDiagnostic, ffi.Uint32)>>
       get clang_formatDiagnostic => _library._clang_formatDiagnostic_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_defaultDiagnosticDisplayOptions>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Uint32 Function()>>
       get clang_defaultDiagnosticDisplayOptions =>
           _library._clang_defaultDiagnosticDisplayOptions_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getDiagnosticSeverity>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Int32 Function(CXDiagnostic)>>
       get clang_getDiagnosticSeverity =>
           _library._clang_getDiagnosticSeverity_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getDiagnosticLocation>>
+  ffi.Pointer<ffi.NativeFunction<CXSourceLocation Function(CXDiagnostic)>>
       get clang_getDiagnosticLocation =>
           _library._clang_getDiagnosticLocation_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getDiagnosticSpelling>>
+  ffi.Pointer<ffi.NativeFunction<CXString Function(CXDiagnostic)>>
       get clang_getDiagnosticSpelling =>
           _library._clang_getDiagnosticSpelling_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getDiagnosticOption>>
+  ffi.Pointer<
+          ffi.NativeFunction<
+              CXString Function(CXDiagnostic, ffi.Pointer<CXString>)>>
       get clang_getDiagnosticOption => _library._clang_getDiagnosticOption_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getDiagnosticCategory>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Uint32 Function(CXDiagnostic)>>
       get clang_getDiagnosticCategory =>
           _library._clang_getDiagnosticCategory_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getDiagnosticCategoryName>>
+  ffi.Pointer<ffi.NativeFunction<CXString Function(ffi.Uint32)>>
       get clang_getDiagnosticCategoryName =>
           _library._clang_getDiagnosticCategoryName_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getDiagnosticCategoryText>>
+  ffi.Pointer<ffi.NativeFunction<CXString Function(CXDiagnostic)>>
       get clang_getDiagnosticCategoryText =>
           _library._clang_getDiagnosticCategoryText_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getDiagnosticNumRanges>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Uint32 Function(CXDiagnostic)>>
       get clang_getDiagnosticNumRanges =>
           _library._clang_getDiagnosticNumRanges_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getDiagnosticRange>>
+  ffi.Pointer<
+          ffi.NativeFunction<CXSourceRange Function(CXDiagnostic, ffi.Uint32)>>
       get clang_getDiagnosticRange => _library._clang_getDiagnosticRange_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getDiagnosticNumFixIts>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Uint32 Function(CXDiagnostic)>>
       get clang_getDiagnosticNumFixIts =>
           _library._clang_getDiagnosticNumFixIts_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getDiagnosticFixIt>>
+  ffi.Pointer<
+          ffi.NativeFunction<
+              CXString Function(
+                  CXDiagnostic, ffi.Uint32, ffi.Pointer<CXSourceRange>)>>
       get clang_getDiagnosticFixIt => _library._clang_getDiagnosticFixIt_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getTranslationUnitSpelling>>
+  ffi.Pointer<ffi.NativeFunction<CXString Function(CXTranslationUnit)>>
       get clang_getTranslationUnitSpelling =>
           _library._clang_getTranslationUnitSpelling_ptr;
   ffi.Pointer<
-          ffi.NativeFunction<Native_clang_createTranslationUnitFromSourceFile>>
+          ffi.NativeFunction<
+              CXTranslationUnit Function(
+                  CXIndex,
+                  ffi.Pointer<ffi.Int8>,
+                  ffi.Int32,
+                  ffi.Pointer<ffi.Pointer<ffi.Int8>>,
+                  ffi.Uint32,
+                  ffi.Pointer<CXUnsavedFile>)>>
       get clang_createTranslationUnitFromSourceFile =>
           _library._clang_createTranslationUnitFromSourceFile_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_createTranslationUnit>>
+  ffi.Pointer<
+          ffi.NativeFunction<
+              CXTranslationUnit Function(CXIndex, ffi.Pointer<ffi.Int8>)>>
       get clang_createTranslationUnit =>
           _library._clang_createTranslationUnit_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_createTranslationUnit2>>
+  ffi.Pointer<
+          ffi.NativeFunction<
+              ffi.Int32 Function(CXIndex, ffi.Pointer<ffi.Int8>,
+                  ffi.Pointer<CXTranslationUnit>)>>
       get clang_createTranslationUnit2 =>
           _library._clang_createTranslationUnit2_ptr;
-  ffi.Pointer<
-          ffi.NativeFunction<Native_clang_defaultEditingTranslationUnitOptions>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Uint32 Function()>>
       get clang_defaultEditingTranslationUnitOptions =>
           _library._clang_defaultEditingTranslationUnitOptions_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_parseTranslationUnit>>
-      get clang_parseTranslationUnit =>
-          _library._clang_parseTranslationUnit_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_parseTranslationUnit2>>
+  ffi.Pointer<
+      ffi.NativeFunction<
+          CXTranslationUnit Function(
+              CXIndex,
+              ffi.Pointer<ffi.Int8>,
+              ffi.Pointer<ffi.Pointer<ffi.Int8>>,
+              ffi.Int32,
+              ffi.Pointer<CXUnsavedFile>,
+              ffi.Uint32,
+              ffi.Uint32)>> get clang_parseTranslationUnit =>
+      _library._clang_parseTranslationUnit_ptr;
+  ffi.Pointer<
+          ffi.NativeFunction<
+              ffi.Int32 Function(
+                  CXIndex,
+                  ffi.Pointer<ffi.Int8>,
+                  ffi.Pointer<ffi.Pointer<ffi.Int8>>,
+                  ffi.Int32,
+                  ffi.Pointer<CXUnsavedFile>,
+                  ffi.Uint32,
+                  ffi.Uint32,
+                  ffi.Pointer<CXTranslationUnit>)>>
       get clang_parseTranslationUnit2 =>
           _library._clang_parseTranslationUnit2_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_parseTranslationUnit2FullArgv>>
+  ffi.Pointer<
+          ffi.NativeFunction<
+              ffi.Int32 Function(
+                  CXIndex,
+                  ffi.Pointer<ffi.Int8>,
+                  ffi.Pointer<ffi.Pointer<ffi.Int8>>,
+                  ffi.Int32,
+                  ffi.Pointer<CXUnsavedFile>,
+                  ffi.Uint32,
+                  ffi.Uint32,
+                  ffi.Pointer<CXTranslationUnit>)>>
       get clang_parseTranslationUnit2FullArgv =>
           _library._clang_parseTranslationUnit2FullArgv_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_defaultSaveOptions>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Uint32 Function(CXTranslationUnit)>>
       get clang_defaultSaveOptions => _library._clang_defaultSaveOptions_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_saveTranslationUnit>>
+  ffi.Pointer<
+          ffi.NativeFunction<
+              ffi.Int32 Function(
+                  CXTranslationUnit, ffi.Pointer<ffi.Int8>, ffi.Uint32)>>
       get clang_saveTranslationUnit => _library._clang_saveTranslationUnit_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_suspendTranslationUnit>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Uint32 Function(CXTranslationUnit)>>
       get clang_suspendTranslationUnit =>
           _library._clang_suspendTranslationUnit_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_disposeTranslationUnit>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Void Function(CXTranslationUnit)>>
       get clang_disposeTranslationUnit =>
           _library._clang_disposeTranslationUnit_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_defaultReparseOptions>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Uint32 Function(CXTranslationUnit)>>
       get clang_defaultReparseOptions =>
           _library._clang_defaultReparseOptions_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_reparseTranslationUnit>>
-      get clang_reparseTranslationUnit =>
-          _library._clang_reparseTranslationUnit_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getTUResourceUsageName>>
+  ffi.Pointer<
+      ffi.NativeFunction<
+          ffi.Int32 Function(
+              CXTranslationUnit,
+              ffi.Uint32,
+              ffi.Pointer<CXUnsavedFile>,
+              ffi.Uint32)>> get clang_reparseTranslationUnit =>
+      _library._clang_reparseTranslationUnit_ptr;
+  ffi.Pointer<ffi.NativeFunction<ffi.Pointer<ffi.Int8> Function(ffi.Int32)>>
       get clang_getTUResourceUsageName =>
           _library._clang_getTUResourceUsageName_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getCXTUResourceUsage>>
+  ffi.Pointer<ffi.NativeFunction<CXTUResourceUsage Function(CXTranslationUnit)>>
       get clang_getCXTUResourceUsage =>
           _library._clang_getCXTUResourceUsage_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_disposeCXTUResourceUsage>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Void Function(CXTUResourceUsage)>>
       get clang_disposeCXTUResourceUsage =>
           _library._clang_disposeCXTUResourceUsage_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getTranslationUnitTargetInfo>>
+  ffi.Pointer<ffi.NativeFunction<CXTargetInfo Function(CXTranslationUnit)>>
       get clang_getTranslationUnitTargetInfo =>
           _library._clang_getTranslationUnitTargetInfo_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_TargetInfo_dispose>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Void Function(CXTargetInfo)>>
       get clang_TargetInfo_dispose => _library._clang_TargetInfo_dispose_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_TargetInfo_getTriple>>
+  ffi.Pointer<ffi.NativeFunction<CXString Function(CXTargetInfo)>>
       get clang_TargetInfo_getTriple =>
           _library._clang_TargetInfo_getTriple_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_TargetInfo_getPointerWidth>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Int32 Function(CXTargetInfo)>>
       get clang_TargetInfo_getPointerWidth =>
           _library._clang_TargetInfo_getPointerWidth_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getNullCursor>>
+  ffi.Pointer<ffi.NativeFunction<CXCursor Function()>>
       get clang_getNullCursor => _library._clang_getNullCursor_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getTranslationUnitCursor>>
+  ffi.Pointer<ffi.NativeFunction<CXCursor Function(CXTranslationUnit)>>
       get clang_getTranslationUnitCursor =>
           _library._clang_getTranslationUnitCursor_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_equalCursors>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Uint32 Function(CXCursor, CXCursor)>>
       get clang_equalCursors => _library._clang_equalCursors_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_Cursor_isNull>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Int32 Function(CXCursor)>>
       get clang_Cursor_isNull => _library._clang_Cursor_isNull_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_hashCursor>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Uint32 Function(CXCursor)>>
       get clang_hashCursor => _library._clang_hashCursor_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getCursorKind>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Int32 Function(CXCursor)>>
       get clang_getCursorKind => _library._clang_getCursorKind_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_isDeclaration>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Uint32 Function(ffi.Int32)>>
       get clang_isDeclaration => _library._clang_isDeclaration_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_isInvalidDeclaration>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Uint32 Function(CXCursor)>>
       get clang_isInvalidDeclaration =>
           _library._clang_isInvalidDeclaration_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_isReference>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Uint32 Function(ffi.Int32)>>
       get clang_isReference => _library._clang_isReference_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_isExpression>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Uint32 Function(ffi.Int32)>>
       get clang_isExpression => _library._clang_isExpression_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_isStatement>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Uint32 Function(ffi.Int32)>>
       get clang_isStatement => _library._clang_isStatement_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_isAttribute>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Uint32 Function(ffi.Int32)>>
       get clang_isAttribute => _library._clang_isAttribute_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_Cursor_hasAttrs>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Uint32 Function(CXCursor)>>
       get clang_Cursor_hasAttrs => _library._clang_Cursor_hasAttrs_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_isInvalid>> get clang_isInvalid =>
-      _library._clang_isInvalid_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_isTranslationUnit>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Uint32 Function(ffi.Int32)>>
+      get clang_isInvalid => _library._clang_isInvalid_ptr;
+  ffi.Pointer<ffi.NativeFunction<ffi.Uint32 Function(ffi.Int32)>>
       get clang_isTranslationUnit => _library._clang_isTranslationUnit_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_isPreprocessing>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Uint32 Function(ffi.Int32)>>
       get clang_isPreprocessing => _library._clang_isPreprocessing_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_isUnexposed>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Uint32 Function(ffi.Int32)>>
       get clang_isUnexposed => _library._clang_isUnexposed_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getCursorLinkage>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Int32 Function(CXCursor)>>
       get clang_getCursorLinkage => _library._clang_getCursorLinkage_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getCursorVisibility>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Int32 Function(CXCursor)>>
       get clang_getCursorVisibility => _library._clang_getCursorVisibility_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getCursorAvailability>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Int32 Function(CXCursor)>>
       get clang_getCursorAvailability =>
           _library._clang_getCursorAvailability_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getCursorPlatformAvailability>>
-      get clang_getCursorPlatformAvailability =>
-          _library._clang_getCursorPlatformAvailability_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_disposeCXPlatformAvailability>>
+  ffi.Pointer<
+      ffi.NativeFunction<
+          ffi.Int32 Function(
+              CXCursor,
+              ffi.Pointer<ffi.Int32>,
+              ffi.Pointer<CXString>,
+              ffi.Pointer<ffi.Int32>,
+              ffi.Pointer<CXString>,
+              ffi.Pointer<CXPlatformAvailability>,
+              ffi.Int32)>> get clang_getCursorPlatformAvailability =>
+      _library._clang_getCursorPlatformAvailability_ptr;
+  ffi.Pointer<
+          ffi.NativeFunction<
+              ffi.Void Function(ffi.Pointer<CXPlatformAvailability>)>>
       get clang_disposeCXPlatformAvailability =>
           _library._clang_disposeCXPlatformAvailability_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getCursorLanguage>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Int32 Function(CXCursor)>>
       get clang_getCursorLanguage => _library._clang_getCursorLanguage_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getCursorTLSKind>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Int32 Function(CXCursor)>>
       get clang_getCursorTLSKind => _library._clang_getCursorTLSKind_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_Cursor_getTranslationUnit>>
+  ffi.Pointer<ffi.NativeFunction<CXTranslationUnit Function(CXCursor)>>
       get clang_Cursor_getTranslationUnit =>
           _library._clang_Cursor_getTranslationUnit_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_createCXCursorSet>>
+  ffi.Pointer<ffi.NativeFunction<CXCursorSet Function()>>
       get clang_createCXCursorSet => _library._clang_createCXCursorSet_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_disposeCXCursorSet>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Void Function(CXCursorSet)>>
       get clang_disposeCXCursorSet => _library._clang_disposeCXCursorSet_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_CXCursorSet_contains>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Uint32 Function(CXCursorSet, CXCursor)>>
       get clang_CXCursorSet_contains =>
           _library._clang_CXCursorSet_contains_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_CXCursorSet_insert>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Uint32 Function(CXCursorSet, CXCursor)>>
       get clang_CXCursorSet_insert => _library._clang_CXCursorSet_insert_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getCursorSemanticParent>>
+  ffi.Pointer<ffi.NativeFunction<CXCursor Function(CXCursor)>>
       get clang_getCursorSemanticParent =>
           _library._clang_getCursorSemanticParent_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getCursorLexicalParent>>
+  ffi.Pointer<ffi.NativeFunction<CXCursor Function(CXCursor)>>
       get clang_getCursorLexicalParent =>
           _library._clang_getCursorLexicalParent_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getOverriddenCursors>>
-      get clang_getOverriddenCursors =>
-          _library._clang_getOverriddenCursors_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_disposeOverriddenCursors>>
+  ffi.Pointer<
+      ffi.NativeFunction<
+          ffi.Void Function(CXCursor, ffi.Pointer<ffi.Pointer<CXCursor>>,
+              ffi.Pointer<ffi.Uint32>)>> get clang_getOverriddenCursors =>
+      _library._clang_getOverriddenCursors_ptr;
+  ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<CXCursor>)>>
       get clang_disposeOverriddenCursors =>
           _library._clang_disposeOverriddenCursors_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getIncludedFile>>
+  ffi.Pointer<ffi.NativeFunction<CXFile Function(CXCursor)>>
       get clang_getIncludedFile => _library._clang_getIncludedFile_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getCursor>> get clang_getCursor =>
-      _library._clang_getCursor_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getCursorLocation>>
+  ffi.Pointer<
+          ffi.NativeFunction<
+              CXCursor Function(CXTranslationUnit, CXSourceLocation)>>
+      get clang_getCursor => _library._clang_getCursor_ptr;
+  ffi.Pointer<ffi.NativeFunction<CXSourceLocation Function(CXCursor)>>
       get clang_getCursorLocation => _library._clang_getCursorLocation_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getCursorExtent>>
+  ffi.Pointer<ffi.NativeFunction<CXSourceRange Function(CXCursor)>>
       get clang_getCursorExtent => _library._clang_getCursorExtent_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getCursorType>>
+  ffi.Pointer<ffi.NativeFunction<CXType Function(CXCursor)>>
       get clang_getCursorType => _library._clang_getCursorType_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getTypeSpelling>>
+  ffi.Pointer<ffi.NativeFunction<CXString Function(CXType)>>
       get clang_getTypeSpelling => _library._clang_getTypeSpelling_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getTypedefDeclUnderlyingType>>
+  ffi.Pointer<ffi.NativeFunction<CXType Function(CXCursor)>>
       get clang_getTypedefDeclUnderlyingType =>
           _library._clang_getTypedefDeclUnderlyingType_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getEnumDeclIntegerType>>
+  ffi.Pointer<ffi.NativeFunction<CXType Function(CXCursor)>>
       get clang_getEnumDeclIntegerType =>
           _library._clang_getEnumDeclIntegerType_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getEnumConstantDeclValue>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Int64 Function(CXCursor)>>
       get clang_getEnumConstantDeclValue =>
           _library._clang_getEnumConstantDeclValue_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getEnumConstantDeclUnsignedValue>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Uint64 Function(CXCursor)>>
       get clang_getEnumConstantDeclUnsignedValue =>
           _library._clang_getEnumConstantDeclUnsignedValue_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getFieldDeclBitWidth>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Int32 Function(CXCursor)>>
       get clang_getFieldDeclBitWidth =>
           _library._clang_getFieldDeclBitWidth_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_Cursor_getNumArguments>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Int32 Function(CXCursor)>>
       get clang_Cursor_getNumArguments =>
           _library._clang_Cursor_getNumArguments_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_Cursor_getArgument>>
+  ffi.Pointer<ffi.NativeFunction<CXCursor Function(CXCursor, ffi.Uint32)>>
       get clang_Cursor_getArgument => _library._clang_Cursor_getArgument_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_Cursor_getNumTemplateArguments>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Int32 Function(CXCursor)>>
       get clang_Cursor_getNumTemplateArguments =>
           _library._clang_Cursor_getNumTemplateArguments_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_Cursor_getTemplateArgumentKind>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Int32 Function(CXCursor, ffi.Uint32)>>
       get clang_Cursor_getTemplateArgumentKind =>
           _library._clang_Cursor_getTemplateArgumentKind_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_Cursor_getTemplateArgumentType>>
+  ffi.Pointer<ffi.NativeFunction<CXType Function(CXCursor, ffi.Uint32)>>
       get clang_Cursor_getTemplateArgumentType =>
           _library._clang_Cursor_getTemplateArgumentType_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_Cursor_getTemplateArgumentValue>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Int64 Function(CXCursor, ffi.Uint32)>>
       get clang_Cursor_getTemplateArgumentValue =>
           _library._clang_Cursor_getTemplateArgumentValue_ptr;
-  ffi.Pointer<
-          ffi.NativeFunction<
-              Native_clang_Cursor_getTemplateArgumentUnsignedValue>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Uint64 Function(CXCursor, ffi.Uint32)>>
       get clang_Cursor_getTemplateArgumentUnsignedValue =>
           _library._clang_Cursor_getTemplateArgumentUnsignedValue_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_equalTypes>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Uint32 Function(CXType, CXType)>>
       get clang_equalTypes => _library._clang_equalTypes_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getCanonicalType>>
+  ffi.Pointer<ffi.NativeFunction<CXType Function(CXType)>>
       get clang_getCanonicalType => _library._clang_getCanonicalType_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_isConstQualifiedType>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Uint32 Function(CXType)>>
       get clang_isConstQualifiedType =>
           _library._clang_isConstQualifiedType_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_Cursor_isMacroFunctionLike>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Uint32 Function(CXCursor)>>
       get clang_Cursor_isMacroFunctionLike =>
           _library._clang_Cursor_isMacroFunctionLike_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_Cursor_isMacroBuiltin>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Uint32 Function(CXCursor)>>
       get clang_Cursor_isMacroBuiltin =>
           _library._clang_Cursor_isMacroBuiltin_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_Cursor_isFunctionInlined>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Uint32 Function(CXCursor)>>
       get clang_Cursor_isFunctionInlined =>
           _library._clang_Cursor_isFunctionInlined_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_isVolatileQualifiedType>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Uint32 Function(CXType)>>
       get clang_isVolatileQualifiedType =>
           _library._clang_isVolatileQualifiedType_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_isRestrictQualifiedType>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Uint32 Function(CXType)>>
       get clang_isRestrictQualifiedType =>
           _library._clang_isRestrictQualifiedType_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getAddressSpace>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Uint32 Function(CXType)>>
       get clang_getAddressSpace => _library._clang_getAddressSpace_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getTypedefName>>
+  ffi.Pointer<ffi.NativeFunction<CXString Function(CXType)>>
       get clang_getTypedefName => _library._clang_getTypedefName_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getPointeeType>>
+  ffi.Pointer<ffi.NativeFunction<CXType Function(CXType)>>
       get clang_getPointeeType => _library._clang_getPointeeType_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getTypeDeclaration>>
+  ffi.Pointer<ffi.NativeFunction<CXCursor Function(CXType)>>
       get clang_getTypeDeclaration => _library._clang_getTypeDeclaration_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getDeclObjCTypeEncoding>>
+  ffi.Pointer<ffi.NativeFunction<CXString Function(CXCursor)>>
       get clang_getDeclObjCTypeEncoding =>
           _library._clang_getDeclObjCTypeEncoding_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_Type_getObjCEncoding>>
+  ffi.Pointer<ffi.NativeFunction<CXString Function(CXType)>>
       get clang_Type_getObjCEncoding =>
           _library._clang_Type_getObjCEncoding_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getTypeKindSpelling>>
+  ffi.Pointer<ffi.NativeFunction<CXString Function(ffi.Int32)>>
       get clang_getTypeKindSpelling => _library._clang_getTypeKindSpelling_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getFunctionTypeCallingConv>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Int32 Function(CXType)>>
       get clang_getFunctionTypeCallingConv =>
           _library._clang_getFunctionTypeCallingConv_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getResultType>>
+  ffi.Pointer<ffi.NativeFunction<CXType Function(CXType)>>
       get clang_getResultType => _library._clang_getResultType_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getExceptionSpecificationType>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Int32 Function(CXType)>>
       get clang_getExceptionSpecificationType =>
           _library._clang_getExceptionSpecificationType_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getNumArgTypes>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Int32 Function(CXType)>>
       get clang_getNumArgTypes => _library._clang_getNumArgTypes_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getArgType>>
+  ffi.Pointer<ffi.NativeFunction<CXType Function(CXType, ffi.Uint32)>>
       get clang_getArgType => _library._clang_getArgType_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_Type_getObjCObjectBaseType>>
+  ffi.Pointer<ffi.NativeFunction<CXType Function(CXType)>>
       get clang_Type_getObjCObjectBaseType =>
           _library._clang_Type_getObjCObjectBaseType_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_Type_getNumObjCProtocolRefs>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Uint32 Function(CXType)>>
       get clang_Type_getNumObjCProtocolRefs =>
           _library._clang_Type_getNumObjCProtocolRefs_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_Type_getObjCProtocolDecl>>
+  ffi.Pointer<ffi.NativeFunction<CXCursor Function(CXType, ffi.Uint32)>>
       get clang_Type_getObjCProtocolDecl =>
           _library._clang_Type_getObjCProtocolDecl_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_Type_getNumObjCTypeArgs>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Uint32 Function(CXType)>>
       get clang_Type_getNumObjCTypeArgs =>
           _library._clang_Type_getNumObjCTypeArgs_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_Type_getObjCTypeArg>>
+  ffi.Pointer<ffi.NativeFunction<CXType Function(CXType, ffi.Uint32)>>
       get clang_Type_getObjCTypeArg => _library._clang_Type_getObjCTypeArg_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_isFunctionTypeVariadic>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Uint32 Function(CXType)>>
       get clang_isFunctionTypeVariadic =>
           _library._clang_isFunctionTypeVariadic_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getCursorResultType>>
+  ffi.Pointer<ffi.NativeFunction<CXType Function(CXCursor)>>
       get clang_getCursorResultType => _library._clang_getCursorResultType_ptr;
-  ffi.Pointer<
-          ffi.NativeFunction<Native_clang_getCursorExceptionSpecificationType>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Int32 Function(CXCursor)>>
       get clang_getCursorExceptionSpecificationType =>
           _library._clang_getCursorExceptionSpecificationType_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_isPODType>> get clang_isPODType =>
-      _library._clang_isPODType_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getElementType>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Uint32 Function(CXType)>>
+      get clang_isPODType => _library._clang_isPODType_ptr;
+  ffi.Pointer<ffi.NativeFunction<CXType Function(CXType)>>
       get clang_getElementType => _library._clang_getElementType_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getNumElements>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Int64 Function(CXType)>>
       get clang_getNumElements => _library._clang_getNumElements_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getArrayElementType>>
+  ffi.Pointer<ffi.NativeFunction<CXType Function(CXType)>>
       get clang_getArrayElementType => _library._clang_getArrayElementType_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getArraySize>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Int64 Function(CXType)>>
       get clang_getArraySize => _library._clang_getArraySize_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_Type_getNamedType>>
+  ffi.Pointer<ffi.NativeFunction<CXType Function(CXType)>>
       get clang_Type_getNamedType => _library._clang_Type_getNamedType_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_Type_isTransparentTagTypedef>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Uint32 Function(CXType)>>
       get clang_Type_isTransparentTagTypedef =>
           _library._clang_Type_isTransparentTagTypedef_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_Type_getNullability>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Int32 Function(CXType)>>
       get clang_Type_getNullability => _library._clang_Type_getNullability_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_Type_getAlignOf>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Int64 Function(CXType)>>
       get clang_Type_getAlignOf => _library._clang_Type_getAlignOf_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_Type_getClassType>>
+  ffi.Pointer<ffi.NativeFunction<CXType Function(CXType)>>
       get clang_Type_getClassType => _library._clang_Type_getClassType_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_Type_getSizeOf>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Int64 Function(CXType)>>
       get clang_Type_getSizeOf => _library._clang_Type_getSizeOf_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_Type_getOffsetOf>>
+  ffi.Pointer<
+          ffi.NativeFunction<ffi.Int64 Function(CXType, ffi.Pointer<ffi.Int8>)>>
       get clang_Type_getOffsetOf => _library._clang_Type_getOffsetOf_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_Type_getModifiedType>>
+  ffi.Pointer<ffi.NativeFunction<CXType Function(CXType)>>
       get clang_Type_getModifiedType =>
           _library._clang_Type_getModifiedType_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_Cursor_getOffsetOfField>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Int64 Function(CXCursor)>>
       get clang_Cursor_getOffsetOfField =>
           _library._clang_Cursor_getOffsetOfField_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_Cursor_isAnonymous>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Uint32 Function(CXCursor)>>
       get clang_Cursor_isAnonymous => _library._clang_Cursor_isAnonymous_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_Cursor_isAnonymousRecordDecl>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Uint32 Function(CXCursor)>>
       get clang_Cursor_isAnonymousRecordDecl =>
           _library._clang_Cursor_isAnonymousRecordDecl_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_Cursor_isInlineNamespace>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Uint32 Function(CXCursor)>>
       get clang_Cursor_isInlineNamespace =>
           _library._clang_Cursor_isInlineNamespace_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_Type_getNumTemplateArguments>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Int32 Function(CXType)>>
       get clang_Type_getNumTemplateArguments =>
           _library._clang_Type_getNumTemplateArguments_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_Type_getTemplateArgumentAsType>>
+  ffi.Pointer<ffi.NativeFunction<CXType Function(CXType, ffi.Uint32)>>
       get clang_Type_getTemplateArgumentAsType =>
           _library._clang_Type_getTemplateArgumentAsType_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_Type_getCXXRefQualifier>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Int32 Function(CXType)>>
       get clang_Type_getCXXRefQualifier =>
           _library._clang_Type_getCXXRefQualifier_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_Cursor_isBitField>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Uint32 Function(CXCursor)>>
       get clang_Cursor_isBitField => _library._clang_Cursor_isBitField_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_isVirtualBase>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Uint32 Function(CXCursor)>>
       get clang_isVirtualBase => _library._clang_isVirtualBase_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getCXXAccessSpecifier>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Int32 Function(CXCursor)>>
       get clang_getCXXAccessSpecifier =>
           _library._clang_getCXXAccessSpecifier_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_Cursor_getStorageClass>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Int32 Function(CXCursor)>>
       get clang_Cursor_getStorageClass =>
           _library._clang_Cursor_getStorageClass_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getNumOverloadedDecls>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Uint32 Function(CXCursor)>>
       get clang_getNumOverloadedDecls =>
           _library._clang_getNumOverloadedDecls_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getOverloadedDecl>>
+  ffi.Pointer<ffi.NativeFunction<CXCursor Function(CXCursor, ffi.Uint32)>>
       get clang_getOverloadedDecl => _library._clang_getOverloadedDecl_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getIBOutletCollectionType>>
+  ffi.Pointer<ffi.NativeFunction<CXType Function(CXCursor)>>
       get clang_getIBOutletCollectionType =>
           _library._clang_getIBOutletCollectionType_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_visitChildren>>
-      get clang_visitChildren => _library._clang_visitChildren_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getCursorUSR>>
-      get clang_getCursorUSR => _library._clang_getCursorUSR_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_constructUSR_ObjCClass>>
-      get clang_constructUSR_ObjCClass =>
-          _library._clang_constructUSR_ObjCClass_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_constructUSR_ObjCCategory>>
-      get clang_constructUSR_ObjCCategory =>
-          _library._clang_constructUSR_ObjCCategory_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_constructUSR_ObjCProtocol>>
-      get clang_constructUSR_ObjCProtocol =>
-          _library._clang_constructUSR_ObjCProtocol_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_constructUSR_ObjCIvar>>
-      get clang_constructUSR_ObjCIvar =>
-          _library._clang_constructUSR_ObjCIvar_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_constructUSR_ObjCMethod>>
-      get clang_constructUSR_ObjCMethod =>
-          _library._clang_constructUSR_ObjCMethod_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_constructUSR_ObjCProperty>>
-      get clang_constructUSR_ObjCProperty =>
-          _library._clang_constructUSR_ObjCProperty_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getCursorSpelling>>
-      get clang_getCursorSpelling => _library._clang_getCursorSpelling_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_Cursor_getSpellingNameRange>>
-      get clang_Cursor_getSpellingNameRange =>
-          _library._clang_Cursor_getSpellingNameRange_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_PrintingPolicy_getProperty>>
-      get clang_PrintingPolicy_getProperty =>
-          _library._clang_PrintingPolicy_getProperty_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_PrintingPolicy_setProperty>>
-      get clang_PrintingPolicy_setProperty =>
-          _library._clang_PrintingPolicy_setProperty_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getCursorPrintingPolicy>>
-      get clang_getCursorPrintingPolicy =>
-          _library._clang_getCursorPrintingPolicy_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_PrintingPolicy_dispose>>
-      get clang_PrintingPolicy_dispose =>
-          _library._clang_PrintingPolicy_dispose_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getCursorPrettyPrinted>>
-      get clang_getCursorPrettyPrinted =>
-          _library._clang_getCursorPrettyPrinted_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getCursorDisplayName>>
-      get clang_getCursorDisplayName =>
-          _library._clang_getCursorDisplayName_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getCursorReferenced>>
-      get clang_getCursorReferenced => _library._clang_getCursorReferenced_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getCursorDefinition>>
-      get clang_getCursorDefinition => _library._clang_getCursorDefinition_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_isCursorDefinition>>
-      get clang_isCursorDefinition => _library._clang_isCursorDefinition_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getCanonicalCursor>>
-      get clang_getCanonicalCursor => _library._clang_getCanonicalCursor_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_Cursor_getObjCSelectorIndex>>
-      get clang_Cursor_getObjCSelectorIndex =>
-          _library._clang_Cursor_getObjCSelectorIndex_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_Cursor_isDynamicCall>>
-      get clang_Cursor_isDynamicCall =>
-          _library._clang_Cursor_isDynamicCall_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_Cursor_getReceiverType>>
-      get clang_Cursor_getReceiverType =>
-          _library._clang_Cursor_getReceiverType_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_Cursor_getObjCPropertyAttributes>>
-      get clang_Cursor_getObjCPropertyAttributes =>
-          _library._clang_Cursor_getObjCPropertyAttributes_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_Cursor_getObjCPropertyGetterName>>
-      get clang_Cursor_getObjCPropertyGetterName =>
-          _library._clang_Cursor_getObjCPropertyGetterName_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_Cursor_getObjCPropertySetterName>>
-      get clang_Cursor_getObjCPropertySetterName =>
-          _library._clang_Cursor_getObjCPropertySetterName_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_Cursor_getObjCDeclQualifiers>>
-      get clang_Cursor_getObjCDeclQualifiers =>
-          _library._clang_Cursor_getObjCDeclQualifiers_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_Cursor_isObjCOptional>>
-      get clang_Cursor_isObjCOptional =>
-          _library._clang_Cursor_isObjCOptional_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_Cursor_isVariadic>>
-      get clang_Cursor_isVariadic => _library._clang_Cursor_isVariadic_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_Cursor_isExternalSymbol>>
-      get clang_Cursor_isExternalSymbol =>
-          _library._clang_Cursor_isExternalSymbol_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_Cursor_getCommentRange>>
-      get clang_Cursor_getCommentRange =>
-          _library._clang_Cursor_getCommentRange_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_Cursor_getRawCommentText>>
-      get clang_Cursor_getRawCommentText =>
-          _library._clang_Cursor_getRawCommentText_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_Cursor_getBriefCommentText>>
-      get clang_Cursor_getBriefCommentText =>
-          _library._clang_Cursor_getBriefCommentText_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_Cursor_getMangling>>
-      get clang_Cursor_getMangling => _library._clang_Cursor_getMangling_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_Cursor_getCXXManglings>>
-      get clang_Cursor_getCXXManglings =>
-          _library._clang_Cursor_getCXXManglings_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_Cursor_getObjCManglings>>
-      get clang_Cursor_getObjCManglings =>
-          _library._clang_Cursor_getObjCManglings_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_Cursor_getModule>>
-      get clang_Cursor_getModule => _library._clang_Cursor_getModule_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getModuleForFile>>
-      get clang_getModuleForFile => _library._clang_getModuleForFile_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_Module_getASTFile>>
-      get clang_Module_getASTFile => _library._clang_Module_getASTFile_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_Module_getParent>>
-      get clang_Module_getParent => _library._clang_Module_getParent_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_Module_getName>>
-      get clang_Module_getName => _library._clang_Module_getName_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_Module_getFullName>>
-      get clang_Module_getFullName => _library._clang_Module_getFullName_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_Module_isSystem>>
-      get clang_Module_isSystem => _library._clang_Module_isSystem_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_Module_getNumTopLevelHeaders>>
-      get clang_Module_getNumTopLevelHeaders =>
-          _library._clang_Module_getNumTopLevelHeaders_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_Module_getTopLevelHeader>>
-      get clang_Module_getTopLevelHeader =>
-          _library._clang_Module_getTopLevelHeader_ptr;
   ffi.Pointer<
           ffi.NativeFunction<
-              Native_clang_CXXConstructor_isConvertingConstructor>>
+              ffi.Uint32 Function(CXCursor, CXCursorVisitor, CXClientData)>>
+      get clang_visitChildren => _library._clang_visitChildren_ptr;
+  ffi.Pointer<ffi.NativeFunction<CXString Function(CXCursor)>>
+      get clang_getCursorUSR => _library._clang_getCursorUSR_ptr;
+  ffi.Pointer<ffi.NativeFunction<CXString Function(ffi.Pointer<ffi.Int8>)>>
+      get clang_constructUSR_ObjCClass =>
+          _library._clang_constructUSR_ObjCClass_ptr;
+  ffi.Pointer<
+          ffi.NativeFunction<
+              CXString Function(ffi.Pointer<ffi.Int8>, ffi.Pointer<ffi.Int8>)>>
+      get clang_constructUSR_ObjCCategory =>
+          _library._clang_constructUSR_ObjCCategory_ptr;
+  ffi.Pointer<ffi.NativeFunction<CXString Function(ffi.Pointer<ffi.Int8>)>>
+      get clang_constructUSR_ObjCProtocol =>
+          _library._clang_constructUSR_ObjCProtocol_ptr;
+  ffi.Pointer<
+          ffi.NativeFunction<
+              CXString Function(ffi.Pointer<ffi.Int8>, CXString)>>
+      get clang_constructUSR_ObjCIvar =>
+          _library._clang_constructUSR_ObjCIvar_ptr;
+  ffi.Pointer<
+          ffi.NativeFunction<
+              CXString Function(ffi.Pointer<ffi.Int8>, ffi.Uint32, CXString)>>
+      get clang_constructUSR_ObjCMethod =>
+          _library._clang_constructUSR_ObjCMethod_ptr;
+  ffi.Pointer<
+          ffi.NativeFunction<
+              CXString Function(ffi.Pointer<ffi.Int8>, CXString)>>
+      get clang_constructUSR_ObjCProperty =>
+          _library._clang_constructUSR_ObjCProperty_ptr;
+  ffi.Pointer<ffi.NativeFunction<CXString Function(CXCursor)>>
+      get clang_getCursorSpelling => _library._clang_getCursorSpelling_ptr;
+  ffi.Pointer<
+          ffi.NativeFunction<
+              CXSourceRange Function(CXCursor, ffi.Uint32, ffi.Uint32)>>
+      get clang_Cursor_getSpellingNameRange =>
+          _library._clang_Cursor_getSpellingNameRange_ptr;
+  ffi.Pointer<
+          ffi.NativeFunction<ffi.Uint32 Function(CXPrintingPolicy, ffi.Int32)>>
+      get clang_PrintingPolicy_getProperty =>
+          _library._clang_PrintingPolicy_getProperty_ptr;
+  ffi.Pointer<
+          ffi.NativeFunction<
+              ffi.Void Function(CXPrintingPolicy, ffi.Int32, ffi.Uint32)>>
+      get clang_PrintingPolicy_setProperty =>
+          _library._clang_PrintingPolicy_setProperty_ptr;
+  ffi.Pointer<ffi.NativeFunction<CXPrintingPolicy Function(CXCursor)>>
+      get clang_getCursorPrintingPolicy =>
+          _library._clang_getCursorPrintingPolicy_ptr;
+  ffi.Pointer<ffi.NativeFunction<ffi.Void Function(CXPrintingPolicy)>>
+      get clang_PrintingPolicy_dispose =>
+          _library._clang_PrintingPolicy_dispose_ptr;
+  ffi.Pointer<ffi.NativeFunction<CXString Function(CXCursor, CXPrintingPolicy)>>
+      get clang_getCursorPrettyPrinted =>
+          _library._clang_getCursorPrettyPrinted_ptr;
+  ffi.Pointer<ffi.NativeFunction<CXString Function(CXCursor)>>
+      get clang_getCursorDisplayName =>
+          _library._clang_getCursorDisplayName_ptr;
+  ffi.Pointer<ffi.NativeFunction<CXCursor Function(CXCursor)>>
+      get clang_getCursorReferenced => _library._clang_getCursorReferenced_ptr;
+  ffi.Pointer<ffi.NativeFunction<CXCursor Function(CXCursor)>>
+      get clang_getCursorDefinition => _library._clang_getCursorDefinition_ptr;
+  ffi.Pointer<ffi.NativeFunction<ffi.Uint32 Function(CXCursor)>>
+      get clang_isCursorDefinition => _library._clang_isCursorDefinition_ptr;
+  ffi.Pointer<ffi.NativeFunction<CXCursor Function(CXCursor)>>
+      get clang_getCanonicalCursor => _library._clang_getCanonicalCursor_ptr;
+  ffi.Pointer<ffi.NativeFunction<ffi.Int32 Function(CXCursor)>>
+      get clang_Cursor_getObjCSelectorIndex =>
+          _library._clang_Cursor_getObjCSelectorIndex_ptr;
+  ffi.Pointer<ffi.NativeFunction<ffi.Int32 Function(CXCursor)>>
+      get clang_Cursor_isDynamicCall =>
+          _library._clang_Cursor_isDynamicCall_ptr;
+  ffi.Pointer<ffi.NativeFunction<CXType Function(CXCursor)>>
+      get clang_Cursor_getReceiverType =>
+          _library._clang_Cursor_getReceiverType_ptr;
+  ffi.Pointer<ffi.NativeFunction<ffi.Uint32 Function(CXCursor, ffi.Uint32)>>
+      get clang_Cursor_getObjCPropertyAttributes =>
+          _library._clang_Cursor_getObjCPropertyAttributes_ptr;
+  ffi.Pointer<ffi.NativeFunction<CXString Function(CXCursor)>>
+      get clang_Cursor_getObjCPropertyGetterName =>
+          _library._clang_Cursor_getObjCPropertyGetterName_ptr;
+  ffi.Pointer<ffi.NativeFunction<CXString Function(CXCursor)>>
+      get clang_Cursor_getObjCPropertySetterName =>
+          _library._clang_Cursor_getObjCPropertySetterName_ptr;
+  ffi.Pointer<ffi.NativeFunction<ffi.Uint32 Function(CXCursor)>>
+      get clang_Cursor_getObjCDeclQualifiers =>
+          _library._clang_Cursor_getObjCDeclQualifiers_ptr;
+  ffi.Pointer<ffi.NativeFunction<ffi.Uint32 Function(CXCursor)>>
+      get clang_Cursor_isObjCOptional =>
+          _library._clang_Cursor_isObjCOptional_ptr;
+  ffi.Pointer<ffi.NativeFunction<ffi.Uint32 Function(CXCursor)>>
+      get clang_Cursor_isVariadic => _library._clang_Cursor_isVariadic_ptr;
+  ffi.Pointer<
+      ffi.NativeFunction<
+          ffi.Uint32 Function(
+              CXCursor,
+              ffi.Pointer<CXString>,
+              ffi.Pointer<CXString>,
+              ffi.Pointer<ffi.Uint32>)>> get clang_Cursor_isExternalSymbol =>
+      _library._clang_Cursor_isExternalSymbol_ptr;
+  ffi.Pointer<ffi.NativeFunction<CXSourceRange Function(CXCursor)>>
+      get clang_Cursor_getCommentRange =>
+          _library._clang_Cursor_getCommentRange_ptr;
+  ffi.Pointer<ffi.NativeFunction<CXString Function(CXCursor)>>
+      get clang_Cursor_getRawCommentText =>
+          _library._clang_Cursor_getRawCommentText_ptr;
+  ffi.Pointer<ffi.NativeFunction<CXString Function(CXCursor)>>
+      get clang_Cursor_getBriefCommentText =>
+          _library._clang_Cursor_getBriefCommentText_ptr;
+  ffi.Pointer<ffi.NativeFunction<CXString Function(CXCursor)>>
+      get clang_Cursor_getMangling => _library._clang_Cursor_getMangling_ptr;
+  ffi.Pointer<ffi.NativeFunction<ffi.Pointer<CXStringSet> Function(CXCursor)>>
+      get clang_Cursor_getCXXManglings =>
+          _library._clang_Cursor_getCXXManglings_ptr;
+  ffi.Pointer<ffi.NativeFunction<ffi.Pointer<CXStringSet> Function(CXCursor)>>
+      get clang_Cursor_getObjCManglings =>
+          _library._clang_Cursor_getObjCManglings_ptr;
+  ffi.Pointer<ffi.NativeFunction<CXModule Function(CXCursor)>>
+      get clang_Cursor_getModule => _library._clang_Cursor_getModule_ptr;
+  ffi.Pointer<ffi.NativeFunction<CXModule Function(CXTranslationUnit, CXFile)>>
+      get clang_getModuleForFile => _library._clang_getModuleForFile_ptr;
+  ffi.Pointer<ffi.NativeFunction<CXFile Function(CXModule)>>
+      get clang_Module_getASTFile => _library._clang_Module_getASTFile_ptr;
+  ffi.Pointer<ffi.NativeFunction<CXModule Function(CXModule)>>
+      get clang_Module_getParent => _library._clang_Module_getParent_ptr;
+  ffi.Pointer<ffi.NativeFunction<CXString Function(CXModule)>>
+      get clang_Module_getName => _library._clang_Module_getName_ptr;
+  ffi.Pointer<ffi.NativeFunction<CXString Function(CXModule)>>
+      get clang_Module_getFullName => _library._clang_Module_getFullName_ptr;
+  ffi.Pointer<ffi.NativeFunction<ffi.Int32 Function(CXModule)>>
+      get clang_Module_isSystem => _library._clang_Module_isSystem_ptr;
+  ffi.Pointer<
+          ffi.NativeFunction<ffi.Uint32 Function(CXTranslationUnit, CXModule)>>
+      get clang_Module_getNumTopLevelHeaders =>
+          _library._clang_Module_getNumTopLevelHeaders_ptr;
+  ffi.Pointer<
+          ffi.NativeFunction<
+              CXFile Function(CXTranslationUnit, CXModule, ffi.Uint32)>>
+      get clang_Module_getTopLevelHeader =>
+          _library._clang_Module_getTopLevelHeader_ptr;
+  ffi.Pointer<ffi.NativeFunction<ffi.Uint32 Function(CXCursor)>>
       get clang_CXXConstructor_isConvertingConstructor =>
           _library._clang_CXXConstructor_isConvertingConstructor_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_CXXConstructor_isCopyConstructor>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Uint32 Function(CXCursor)>>
       get clang_CXXConstructor_isCopyConstructor =>
           _library._clang_CXXConstructor_isCopyConstructor_ptr;
-  ffi.Pointer<
-          ffi.NativeFunction<Native_clang_CXXConstructor_isDefaultConstructor>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Uint32 Function(CXCursor)>>
       get clang_CXXConstructor_isDefaultConstructor =>
           _library._clang_CXXConstructor_isDefaultConstructor_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_CXXConstructor_isMoveConstructor>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Uint32 Function(CXCursor)>>
       get clang_CXXConstructor_isMoveConstructor =>
           _library._clang_CXXConstructor_isMoveConstructor_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_CXXField_isMutable>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Uint32 Function(CXCursor)>>
       get clang_CXXField_isMutable => _library._clang_CXXField_isMutable_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_CXXMethod_isDefaulted>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Uint32 Function(CXCursor)>>
       get clang_CXXMethod_isDefaulted =>
           _library._clang_CXXMethod_isDefaulted_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_CXXMethod_isPureVirtual>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Uint32 Function(CXCursor)>>
       get clang_CXXMethod_isPureVirtual =>
           _library._clang_CXXMethod_isPureVirtual_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_CXXMethod_isStatic>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Uint32 Function(CXCursor)>>
       get clang_CXXMethod_isStatic => _library._clang_CXXMethod_isStatic_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_CXXMethod_isVirtual>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Uint32 Function(CXCursor)>>
       get clang_CXXMethod_isVirtual => _library._clang_CXXMethod_isVirtual_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_CXXRecord_isAbstract>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Uint32 Function(CXCursor)>>
       get clang_CXXRecord_isAbstract =>
           _library._clang_CXXRecord_isAbstract_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_EnumDecl_isScoped>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Uint32 Function(CXCursor)>>
       get clang_EnumDecl_isScoped => _library._clang_EnumDecl_isScoped_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_CXXMethod_isConst>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Uint32 Function(CXCursor)>>
       get clang_CXXMethod_isConst => _library._clang_CXXMethod_isConst_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getTemplateCursorKind>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Int32 Function(CXCursor)>>
       get clang_getTemplateCursorKind =>
           _library._clang_getTemplateCursorKind_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getSpecializedCursorTemplate>>
+  ffi.Pointer<ffi.NativeFunction<CXCursor Function(CXCursor)>>
       get clang_getSpecializedCursorTemplate =>
           _library._clang_getSpecializedCursorTemplate_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getCursorReferenceNameRange>>
+  ffi.Pointer<
+          ffi.NativeFunction<
+              CXSourceRange Function(CXCursor, ffi.Uint32, ffi.Uint32)>>
       get clang_getCursorReferenceNameRange =>
           _library._clang_getCursorReferenceNameRange_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getToken>> get clang_getToken =>
+  ffi.Pointer<
+      ffi.NativeFunction<
+          ffi.Pointer<CXToken> Function(
+              CXTranslationUnit, CXSourceLocation)>> get clang_getToken =>
       _library._clang_getToken_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getTokenKind>>
+  ffi.Pointer<ffi.NativeFunction<CXTokenKind Function(CXToken)>>
       get clang_getTokenKind => _library._clang_getTokenKind_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getTokenSpelling>>
+  ffi.Pointer<ffi.NativeFunction<CXString Function(CXTranslationUnit, CXToken)>>
       get clang_getTokenSpelling => _library._clang_getTokenSpelling_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getTokenLocation>>
+  ffi.Pointer<
+          ffi.NativeFunction<
+              CXSourceLocation Function(CXTranslationUnit, CXToken)>>
       get clang_getTokenLocation => _library._clang_getTokenLocation_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getTokenExtent>>
+  ffi.Pointer<
+          ffi.NativeFunction<
+              CXSourceRange Function(CXTranslationUnit, CXToken)>>
       get clang_getTokenExtent => _library._clang_getTokenExtent_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_tokenize>> get clang_tokenize =>
+  ffi.Pointer<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              CXTranslationUnit,
+              CXSourceRange,
+              ffi.Pointer<ffi.Pointer<CXToken>>,
+              ffi.Pointer<ffi.Uint32>)>> get clang_tokenize =>
       _library._clang_tokenize_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_annotateTokens>>
-      get clang_annotateTokens => _library._clang_annotateTokens_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_disposeTokens>>
+  ffi.Pointer<
+      ffi.NativeFunction<
+          ffi.Void Function(CXTranslationUnit, ffi.Pointer<CXToken>, ffi.Uint32,
+              ffi.Pointer<CXCursor>)>> get clang_annotateTokens =>
+      _library._clang_annotateTokens_ptr;
+  ffi.Pointer<
+          ffi.NativeFunction<
+              ffi.Void Function(
+                  CXTranslationUnit, ffi.Pointer<CXToken>, ffi.Uint32)>>
       get clang_disposeTokens => _library._clang_disposeTokens_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getCursorKindSpelling>>
+  ffi.Pointer<ffi.NativeFunction<CXString Function(ffi.Int32)>>
       get clang_getCursorKindSpelling =>
           _library._clang_getCursorKindSpelling_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getDefinitionSpellingAndExtent>>
+  ffi.Pointer<
+          ffi.NativeFunction<
+              ffi.Void Function(
+                  CXCursor,
+                  ffi.Pointer<ffi.Pointer<ffi.Int8>>,
+                  ffi.Pointer<ffi.Pointer<ffi.Int8>>,
+                  ffi.Pointer<ffi.Uint32>,
+                  ffi.Pointer<ffi.Uint32>,
+                  ffi.Pointer<ffi.Uint32>,
+                  ffi.Pointer<ffi.Uint32>)>>
       get clang_getDefinitionSpellingAndExtent =>
           _library._clang_getDefinitionSpellingAndExtent_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_enableStackTraces>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Void Function()>>
       get clang_enableStackTraces => _library._clang_enableStackTraces_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_executeOnThread>>
-      get clang_executeOnThread => _library._clang_executeOnThread_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getCompletionChunkKind>>
+  ffi.Pointer<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              ffi.Pointer<
+                  ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>,
+              ffi.Pointer<ffi.Void>,
+              ffi.Uint32)>> get clang_executeOnThread =>
+      _library._clang_executeOnThread_ptr;
+  ffi.Pointer<
+          ffi.NativeFunction<
+              ffi.Int32 Function(CXCompletionString, ffi.Uint32)>>
       get clang_getCompletionChunkKind =>
           _library._clang_getCompletionChunkKind_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getCompletionChunkText>>
+  ffi.Pointer<
+          ffi.NativeFunction<CXString Function(CXCompletionString, ffi.Uint32)>>
       get clang_getCompletionChunkText =>
           _library._clang_getCompletionChunkText_ptr;
   ffi.Pointer<
-          ffi.NativeFunction<Native_clang_getCompletionChunkCompletionString>>
+          ffi.NativeFunction<
+              CXCompletionString Function(CXCompletionString, ffi.Uint32)>>
       get clang_getCompletionChunkCompletionString =>
           _library._clang_getCompletionChunkCompletionString_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getNumCompletionChunks>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Uint32 Function(CXCompletionString)>>
       get clang_getNumCompletionChunks =>
           _library._clang_getNumCompletionChunks_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getCompletionPriority>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Uint32 Function(CXCompletionString)>>
       get clang_getCompletionPriority =>
           _library._clang_getCompletionPriority_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getCompletionAvailability>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Int32 Function(CXCompletionString)>>
       get clang_getCompletionAvailability =>
           _library._clang_getCompletionAvailability_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getCompletionNumAnnotations>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Uint32 Function(CXCompletionString)>>
       get clang_getCompletionNumAnnotations =>
           _library._clang_getCompletionNumAnnotations_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getCompletionAnnotation>>
+  ffi.Pointer<
+          ffi.NativeFunction<CXString Function(CXCompletionString, ffi.Uint32)>>
       get clang_getCompletionAnnotation =>
           _library._clang_getCompletionAnnotation_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getCompletionParent>>
+  ffi.Pointer<
+          ffi.NativeFunction<
+              CXString Function(CXCompletionString, ffi.Pointer<ffi.Int32>)>>
       get clang_getCompletionParent => _library._clang_getCompletionParent_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getCompletionBriefComment>>
+  ffi.Pointer<ffi.NativeFunction<CXString Function(CXCompletionString)>>
       get clang_getCompletionBriefComment =>
           _library._clang_getCompletionBriefComment_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getCursorCompletionString>>
+  ffi.Pointer<ffi.NativeFunction<CXCompletionString Function(CXCursor)>>
       get clang_getCursorCompletionString =>
           _library._clang_getCursorCompletionString_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getCompletionNumFixIts>>
+  ffi.Pointer<
+          ffi.NativeFunction<
+              ffi.Uint32 Function(
+                  ffi.Pointer<CXCodeCompleteResults>, ffi.Uint32)>>
       get clang_getCompletionNumFixIts =>
           _library._clang_getCompletionNumFixIts_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getCompletionFixIt>>
-      get clang_getCompletionFixIt => _library._clang_getCompletionFixIt_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_defaultCodeCompleteOptions>>
+  ffi.Pointer<
+      ffi.NativeFunction<
+          CXString Function(
+              ffi.Pointer<CXCodeCompleteResults>,
+              ffi.Uint32,
+              ffi.Uint32,
+              ffi.Pointer<CXSourceRange>)>> get clang_getCompletionFixIt =>
+      _library._clang_getCompletionFixIt_ptr;
+  ffi.Pointer<ffi.NativeFunction<ffi.Uint32 Function()>>
       get clang_defaultCodeCompleteOptions =>
           _library._clang_defaultCodeCompleteOptions_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_codeCompleteAt>>
-      get clang_codeCompleteAt => _library._clang_codeCompleteAt_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_sortCodeCompletionResults>>
+  ffi.Pointer<
+      ffi.NativeFunction<
+          ffi.Pointer<CXCodeCompleteResults> Function(
+              CXTranslationUnit,
+              ffi.Pointer<ffi.Int8>,
+              ffi.Uint32,
+              ffi.Uint32,
+              ffi.Pointer<CXUnsavedFile>,
+              ffi.Uint32,
+              ffi.Uint32)>> get clang_codeCompleteAt =>
+      _library._clang_codeCompleteAt_ptr;
+  ffi.Pointer<
+          ffi.NativeFunction<
+              ffi.Void Function(ffi.Pointer<CXCompletionResult>, ffi.Uint32)>>
       get clang_sortCodeCompletionResults =>
           _library._clang_sortCodeCompletionResults_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_disposeCodeCompleteResults>>
+  ffi.Pointer<
+          ffi.NativeFunction<
+              ffi.Void Function(ffi.Pointer<CXCodeCompleteResults>)>>
       get clang_disposeCodeCompleteResults =>
           _library._clang_disposeCodeCompleteResults_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_codeCompleteGetNumDiagnostics>>
+  ffi.Pointer<
+          ffi.NativeFunction<
+              ffi.Uint32 Function(ffi.Pointer<CXCodeCompleteResults>)>>
       get clang_codeCompleteGetNumDiagnostics =>
           _library._clang_codeCompleteGetNumDiagnostics_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_codeCompleteGetDiagnostic>>
+  ffi.Pointer<
+          ffi.NativeFunction<
+              CXDiagnostic Function(
+                  ffi.Pointer<CXCodeCompleteResults>, ffi.Uint32)>>
       get clang_codeCompleteGetDiagnostic =>
           _library._clang_codeCompleteGetDiagnostic_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_codeCompleteGetContexts>>
+  ffi.Pointer<
+          ffi.NativeFunction<
+              ffi.Uint64 Function(ffi.Pointer<CXCodeCompleteResults>)>>
       get clang_codeCompleteGetContexts =>
           _library._clang_codeCompleteGetContexts_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_codeCompleteGetContainerKind>>
+  ffi.Pointer<
+          ffi.NativeFunction<
+              ffi.Int32 Function(
+                  ffi.Pointer<CXCodeCompleteResults>, ffi.Pointer<ffi.Uint32>)>>
       get clang_codeCompleteGetContainerKind =>
           _library._clang_codeCompleteGetContainerKind_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_codeCompleteGetContainerUSR>>
+  ffi.Pointer<
+          ffi.NativeFunction<
+              CXString Function(ffi.Pointer<CXCodeCompleteResults>)>>
       get clang_codeCompleteGetContainerUSR =>
           _library._clang_codeCompleteGetContainerUSR_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_codeCompleteGetObjCSelector>>
+  ffi.Pointer<
+          ffi.NativeFunction<
+              CXString Function(ffi.Pointer<CXCodeCompleteResults>)>>
       get clang_codeCompleteGetObjCSelector =>
           _library._clang_codeCompleteGetObjCSelector_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getClangVersion>>
+  ffi.Pointer<ffi.NativeFunction<CXString Function()>>
       get clang_getClangVersion => _library._clang_getClangVersion_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_toggleCrashRecovery>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Uint32)>>
       get clang_toggleCrashRecovery => _library._clang_toggleCrashRecovery_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getInclusions>>
+  ffi.Pointer<
+          ffi.NativeFunction<
+              ffi.Void Function(
+                  CXTranslationUnit, CXInclusionVisitor, CXClientData)>>
       get clang_getInclusions => _library._clang_getInclusions_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_Cursor_Evaluate>>
+  ffi.Pointer<ffi.NativeFunction<CXEvalResult Function(CXCursor)>>
       get clang_Cursor_Evaluate => _library._clang_Cursor_Evaluate_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_EvalResult_getKind>>
+  ffi.Pointer<ffi.NativeFunction<CXEvalResultKind Function(CXEvalResult)>>
       get clang_EvalResult_getKind => _library._clang_EvalResult_getKind_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_EvalResult_getAsInt>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Int32 Function(CXEvalResult)>>
       get clang_EvalResult_getAsInt => _library._clang_EvalResult_getAsInt_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_EvalResult_getAsLongLong>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Int64 Function(CXEvalResult)>>
       get clang_EvalResult_getAsLongLong =>
           _library._clang_EvalResult_getAsLongLong_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_EvalResult_isUnsignedInt>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Uint32 Function(CXEvalResult)>>
       get clang_EvalResult_isUnsignedInt =>
           _library._clang_EvalResult_isUnsignedInt_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_EvalResult_getAsUnsigned>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Uint64 Function(CXEvalResult)>>
       get clang_EvalResult_getAsUnsigned =>
           _library._clang_EvalResult_getAsUnsigned_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_EvalResult_getAsDouble>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Double Function(CXEvalResult)>>
       get clang_EvalResult_getAsDouble =>
           _library._clang_EvalResult_getAsDouble_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_EvalResult_getAsStr>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Pointer<ffi.Int8> Function(CXEvalResult)>>
       get clang_EvalResult_getAsStr => _library._clang_EvalResult_getAsStr_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_EvalResult_dispose>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Void Function(CXEvalResult)>>
       get clang_EvalResult_dispose => _library._clang_EvalResult_dispose_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getRemappings>>
+  ffi.Pointer<ffi.NativeFunction<CXRemapping Function(ffi.Pointer<ffi.Int8>)>>
       get clang_getRemappings => _library._clang_getRemappings_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_getRemappingsFromFileList>>
+  ffi.Pointer<
+          ffi.NativeFunction<
+              CXRemapping Function(
+                  ffi.Pointer<ffi.Pointer<ffi.Int8>>, ffi.Uint32)>>
       get clang_getRemappingsFromFileList =>
           _library._clang_getRemappingsFromFileList_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_remap_getNumFiles>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Uint32 Function(CXRemapping)>>
       get clang_remap_getNumFiles => _library._clang_remap_getNumFiles_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_remap_getFilenames>>
-      get clang_remap_getFilenames => _library._clang_remap_getFilenames_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_remap_dispose>>
+  ffi.Pointer<
+      ffi.NativeFunction<
+          ffi.Void Function(CXRemapping, ffi.Uint32, ffi.Pointer<CXString>,
+              ffi.Pointer<CXString>)>> get clang_remap_getFilenames =>
+      _library._clang_remap_getFilenames_ptr;
+  ffi.Pointer<ffi.NativeFunction<ffi.Void Function(CXRemapping)>>
       get clang_remap_dispose => _library._clang_remap_dispose_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_findReferencesInFile>>
+  ffi.Pointer<
+          ffi.NativeFunction<
+              CXResult Function(CXCursor, CXFile, CXCursorAndRangeVisitor)>>
       get clang_findReferencesInFile =>
           _library._clang_findReferencesInFile_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_findIncludesInFile>>
+  ffi.Pointer<
+          ffi.NativeFunction<
+              CXResult Function(
+                  CXTranslationUnit, CXFile, CXCursorAndRangeVisitor)>>
       get clang_findIncludesInFile => _library._clang_findIncludesInFile_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_index_isEntityObjCContainerKind>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Int32 Function(CXIdxEntityKind)>>
       get clang_index_isEntityObjCContainerKind =>
           _library._clang_index_isEntityObjCContainerKind_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_index_getObjCContainerDeclInfo>>
+  ffi.Pointer<
+          ffi.NativeFunction<
+              ffi.Pointer<CXIdxObjCContainerDeclInfo> Function(
+                  ffi.Pointer<CXIdxDeclInfo>)>>
       get clang_index_getObjCContainerDeclInfo =>
           _library._clang_index_getObjCContainerDeclInfo_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_index_getObjCInterfaceDeclInfo>>
+  ffi.Pointer<
+          ffi.NativeFunction<
+              ffi.Pointer<CXIdxObjCInterfaceDeclInfo> Function(
+                  ffi.Pointer<CXIdxDeclInfo>)>>
       get clang_index_getObjCInterfaceDeclInfo =>
           _library._clang_index_getObjCInterfaceDeclInfo_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_index_getObjCCategoryDeclInfo>>
+  ffi.Pointer<
+          ffi.NativeFunction<
+              ffi.Pointer<CXIdxObjCCategoryDeclInfo> Function(
+                  ffi.Pointer<CXIdxDeclInfo>)>>
       get clang_index_getObjCCategoryDeclInfo =>
           _library._clang_index_getObjCCategoryDeclInfo_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_index_getObjCProtocolRefListInfo>>
+  ffi.Pointer<
+          ffi.NativeFunction<
+              ffi.Pointer<CXIdxObjCProtocolRefListInfo> Function(
+                  ffi.Pointer<CXIdxDeclInfo>)>>
       get clang_index_getObjCProtocolRefListInfo =>
           _library._clang_index_getObjCProtocolRefListInfo_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_index_getObjCPropertyDeclInfo>>
+  ffi.Pointer<
+          ffi.NativeFunction<
+              ffi.Pointer<CXIdxObjCPropertyDeclInfo> Function(
+                  ffi.Pointer<CXIdxDeclInfo>)>>
       get clang_index_getObjCPropertyDeclInfo =>
           _library._clang_index_getObjCPropertyDeclInfo_ptr;
   ffi.Pointer<
-          ffi.NativeFunction<Native_clang_index_getIBOutletCollectionAttrInfo>>
+          ffi.NativeFunction<
+              ffi.Pointer<CXIdxIBOutletCollectionAttrInfo> Function(
+                  ffi.Pointer<CXIdxAttrInfo>)>>
       get clang_index_getIBOutletCollectionAttrInfo =>
           _library._clang_index_getIBOutletCollectionAttrInfo_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_index_getCXXClassDeclInfo>>
+  ffi.Pointer<
+          ffi.NativeFunction<
+              ffi.Pointer<CXIdxCXXClassDeclInfo> Function(
+                  ffi.Pointer<CXIdxDeclInfo>)>>
       get clang_index_getCXXClassDeclInfo =>
           _library._clang_index_getCXXClassDeclInfo_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_index_getClientContainer>>
+  ffi.Pointer<
+          ffi.NativeFunction<
+              CXIdxClientContainer Function(ffi.Pointer<CXIdxContainerInfo>)>>
       get clang_index_getClientContainer =>
           _library._clang_index_getClientContainer_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_index_setClientContainer>>
+  ffi.Pointer<
+          ffi.NativeFunction<
+              ffi.Void Function(
+                  ffi.Pointer<CXIdxContainerInfo>, CXIdxClientContainer)>>
       get clang_index_setClientContainer =>
           _library._clang_index_setClientContainer_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_index_getClientEntity>>
+  ffi.Pointer<
+          ffi.NativeFunction<
+              CXIdxClientEntity Function(ffi.Pointer<CXIdxEntityInfo>)>>
       get clang_index_getClientEntity =>
           _library._clang_index_getClientEntity_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_index_setClientEntity>>
+  ffi.Pointer<
+          ffi.NativeFunction<
+              ffi.Void Function(
+                  ffi.Pointer<CXIdxEntityInfo>, CXIdxClientEntity)>>
       get clang_index_setClientEntity =>
           _library._clang_index_setClientEntity_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_IndexAction_create>>
+  ffi.Pointer<ffi.NativeFunction<CXIndexAction Function(CXIndex)>>
       get clang_IndexAction_create => _library._clang_IndexAction_create_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_IndexAction_dispose>>
+  ffi.Pointer<ffi.NativeFunction<ffi.Void Function(CXIndexAction)>>
       get clang_IndexAction_dispose => _library._clang_IndexAction_dispose_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_indexSourceFile>>
-      get clang_indexSourceFile => _library._clang_indexSourceFile_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_indexSourceFileFullArgv>>
-      get clang_indexSourceFileFullArgv =>
-          _library._clang_indexSourceFileFullArgv_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_indexTranslationUnit>>
-      get clang_indexTranslationUnit =>
-          _library._clang_indexTranslationUnit_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_indexLoc_getFileLocation>>
-      get clang_indexLoc_getFileLocation =>
-          _library._clang_indexLoc_getFileLocation_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_indexLoc_getCXSourceLocation>>
+  ffi.Pointer<
+      ffi.NativeFunction<
+          ffi.Int32 Function(
+              CXIndexAction,
+              CXClientData,
+              ffi.Pointer<IndexerCallbacks>,
+              ffi.Uint32,
+              ffi.Uint32,
+              ffi.Pointer<ffi.Int8>,
+              ffi.Pointer<ffi.Pointer<ffi.Int8>>,
+              ffi.Int32,
+              ffi.Pointer<CXUnsavedFile>,
+              ffi.Uint32,
+              ffi.Pointer<CXTranslationUnit>,
+              ffi.Uint32)>> get clang_indexSourceFile =>
+      _library._clang_indexSourceFile_ptr;
+  ffi.Pointer<
+      ffi.NativeFunction<
+          ffi.Int32 Function(
+              CXIndexAction,
+              CXClientData,
+              ffi.Pointer<IndexerCallbacks>,
+              ffi.Uint32,
+              ffi.Uint32,
+              ffi.Pointer<ffi.Int8>,
+              ffi.Pointer<ffi.Pointer<ffi.Int8>>,
+              ffi.Int32,
+              ffi.Pointer<CXUnsavedFile>,
+              ffi.Uint32,
+              ffi.Pointer<CXTranslationUnit>,
+              ffi.Uint32)>> get clang_indexSourceFileFullArgv =>
+      _library._clang_indexSourceFileFullArgv_ptr;
+  ffi.Pointer<
+      ffi.NativeFunction<
+          ffi.Int32 Function(
+              CXIndexAction,
+              CXClientData,
+              ffi.Pointer<IndexerCallbacks>,
+              ffi.Uint32,
+              ffi.Uint32,
+              CXTranslationUnit)>> get clang_indexTranslationUnit =>
+      _library._clang_indexTranslationUnit_ptr;
+  ffi.Pointer<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              CXIdxLoc,
+              ffi.Pointer<CXIdxClientFile>,
+              ffi.Pointer<CXFile>,
+              ffi.Pointer<ffi.Uint32>,
+              ffi.Pointer<ffi.Uint32>,
+              ffi.Pointer<ffi.Uint32>)>> get clang_indexLoc_getFileLocation =>
+      _library._clang_indexLoc_getFileLocation_ptr;
+  ffi.Pointer<ffi.NativeFunction<CXSourceLocation Function(CXIdxLoc)>>
       get clang_indexLoc_getCXSourceLocation =>
           _library._clang_indexLoc_getCXSourceLocation_ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_clang_Type_visitFields>>
+  ffi.Pointer<
+          ffi.NativeFunction<
+              ffi.Uint32 Function(CXType, CXFieldVisitor, CXClientData)>>
       get clang_Type_visitFields => _library._clang_Type_visitFields_ptr;
 }
 
@@ -7902,28 +8393,10 @@ class CXVersion extends ffi.Struct {
   external int Subminor;
 }
 
-abstract class CXGlobalOptFlags {
-  /// Used to indicate that no special CXIndex options are needed.
-  static const int CXGlobalOpt_None = 0;
-
-  /// Used to indicate that threads that libclang creates for indexing
-  /// purposes should use background priority.
-  ///
-  /// Affects #clang_indexSourceFile, #clang_indexTranslationUnit,
-  /// #clang_parseTranslationUnit, #clang_saveTranslationUnit.
-  static const int CXGlobalOpt_ThreadBackgroundPriorityForIndexing = 1;
-
-  /// Used to indicate that threads that libclang creates for editing
-  /// purposes should use background priority.
-  ///
-  /// Affects #clang_reparseTranslationUnit, #clang_codeCompleteAt,
-  /// #clang_annotateTokens
-  static const int CXGlobalOpt_ThreadBackgroundPriorityForEditing = 2;
-
-  /// Used to indicate that all threads that libclang creates should use
-  /// background priority.
-  static const int CXGlobalOpt_ThreadBackgroundPriorityForAll = 3;
-}
+typedef CXIndex = ffi.Pointer<ffi.Void>;
+typedef CXFile = ffi.Pointer<ffi.Void>;
+typedef time_t = __darwin_time_t;
+typedef __darwin_time_t = ffi.Int64;
 
 /// Uniquely identifies a CXFile, that refers to the same underlying file,
 /// across an indexing session.
@@ -7931,6 +8404,10 @@ class CXFileUniqueID extends ffi.Struct {
   @ffi.Array.multi([3])
   external ffi.Array<ffi.Uint64> data;
 }
+
+typedef CXTranslationUnit = ffi.Pointer<CXTranslationUnitImpl>;
+typedef size_t = __darwin_size_t;
+typedef __darwin_size_t = ffi.Uint64;
 
 /// Identifies a specific source location within a translation
 /// unit.
@@ -7970,6 +8447,9 @@ class CXSourceRangeList extends ffi.Struct {
   external ffi.Pointer<CXSourceRange> ranges;
 }
 
+typedef CXDiagnosticSet = ffi.Pointer<ffi.Void>;
+typedef CXDiagnostic = ffi.Pointer<ffi.Void>;
+
 class CXTUResourceUsageEntry extends ffi.Struct {
   @ffi.Int32()
   external int kind;
@@ -7987,6 +8467,8 @@ class CXTUResourceUsage extends ffi.Struct {
 
   external ffi.Pointer<CXTUResourceUsageEntry> entries;
 }
+
+typedef CXTargetInfo = ffi.Pointer<CXTargetInfoImpl>;
 
 /// A cursor representing some element in the abstract syntax tree for
 /// a translation unit.
@@ -8045,6 +8527,8 @@ class CXPlatformAvailability extends ffi.Struct {
 }
 
 class CXCursorSetImpl extends ffi.Opaque {}
+
+typedef CXCursorSet = ffi.Pointer<CXCursorSetImpl>;
 
 /// Describes the kind of type
 abstract class CXTypeKind {
@@ -8185,6 +8669,12 @@ class CXType extends ffi.Struct {
   external ffi.Array<ffi.Pointer<ffi.Void>> data;
 }
 
+typedef CXCursorVisitor = ffi.Pointer<
+    ffi.NativeFunction<ffi.Int32 Function(CXCursor, CXCursor, CXClientData)>>;
+typedef CXClientData = ffi.Pointer<ffi.Void>;
+typedef CXPrintingPolicy = ffi.Pointer<ffi.Void>;
+typedef CXModule = ffi.Pointer<ffi.Void>;
+
 /// Describes a single preprocessing token.
 class CXToken extends ffi.Struct {
   @ffi.Array.multi([4])
@@ -8192,6 +8682,8 @@ class CXToken extends ffi.Struct {
 
   external ffi.Pointer<ffi.Void> ptr_data;
 }
+
+typedef CXTokenKind = ffi.Int32;
 
 /// A single result of code completion.
 class CXCompletionResult extends ffi.Struct {
@@ -8208,8 +8700,10 @@ class CXCompletionResult extends ffi.Struct {
 
   /// The code-completion string that describes how to insert this
   /// code-completion result into the editing buffer.
-  external ffi.Pointer<ffi.Void> CompletionString;
+  external CXCompletionString CompletionString;
 }
+
+typedef CXCompletionString = ffi.Pointer<ffi.Void>;
 
 /// Contains the results of code-completion.
 ///
@@ -8226,11 +8720,24 @@ class CXCodeCompleteResults extends ffi.Struct {
   external int NumResults;
 }
 
+typedef CXInclusionVisitor = ffi.Pointer<
+    ffi.NativeFunction<
+        ffi.Void Function(
+            CXFile, ffi.Pointer<CXSourceLocation>, ffi.Uint32, CXClientData)>>;
+typedef CXEvalResult = ffi.Pointer<ffi.Void>;
+typedef CXEvalResultKind = ffi.Int32;
+typedef CXRemapping = ffi.Pointer<ffi.Void>;
+
 class CXCursorAndRangeVisitor extends ffi.Struct {
   external ffi.Pointer<ffi.Void> context;
 
-  external ffi.Pointer<ffi.NativeFunction<_typedefC_2>> visit;
+  external ffi.Pointer<
+      ffi.NativeFunction<
+          ffi.Int32 Function(
+              ffi.Pointer<ffi.Void>, CXCursor, CXSourceRange)>> visit;
 }
+
+typedef CXResult = ffi.Int32;
 
 /// Source location passed to index callbacks.
 class CXIdxLoc extends ffi.Struct {
@@ -8250,7 +8757,7 @@ class CXIdxIncludedFileInfo extends ffi.Struct {
   external ffi.Pointer<ffi.Int8> filename;
 
   /// The actual file that the \#include/\#import directive resolved to.
-  external ffi.Pointer<ffi.Void> file;
+  external CXFile file;
 
   @ffi.Int32()
   external int isImport;
@@ -8267,10 +8774,10 @@ class CXIdxIncludedFileInfo extends ffi.Struct {
 /// Data for IndexerCallbacks#importedASTFile.
 class CXIdxImportedASTFileInfo extends ffi.Struct {
   /// Top level AST file containing the imported PCH, module or submodule.
-  external ffi.Pointer<ffi.Void> file;
+  external CXFile file;
 
   /// The imported module or NULL if the AST file is a PCH.
-  external ffi.Pointer<ffi.Void> module;
+  external CXModule module;
 
   /// Location where the file is imported. Applicable only for modules.
   external CXIdxLoc loc;
@@ -8282,7 +8789,7 @@ class CXIdxImportedASTFileInfo extends ffi.Struct {
 }
 
 class CXIdxAttrInfo extends ffi.Struct {
-  @ffi.Int32()
+  @CXIdxAttrKind()
   external int kind;
 
   external CXCursor cursor;
@@ -8290,14 +8797,16 @@ class CXIdxAttrInfo extends ffi.Struct {
   external CXIdxLoc loc;
 }
 
+typedef CXIdxAttrKind = ffi.Int32;
+
 class CXIdxEntityInfo extends ffi.Struct {
-  @ffi.Int32()
+  @CXIdxEntityKind()
   external int kind;
 
-  @ffi.Int32()
+  @CXIdxEntityCXXTemplateKind()
   external int templateKind;
 
-  @ffi.Int32()
+  @CXIdxEntityLanguage()
   external int lang;
 
   external ffi.Pointer<ffi.Int8> name;
@@ -8311,6 +8820,10 @@ class CXIdxEntityInfo extends ffi.Struct {
   @ffi.Uint32()
   external int numAttributes;
 }
+
+typedef CXIdxEntityKind = ffi.Int32;
+typedef CXIdxEntityCXXTemplateKind = ffi.Int32;
+typedef CXIdxEntityLanguage = ffi.Int32;
 
 class CXIdxContainerInfo extends ffi.Struct {
   external CXCursor cursor;
@@ -8367,9 +8880,11 @@ class CXIdxDeclInfo extends ffi.Struct {
 class CXIdxObjCContainerDeclInfo extends ffi.Struct {
   external ffi.Pointer<CXIdxDeclInfo> declInfo;
 
-  @ffi.Int32()
+  @CXIdxObjCContainerKind()
   external int kind;
 }
+
+typedef CXIdxObjCContainerKind = ffi.Int32;
 
 class CXIdxBaseClassInfo extends ffi.Struct {
   external ffi.Pointer<CXIdxEntityInfo> base;
@@ -8433,7 +8948,7 @@ class CXIdxCXXClassDeclInfo extends ffi.Struct {
 
 /// Data for IndexerCallbacks#indexEntityReference.
 class CXIdxEntityRefInfo extends ffi.Struct {
-  @ffi.Int32()
+  @CXIdxEntityRefKind()
   external int kind;
 
   /// Reference cursor.
@@ -8459,24 +8974,43 @@ class CXIdxEntityRefInfo extends ffi.Struct {
   external ffi.Pointer<CXIdxContainerInfo> container;
 
   /// Sets of symbol roles of the reference.
-  @ffi.Int32()
+  @CXSymbolRole()
   external int role;
 }
+
+typedef CXIdxEntityRefKind = ffi.Int32;
+typedef CXSymbolRole = ffi.Int32;
+typedef CXIdxClientContainer = ffi.Pointer<ffi.Void>;
+typedef CXIdxClientEntity = ffi.Pointer<ffi.Void>;
+typedef CXIndexAction = ffi.Pointer<ffi.Void>;
 
 /// A group of callbacks used by #clang_indexSourceFile and
 /// #clang_indexTranslationUnit.
 class IndexerCallbacks extends ffi.Struct {
   /// Called periodically to check whether indexing should be aborted.
   /// Should return 0 to continue, and non-zero to abort.
-  external ffi.Pointer<ffi.NativeFunction<_typedefC_3>> abortQuery;
+  external ffi.Pointer<
+      ffi.NativeFunction<
+          ffi.Int32 Function(CXClientData, ffi.Pointer<ffi.Void>)>> abortQuery;
 
   /// Called at the end of indexing; passes the complete diagnostic set.
-  external ffi.Pointer<ffi.NativeFunction<_typedefC_4>> diagnostic;
+  external ffi.Pointer<
+          ffi.NativeFunction<
+              ffi.Void Function(
+                  CXClientData, CXDiagnosticSet, ffi.Pointer<ffi.Void>)>>
+      diagnostic;
 
-  external ffi.Pointer<ffi.NativeFunction<_typedefC_5>> enteredMainFile;
+  external ffi.Pointer<
+      ffi.NativeFunction<
+          CXIdxClientFile Function(
+              CXClientData, CXFile, ffi.Pointer<ffi.Void>)>> enteredMainFile;
 
   /// Called when a file gets \#included/\#imported.
-  external ffi.Pointer<ffi.NativeFunction<_typedefC_6>> ppIncludedFile;
+  external ffi.Pointer<
+          ffi.NativeFunction<
+              CXIdxClientFile Function(
+                  CXClientData, ffi.Pointer<CXIdxIncludedFileInfo>)>>
+      ppIncludedFile;
 
   /// Called when a AST file (PCH or module) gets imported.
   ///
@@ -8484,17 +9018,34 @@ class IndexerCallbacks extends ffi.Struct {
   /// the entities in an AST file). The recommended action is that, if the AST
   /// file is not already indexed, to initiate a new indexing job specific to
   /// the AST file.
-  external ffi.Pointer<ffi.NativeFunction<_typedefC_7>> importedASTFile;
+  external ffi.Pointer<
+          ffi.NativeFunction<
+              CXIdxClientASTFile Function(
+                  CXClientData, ffi.Pointer<CXIdxImportedASTFileInfo>)>>
+      importedASTFile;
 
   /// Called at the beginning of indexing a translation unit.
-  external ffi.Pointer<ffi.NativeFunction<_typedefC_8>> startedTranslationUnit;
+  external ffi.Pointer<
+      ffi.NativeFunction<
+          CXIdxClientContainer Function(
+              CXClientData, ffi.Pointer<ffi.Void>)>> startedTranslationUnit;
 
-  external ffi.Pointer<ffi.NativeFunction<_typedefC_9>> indexDeclaration;
+  external ffi.Pointer<
+          ffi.NativeFunction<
+              ffi.Void Function(CXClientData, ffi.Pointer<CXIdxDeclInfo>)>>
+      indexDeclaration;
 
   /// Called to index a reference of an entity.
-  external ffi.Pointer<ffi.NativeFunction<_typedefC_10>> indexEntityReference;
+  external ffi.Pointer<
+          ffi.NativeFunction<
+              ffi.Void Function(CXClientData, ffi.Pointer<CXIdxEntityRefInfo>)>>
+      indexEntityReference;
 }
 
+typedef CXIdxClientFile = ffi.Pointer<ffi.Void>;
+typedef CXIdxClientASTFile = ffi.Pointer<ffi.Void>;
+typedef CXFieldVisitor = ffi
+    .Pointer<ffi.NativeFunction<ffi.Int32 Function(CXCursor, CXClientData)>>;
 const int CINDEX_VERSION_MAJOR = 0;
 
 const int CINDEX_VERSION_MINOR = 59;
@@ -8502,3045 +9053,3 @@ const int CINDEX_VERSION_MINOR = 59;
 const int CINDEX_VERSION = 59;
 
 const String CINDEX_VERSION_STRING = '0.59';
-
-typedef Native_clang_getCString = ffi.Pointer<ffi.Int8> Function(
-  CXString string,
-);
-
-typedef _dart_clang_getCString = ffi.Pointer<ffi.Int8> Function(
-  CXString string,
-);
-
-typedef Native_clang_disposeString = ffi.Void Function(
-  CXString string,
-);
-
-typedef _dart_clang_disposeString = void Function(
-  CXString string,
-);
-
-typedef Native_clang_disposeStringSet = ffi.Void Function(
-  ffi.Pointer<CXStringSet> set_1,
-);
-
-typedef _dart_clang_disposeStringSet = void Function(
-  ffi.Pointer<CXStringSet> set_1,
-);
-
-typedef Native_clang_createIndex = ffi.Pointer<ffi.Void> Function(
-  ffi.Int32 excludeDeclarationsFromPCH,
-  ffi.Int32 displayDiagnostics,
-);
-
-typedef _dart_clang_createIndex = ffi.Pointer<ffi.Void> Function(
-  int excludeDeclarationsFromPCH,
-  int displayDiagnostics,
-);
-
-typedef Native_clang_disposeIndex = ffi.Void Function(
-  ffi.Pointer<ffi.Void> index,
-);
-
-typedef _dart_clang_disposeIndex = void Function(
-  ffi.Pointer<ffi.Void> index,
-);
-
-typedef Native_clang_CXIndex_setGlobalOptions = ffi.Void Function(
-  ffi.Pointer<ffi.Void> arg0,
-  ffi.Uint32 options,
-);
-
-typedef _dart_clang_CXIndex_setGlobalOptions = void Function(
-  ffi.Pointer<ffi.Void> arg0,
-  int options,
-);
-
-typedef Native_clang_CXIndex_getGlobalOptions = ffi.Uint32 Function(
-  ffi.Pointer<ffi.Void> arg0,
-);
-
-typedef _dart_clang_CXIndex_getGlobalOptions = int Function(
-  ffi.Pointer<ffi.Void> arg0,
-);
-
-typedef Native_clang_CXIndex_setInvocationEmissionPathOption = ffi.Void
-    Function(
-  ffi.Pointer<ffi.Void> arg0,
-  ffi.Pointer<ffi.Int8> Path,
-);
-
-typedef _dart_clang_CXIndex_setInvocationEmissionPathOption = void Function(
-  ffi.Pointer<ffi.Void> arg0,
-  ffi.Pointer<ffi.Int8> Path,
-);
-
-typedef Native_clang_getFileName = CXString Function(
-  ffi.Pointer<ffi.Void> SFile,
-);
-
-typedef _dart_clang_getFileName = CXString Function(
-  ffi.Pointer<ffi.Void> SFile,
-);
-
-typedef Native_clang_getFileTime = ffi.Int64 Function(
-  ffi.Pointer<ffi.Void> SFile,
-);
-
-typedef _dart_clang_getFileTime = int Function(
-  ffi.Pointer<ffi.Void> SFile,
-);
-
-typedef Native_clang_getFileUniqueID = ffi.Int32 Function(
-  ffi.Pointer<ffi.Void> file,
-  ffi.Pointer<CXFileUniqueID> outID,
-);
-
-typedef _dart_clang_getFileUniqueID = int Function(
-  ffi.Pointer<ffi.Void> file,
-  ffi.Pointer<CXFileUniqueID> outID,
-);
-
-typedef Native_clang_isFileMultipleIncludeGuarded = ffi.Uint32 Function(
-  ffi.Pointer<CXTranslationUnitImpl> tu,
-  ffi.Pointer<ffi.Void> file,
-);
-
-typedef _dart_clang_isFileMultipleIncludeGuarded = int Function(
-  ffi.Pointer<CXTranslationUnitImpl> tu,
-  ffi.Pointer<ffi.Void> file,
-);
-
-typedef Native_clang_getFile = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<CXTranslationUnitImpl> tu,
-  ffi.Pointer<ffi.Int8> file_name,
-);
-
-typedef _dart_clang_getFile = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<CXTranslationUnitImpl> tu,
-  ffi.Pointer<ffi.Int8> file_name,
-);
-
-typedef Native_clang_getFileContents = ffi.Pointer<ffi.Int8> Function(
-  ffi.Pointer<CXTranslationUnitImpl> tu,
-  ffi.Pointer<ffi.Void> file,
-  ffi.Pointer<ffi.Uint64> size,
-);
-
-typedef _dart_clang_getFileContents = ffi.Pointer<ffi.Int8> Function(
-  ffi.Pointer<CXTranslationUnitImpl> tu,
-  ffi.Pointer<ffi.Void> file,
-  ffi.Pointer<ffi.Uint64> size,
-);
-
-typedef Native_clang_File_isEqual = ffi.Int32 Function(
-  ffi.Pointer<ffi.Void> file1,
-  ffi.Pointer<ffi.Void> file2,
-);
-
-typedef _dart_clang_File_isEqual = int Function(
-  ffi.Pointer<ffi.Void> file1,
-  ffi.Pointer<ffi.Void> file2,
-);
-
-typedef Native_clang_File_tryGetRealPathName = CXString Function(
-  ffi.Pointer<ffi.Void> file,
-);
-
-typedef _dart_clang_File_tryGetRealPathName = CXString Function(
-  ffi.Pointer<ffi.Void> file,
-);
-
-typedef Native_clang_getNullLocation = CXSourceLocation Function();
-
-typedef _dart_clang_getNullLocation = CXSourceLocation Function();
-
-typedef Native_clang_equalLocations = ffi.Uint32 Function(
-  CXSourceLocation loc1,
-  CXSourceLocation loc2,
-);
-
-typedef _dart_clang_equalLocations = int Function(
-  CXSourceLocation loc1,
-  CXSourceLocation loc2,
-);
-
-typedef Native_clang_getLocation = CXSourceLocation Function(
-  ffi.Pointer<CXTranslationUnitImpl> tu,
-  ffi.Pointer<ffi.Void> file,
-  ffi.Uint32 line,
-  ffi.Uint32 column,
-);
-
-typedef _dart_clang_getLocation = CXSourceLocation Function(
-  ffi.Pointer<CXTranslationUnitImpl> tu,
-  ffi.Pointer<ffi.Void> file,
-  int line,
-  int column,
-);
-
-typedef Native_clang_getLocationForOffset = CXSourceLocation Function(
-  ffi.Pointer<CXTranslationUnitImpl> tu,
-  ffi.Pointer<ffi.Void> file,
-  ffi.Uint32 offset,
-);
-
-typedef _dart_clang_getLocationForOffset = CXSourceLocation Function(
-  ffi.Pointer<CXTranslationUnitImpl> tu,
-  ffi.Pointer<ffi.Void> file,
-  int offset,
-);
-
-typedef Native_clang_Location_isInSystemHeader = ffi.Int32 Function(
-  CXSourceLocation location,
-);
-
-typedef _dart_clang_Location_isInSystemHeader = int Function(
-  CXSourceLocation location,
-);
-
-typedef Native_clang_Location_isFromMainFile = ffi.Int32 Function(
-  CXSourceLocation location,
-);
-
-typedef _dart_clang_Location_isFromMainFile = int Function(
-  CXSourceLocation location,
-);
-
-typedef Native_clang_getNullRange = CXSourceRange Function();
-
-typedef _dart_clang_getNullRange = CXSourceRange Function();
-
-typedef Native_clang_getRange = CXSourceRange Function(
-  CXSourceLocation begin,
-  CXSourceLocation end,
-);
-
-typedef _dart_clang_getRange = CXSourceRange Function(
-  CXSourceLocation begin,
-  CXSourceLocation end,
-);
-
-typedef Native_clang_equalRanges = ffi.Uint32 Function(
-  CXSourceRange range1,
-  CXSourceRange range2,
-);
-
-typedef _dart_clang_equalRanges = int Function(
-  CXSourceRange range1,
-  CXSourceRange range2,
-);
-
-typedef Native_clang_Range_isNull = ffi.Int32 Function(
-  CXSourceRange range,
-);
-
-typedef _dart_clang_Range_isNull = int Function(
-  CXSourceRange range,
-);
-
-typedef Native_clang_getExpansionLocation = ffi.Void Function(
-  CXSourceLocation location,
-  ffi.Pointer<ffi.Pointer<ffi.Void>> file,
-  ffi.Pointer<ffi.Uint32> line,
-  ffi.Pointer<ffi.Uint32> column,
-  ffi.Pointer<ffi.Uint32> offset,
-);
-
-typedef _dart_clang_getExpansionLocation = void Function(
-  CXSourceLocation location,
-  ffi.Pointer<ffi.Pointer<ffi.Void>> file,
-  ffi.Pointer<ffi.Uint32> line,
-  ffi.Pointer<ffi.Uint32> column,
-  ffi.Pointer<ffi.Uint32> offset,
-);
-
-typedef Native_clang_getPresumedLocation = ffi.Void Function(
-  CXSourceLocation location,
-  ffi.Pointer<CXString> filename,
-  ffi.Pointer<ffi.Uint32> line,
-  ffi.Pointer<ffi.Uint32> column,
-);
-
-typedef _dart_clang_getPresumedLocation = void Function(
-  CXSourceLocation location,
-  ffi.Pointer<CXString> filename,
-  ffi.Pointer<ffi.Uint32> line,
-  ffi.Pointer<ffi.Uint32> column,
-);
-
-typedef Native_clang_getInstantiationLocation = ffi.Void Function(
-  CXSourceLocation location,
-  ffi.Pointer<ffi.Pointer<ffi.Void>> file,
-  ffi.Pointer<ffi.Uint32> line,
-  ffi.Pointer<ffi.Uint32> column,
-  ffi.Pointer<ffi.Uint32> offset,
-);
-
-typedef _dart_clang_getInstantiationLocation = void Function(
-  CXSourceLocation location,
-  ffi.Pointer<ffi.Pointer<ffi.Void>> file,
-  ffi.Pointer<ffi.Uint32> line,
-  ffi.Pointer<ffi.Uint32> column,
-  ffi.Pointer<ffi.Uint32> offset,
-);
-
-typedef Native_clang_getSpellingLocation = ffi.Void Function(
-  CXSourceLocation location,
-  ffi.Pointer<ffi.Pointer<ffi.Void>> file,
-  ffi.Pointer<ffi.Uint32> line,
-  ffi.Pointer<ffi.Uint32> column,
-  ffi.Pointer<ffi.Uint32> offset,
-);
-
-typedef _dart_clang_getSpellingLocation = void Function(
-  CXSourceLocation location,
-  ffi.Pointer<ffi.Pointer<ffi.Void>> file,
-  ffi.Pointer<ffi.Uint32> line,
-  ffi.Pointer<ffi.Uint32> column,
-  ffi.Pointer<ffi.Uint32> offset,
-);
-
-typedef Native_clang_getFileLocation = ffi.Void Function(
-  CXSourceLocation location,
-  ffi.Pointer<ffi.Pointer<ffi.Void>> file,
-  ffi.Pointer<ffi.Uint32> line,
-  ffi.Pointer<ffi.Uint32> column,
-  ffi.Pointer<ffi.Uint32> offset,
-);
-
-typedef _dart_clang_getFileLocation = void Function(
-  CXSourceLocation location,
-  ffi.Pointer<ffi.Pointer<ffi.Void>> file,
-  ffi.Pointer<ffi.Uint32> line,
-  ffi.Pointer<ffi.Uint32> column,
-  ffi.Pointer<ffi.Uint32> offset,
-);
-
-typedef Native_clang_getRangeStart = CXSourceLocation Function(
-  CXSourceRange range,
-);
-
-typedef _dart_clang_getRangeStart = CXSourceLocation Function(
-  CXSourceRange range,
-);
-
-typedef Native_clang_getRangeEnd = CXSourceLocation Function(
-  CXSourceRange range,
-);
-
-typedef _dart_clang_getRangeEnd = CXSourceLocation Function(
-  CXSourceRange range,
-);
-
-typedef Native_clang_getSkippedRanges = ffi.Pointer<CXSourceRangeList> Function(
-  ffi.Pointer<CXTranslationUnitImpl> tu,
-  ffi.Pointer<ffi.Void> file,
-);
-
-typedef _dart_clang_getSkippedRanges = ffi.Pointer<CXSourceRangeList> Function(
-  ffi.Pointer<CXTranslationUnitImpl> tu,
-  ffi.Pointer<ffi.Void> file,
-);
-
-typedef Native_clang_getAllSkippedRanges = ffi.Pointer<CXSourceRangeList>
-    Function(
-  ffi.Pointer<CXTranslationUnitImpl> tu,
-);
-
-typedef _dart_clang_getAllSkippedRanges = ffi.Pointer<CXSourceRangeList>
-    Function(
-  ffi.Pointer<CXTranslationUnitImpl> tu,
-);
-
-typedef Native_clang_disposeSourceRangeList = ffi.Void Function(
-  ffi.Pointer<CXSourceRangeList> ranges,
-);
-
-typedef _dart_clang_disposeSourceRangeList = void Function(
-  ffi.Pointer<CXSourceRangeList> ranges,
-);
-
-typedef Native_clang_getNumDiagnosticsInSet = ffi.Uint32 Function(
-  ffi.Pointer<ffi.Void> Diags,
-);
-
-typedef _dart_clang_getNumDiagnosticsInSet = int Function(
-  ffi.Pointer<ffi.Void> Diags,
-);
-
-typedef Native_clang_getDiagnosticInSet = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<ffi.Void> Diags,
-  ffi.Uint32 Index,
-);
-
-typedef _dart_clang_getDiagnosticInSet = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<ffi.Void> Diags,
-  int Index,
-);
-
-typedef Native_clang_loadDiagnostics = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<ffi.Int8> file,
-  ffi.Pointer<ffi.Int32> error,
-  ffi.Pointer<CXString> errorString,
-);
-
-typedef _dart_clang_loadDiagnostics = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<ffi.Int8> file,
-  ffi.Pointer<ffi.Int32> error,
-  ffi.Pointer<CXString> errorString,
-);
-
-typedef Native_clang_disposeDiagnosticSet = ffi.Void Function(
-  ffi.Pointer<ffi.Void> Diags,
-);
-
-typedef _dart_clang_disposeDiagnosticSet = void Function(
-  ffi.Pointer<ffi.Void> Diags,
-);
-
-typedef Native_clang_getChildDiagnostics = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<ffi.Void> D,
-);
-
-typedef _dart_clang_getChildDiagnostics = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<ffi.Void> D,
-);
-
-typedef Native_clang_getNumDiagnostics = ffi.Uint32 Function(
-  ffi.Pointer<CXTranslationUnitImpl> Unit,
-);
-
-typedef _dart_clang_getNumDiagnostics = int Function(
-  ffi.Pointer<CXTranslationUnitImpl> Unit,
-);
-
-typedef Native_clang_getDiagnostic = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<CXTranslationUnitImpl> Unit,
-  ffi.Uint32 Index,
-);
-
-typedef _dart_clang_getDiagnostic = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<CXTranslationUnitImpl> Unit,
-  int Index,
-);
-
-typedef Native_clang_getDiagnosticSetFromTU = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<CXTranslationUnitImpl> Unit,
-);
-
-typedef _dart_clang_getDiagnosticSetFromTU = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<CXTranslationUnitImpl> Unit,
-);
-
-typedef Native_clang_disposeDiagnostic = ffi.Void Function(
-  ffi.Pointer<ffi.Void> Diagnostic,
-);
-
-typedef _dart_clang_disposeDiagnostic = void Function(
-  ffi.Pointer<ffi.Void> Diagnostic,
-);
-
-typedef Native_clang_formatDiagnostic = CXString Function(
-  ffi.Pointer<ffi.Void> Diagnostic,
-  ffi.Uint32 Options,
-);
-
-typedef _dart_clang_formatDiagnostic = CXString Function(
-  ffi.Pointer<ffi.Void> Diagnostic,
-  int Options,
-);
-
-typedef Native_clang_defaultDiagnosticDisplayOptions = ffi.Uint32 Function();
-
-typedef _dart_clang_defaultDiagnosticDisplayOptions = int Function();
-
-typedef Native_clang_getDiagnosticSeverity = ffi.Int32 Function(
-  ffi.Pointer<ffi.Void> arg0,
-);
-
-typedef _dart_clang_getDiagnosticSeverity = int Function(
-  ffi.Pointer<ffi.Void> arg0,
-);
-
-typedef Native_clang_getDiagnosticLocation = CXSourceLocation Function(
-  ffi.Pointer<ffi.Void> arg0,
-);
-
-typedef _dart_clang_getDiagnosticLocation = CXSourceLocation Function(
-  ffi.Pointer<ffi.Void> arg0,
-);
-
-typedef Native_clang_getDiagnosticSpelling = CXString Function(
-  ffi.Pointer<ffi.Void> arg0,
-);
-
-typedef _dart_clang_getDiagnosticSpelling = CXString Function(
-  ffi.Pointer<ffi.Void> arg0,
-);
-
-typedef Native_clang_getDiagnosticOption = CXString Function(
-  ffi.Pointer<ffi.Void> Diag,
-  ffi.Pointer<CXString> Disable,
-);
-
-typedef _dart_clang_getDiagnosticOption = CXString Function(
-  ffi.Pointer<ffi.Void> Diag,
-  ffi.Pointer<CXString> Disable,
-);
-
-typedef Native_clang_getDiagnosticCategory = ffi.Uint32 Function(
-  ffi.Pointer<ffi.Void> arg0,
-);
-
-typedef _dart_clang_getDiagnosticCategory = int Function(
-  ffi.Pointer<ffi.Void> arg0,
-);
-
-typedef Native_clang_getDiagnosticCategoryName = CXString Function(
-  ffi.Uint32 Category,
-);
-
-typedef _dart_clang_getDiagnosticCategoryName = CXString Function(
-  int Category,
-);
-
-typedef Native_clang_getDiagnosticCategoryText = CXString Function(
-  ffi.Pointer<ffi.Void> arg0,
-);
-
-typedef _dart_clang_getDiagnosticCategoryText = CXString Function(
-  ffi.Pointer<ffi.Void> arg0,
-);
-
-typedef Native_clang_getDiagnosticNumRanges = ffi.Uint32 Function(
-  ffi.Pointer<ffi.Void> arg0,
-);
-
-typedef _dart_clang_getDiagnosticNumRanges = int Function(
-  ffi.Pointer<ffi.Void> arg0,
-);
-
-typedef Native_clang_getDiagnosticRange = CXSourceRange Function(
-  ffi.Pointer<ffi.Void> Diagnostic,
-  ffi.Uint32 Range,
-);
-
-typedef _dart_clang_getDiagnosticRange = CXSourceRange Function(
-  ffi.Pointer<ffi.Void> Diagnostic,
-  int Range,
-);
-
-typedef Native_clang_getDiagnosticNumFixIts = ffi.Uint32 Function(
-  ffi.Pointer<ffi.Void> Diagnostic,
-);
-
-typedef _dart_clang_getDiagnosticNumFixIts = int Function(
-  ffi.Pointer<ffi.Void> Diagnostic,
-);
-
-typedef Native_clang_getDiagnosticFixIt = CXString Function(
-  ffi.Pointer<ffi.Void> Diagnostic,
-  ffi.Uint32 FixIt,
-  ffi.Pointer<CXSourceRange> ReplacementRange,
-);
-
-typedef _dart_clang_getDiagnosticFixIt = CXString Function(
-  ffi.Pointer<ffi.Void> Diagnostic,
-  int FixIt,
-  ffi.Pointer<CXSourceRange> ReplacementRange,
-);
-
-typedef Native_clang_getTranslationUnitSpelling = CXString Function(
-  ffi.Pointer<CXTranslationUnitImpl> CTUnit,
-);
-
-typedef _dart_clang_getTranslationUnitSpelling = CXString Function(
-  ffi.Pointer<CXTranslationUnitImpl> CTUnit,
-);
-
-typedef Native_clang_createTranslationUnitFromSourceFile
-    = ffi.Pointer<CXTranslationUnitImpl> Function(
-  ffi.Pointer<ffi.Void> CIdx,
-  ffi.Pointer<ffi.Int8> source_filename,
-  ffi.Int32 num_clang_command_line_args,
-  ffi.Pointer<ffi.Pointer<ffi.Int8>> clang_command_line_args,
-  ffi.Uint32 num_unsaved_files,
-  ffi.Pointer<CXUnsavedFile> unsaved_files,
-);
-
-typedef _dart_clang_createTranslationUnitFromSourceFile
-    = ffi.Pointer<CXTranslationUnitImpl> Function(
-  ffi.Pointer<ffi.Void> CIdx,
-  ffi.Pointer<ffi.Int8> source_filename,
-  int num_clang_command_line_args,
-  ffi.Pointer<ffi.Pointer<ffi.Int8>> clang_command_line_args,
-  int num_unsaved_files,
-  ffi.Pointer<CXUnsavedFile> unsaved_files,
-);
-
-typedef Native_clang_createTranslationUnit = ffi.Pointer<CXTranslationUnitImpl>
-    Function(
-  ffi.Pointer<ffi.Void> CIdx,
-  ffi.Pointer<ffi.Int8> ast_filename,
-);
-
-typedef _dart_clang_createTranslationUnit = ffi.Pointer<CXTranslationUnitImpl>
-    Function(
-  ffi.Pointer<ffi.Void> CIdx,
-  ffi.Pointer<ffi.Int8> ast_filename,
-);
-
-typedef Native_clang_createTranslationUnit2 = ffi.Int32 Function(
-  ffi.Pointer<ffi.Void> CIdx,
-  ffi.Pointer<ffi.Int8> ast_filename,
-  ffi.Pointer<ffi.Pointer<CXTranslationUnitImpl>> out_TU,
-);
-
-typedef _dart_clang_createTranslationUnit2 = int Function(
-  ffi.Pointer<ffi.Void> CIdx,
-  ffi.Pointer<ffi.Int8> ast_filename,
-  ffi.Pointer<ffi.Pointer<CXTranslationUnitImpl>> out_TU,
-);
-
-typedef Native_clang_defaultEditingTranslationUnitOptions = ffi.Uint32
-    Function();
-
-typedef _dart_clang_defaultEditingTranslationUnitOptions = int Function();
-
-typedef Native_clang_parseTranslationUnit = ffi.Pointer<CXTranslationUnitImpl>
-    Function(
-  ffi.Pointer<ffi.Void> CIdx,
-  ffi.Pointer<ffi.Int8> source_filename,
-  ffi.Pointer<ffi.Pointer<ffi.Int8>> command_line_args,
-  ffi.Int32 num_command_line_args,
-  ffi.Pointer<CXUnsavedFile> unsaved_files,
-  ffi.Uint32 num_unsaved_files,
-  ffi.Uint32 options,
-);
-
-typedef _dart_clang_parseTranslationUnit = ffi.Pointer<CXTranslationUnitImpl>
-    Function(
-  ffi.Pointer<ffi.Void> CIdx,
-  ffi.Pointer<ffi.Int8> source_filename,
-  ffi.Pointer<ffi.Pointer<ffi.Int8>> command_line_args,
-  int num_command_line_args,
-  ffi.Pointer<CXUnsavedFile> unsaved_files,
-  int num_unsaved_files,
-  int options,
-);
-
-typedef Native_clang_parseTranslationUnit2 = ffi.Int32 Function(
-  ffi.Pointer<ffi.Void> CIdx,
-  ffi.Pointer<ffi.Int8> source_filename,
-  ffi.Pointer<ffi.Pointer<ffi.Int8>> command_line_args,
-  ffi.Int32 num_command_line_args,
-  ffi.Pointer<CXUnsavedFile> unsaved_files,
-  ffi.Uint32 num_unsaved_files,
-  ffi.Uint32 options,
-  ffi.Pointer<ffi.Pointer<CXTranslationUnitImpl>> out_TU,
-);
-
-typedef _dart_clang_parseTranslationUnit2 = int Function(
-  ffi.Pointer<ffi.Void> CIdx,
-  ffi.Pointer<ffi.Int8> source_filename,
-  ffi.Pointer<ffi.Pointer<ffi.Int8>> command_line_args,
-  int num_command_line_args,
-  ffi.Pointer<CXUnsavedFile> unsaved_files,
-  int num_unsaved_files,
-  int options,
-  ffi.Pointer<ffi.Pointer<CXTranslationUnitImpl>> out_TU,
-);
-
-typedef Native_clang_parseTranslationUnit2FullArgv = ffi.Int32 Function(
-  ffi.Pointer<ffi.Void> CIdx,
-  ffi.Pointer<ffi.Int8> source_filename,
-  ffi.Pointer<ffi.Pointer<ffi.Int8>> command_line_args,
-  ffi.Int32 num_command_line_args,
-  ffi.Pointer<CXUnsavedFile> unsaved_files,
-  ffi.Uint32 num_unsaved_files,
-  ffi.Uint32 options,
-  ffi.Pointer<ffi.Pointer<CXTranslationUnitImpl>> out_TU,
-);
-
-typedef _dart_clang_parseTranslationUnit2FullArgv = int Function(
-  ffi.Pointer<ffi.Void> CIdx,
-  ffi.Pointer<ffi.Int8> source_filename,
-  ffi.Pointer<ffi.Pointer<ffi.Int8>> command_line_args,
-  int num_command_line_args,
-  ffi.Pointer<CXUnsavedFile> unsaved_files,
-  int num_unsaved_files,
-  int options,
-  ffi.Pointer<ffi.Pointer<CXTranslationUnitImpl>> out_TU,
-);
-
-typedef Native_clang_defaultSaveOptions = ffi.Uint32 Function(
-  ffi.Pointer<CXTranslationUnitImpl> TU,
-);
-
-typedef _dart_clang_defaultSaveOptions = int Function(
-  ffi.Pointer<CXTranslationUnitImpl> TU,
-);
-
-typedef Native_clang_saveTranslationUnit = ffi.Int32 Function(
-  ffi.Pointer<CXTranslationUnitImpl> TU,
-  ffi.Pointer<ffi.Int8> FileName,
-  ffi.Uint32 options,
-);
-
-typedef _dart_clang_saveTranslationUnit = int Function(
-  ffi.Pointer<CXTranslationUnitImpl> TU,
-  ffi.Pointer<ffi.Int8> FileName,
-  int options,
-);
-
-typedef Native_clang_suspendTranslationUnit = ffi.Uint32 Function(
-  ffi.Pointer<CXTranslationUnitImpl> arg0,
-);
-
-typedef _dart_clang_suspendTranslationUnit = int Function(
-  ffi.Pointer<CXTranslationUnitImpl> arg0,
-);
-
-typedef Native_clang_disposeTranslationUnit = ffi.Void Function(
-  ffi.Pointer<CXTranslationUnitImpl> arg0,
-);
-
-typedef _dart_clang_disposeTranslationUnit = void Function(
-  ffi.Pointer<CXTranslationUnitImpl> arg0,
-);
-
-typedef Native_clang_defaultReparseOptions = ffi.Uint32 Function(
-  ffi.Pointer<CXTranslationUnitImpl> TU,
-);
-
-typedef _dart_clang_defaultReparseOptions = int Function(
-  ffi.Pointer<CXTranslationUnitImpl> TU,
-);
-
-typedef Native_clang_reparseTranslationUnit = ffi.Int32 Function(
-  ffi.Pointer<CXTranslationUnitImpl> TU,
-  ffi.Uint32 num_unsaved_files,
-  ffi.Pointer<CXUnsavedFile> unsaved_files,
-  ffi.Uint32 options,
-);
-
-typedef _dart_clang_reparseTranslationUnit = int Function(
-  ffi.Pointer<CXTranslationUnitImpl> TU,
-  int num_unsaved_files,
-  ffi.Pointer<CXUnsavedFile> unsaved_files,
-  int options,
-);
-
-typedef Native_clang_getTUResourceUsageName = ffi.Pointer<ffi.Int8> Function(
-  ffi.Int32 kind,
-);
-
-typedef _dart_clang_getTUResourceUsageName = ffi.Pointer<ffi.Int8> Function(
-  int kind,
-);
-
-typedef Native_clang_getCXTUResourceUsage = CXTUResourceUsage Function(
-  ffi.Pointer<CXTranslationUnitImpl> TU,
-);
-
-typedef _dart_clang_getCXTUResourceUsage = CXTUResourceUsage Function(
-  ffi.Pointer<CXTranslationUnitImpl> TU,
-);
-
-typedef Native_clang_disposeCXTUResourceUsage = ffi.Void Function(
-  CXTUResourceUsage usage,
-);
-
-typedef _dart_clang_disposeCXTUResourceUsage = void Function(
-  CXTUResourceUsage usage,
-);
-
-typedef Native_clang_getTranslationUnitTargetInfo
-    = ffi.Pointer<CXTargetInfoImpl> Function(
-  ffi.Pointer<CXTranslationUnitImpl> CTUnit,
-);
-
-typedef _dart_clang_getTranslationUnitTargetInfo = ffi.Pointer<CXTargetInfoImpl>
-    Function(
-  ffi.Pointer<CXTranslationUnitImpl> CTUnit,
-);
-
-typedef Native_clang_TargetInfo_dispose = ffi.Void Function(
-  ffi.Pointer<CXTargetInfoImpl> Info,
-);
-
-typedef _dart_clang_TargetInfo_dispose = void Function(
-  ffi.Pointer<CXTargetInfoImpl> Info,
-);
-
-typedef Native_clang_TargetInfo_getTriple = CXString Function(
-  ffi.Pointer<CXTargetInfoImpl> Info,
-);
-
-typedef _dart_clang_TargetInfo_getTriple = CXString Function(
-  ffi.Pointer<CXTargetInfoImpl> Info,
-);
-
-typedef Native_clang_TargetInfo_getPointerWidth = ffi.Int32 Function(
-  ffi.Pointer<CXTargetInfoImpl> Info,
-);
-
-typedef _dart_clang_TargetInfo_getPointerWidth = int Function(
-  ffi.Pointer<CXTargetInfoImpl> Info,
-);
-
-typedef Native_clang_getNullCursor = CXCursor Function();
-
-typedef _dart_clang_getNullCursor = CXCursor Function();
-
-typedef Native_clang_getTranslationUnitCursor = CXCursor Function(
-  ffi.Pointer<CXTranslationUnitImpl> arg0,
-);
-
-typedef _dart_clang_getTranslationUnitCursor = CXCursor Function(
-  ffi.Pointer<CXTranslationUnitImpl> arg0,
-);
-
-typedef Native_clang_equalCursors = ffi.Uint32 Function(
-  CXCursor arg0,
-  CXCursor arg1,
-);
-
-typedef _dart_clang_equalCursors = int Function(
-  CXCursor arg0,
-  CXCursor arg1,
-);
-
-typedef Native_clang_Cursor_isNull = ffi.Int32 Function(
-  CXCursor cursor,
-);
-
-typedef _dart_clang_Cursor_isNull = int Function(
-  CXCursor cursor,
-);
-
-typedef Native_clang_hashCursor = ffi.Uint32 Function(
-  CXCursor arg0,
-);
-
-typedef _dart_clang_hashCursor = int Function(
-  CXCursor arg0,
-);
-
-typedef Native_clang_getCursorKind = ffi.Int32 Function(
-  CXCursor arg0,
-);
-
-typedef _dart_clang_getCursorKind = int Function(
-  CXCursor arg0,
-);
-
-typedef Native_clang_isDeclaration = ffi.Uint32 Function(
-  ffi.Int32 arg0,
-);
-
-typedef _dart_clang_isDeclaration = int Function(
-  int arg0,
-);
-
-typedef Native_clang_isInvalidDeclaration = ffi.Uint32 Function(
-  CXCursor arg0,
-);
-
-typedef _dart_clang_isInvalidDeclaration = int Function(
-  CXCursor arg0,
-);
-
-typedef Native_clang_isReference = ffi.Uint32 Function(
-  ffi.Int32 arg0,
-);
-
-typedef _dart_clang_isReference = int Function(
-  int arg0,
-);
-
-typedef Native_clang_isExpression = ffi.Uint32 Function(
-  ffi.Int32 arg0,
-);
-
-typedef _dart_clang_isExpression = int Function(
-  int arg0,
-);
-
-typedef Native_clang_isStatement = ffi.Uint32 Function(
-  ffi.Int32 arg0,
-);
-
-typedef _dart_clang_isStatement = int Function(
-  int arg0,
-);
-
-typedef Native_clang_isAttribute = ffi.Uint32 Function(
-  ffi.Int32 arg0,
-);
-
-typedef _dart_clang_isAttribute = int Function(
-  int arg0,
-);
-
-typedef Native_clang_Cursor_hasAttrs = ffi.Uint32 Function(
-  CXCursor C,
-);
-
-typedef _dart_clang_Cursor_hasAttrs = int Function(
-  CXCursor C,
-);
-
-typedef Native_clang_isInvalid = ffi.Uint32 Function(
-  ffi.Int32 arg0,
-);
-
-typedef _dart_clang_isInvalid = int Function(
-  int arg0,
-);
-
-typedef Native_clang_isTranslationUnit = ffi.Uint32 Function(
-  ffi.Int32 arg0,
-);
-
-typedef _dart_clang_isTranslationUnit = int Function(
-  int arg0,
-);
-
-typedef Native_clang_isPreprocessing = ffi.Uint32 Function(
-  ffi.Int32 arg0,
-);
-
-typedef _dart_clang_isPreprocessing = int Function(
-  int arg0,
-);
-
-typedef Native_clang_isUnexposed = ffi.Uint32 Function(
-  ffi.Int32 arg0,
-);
-
-typedef _dart_clang_isUnexposed = int Function(
-  int arg0,
-);
-
-typedef Native_clang_getCursorLinkage = ffi.Int32 Function(
-  CXCursor cursor,
-);
-
-typedef _dart_clang_getCursorLinkage = int Function(
-  CXCursor cursor,
-);
-
-typedef Native_clang_getCursorVisibility = ffi.Int32 Function(
-  CXCursor cursor,
-);
-
-typedef _dart_clang_getCursorVisibility = int Function(
-  CXCursor cursor,
-);
-
-typedef Native_clang_getCursorAvailability = ffi.Int32 Function(
-  CXCursor cursor,
-);
-
-typedef _dart_clang_getCursorAvailability = int Function(
-  CXCursor cursor,
-);
-
-typedef Native_clang_getCursorPlatformAvailability = ffi.Int32 Function(
-  CXCursor cursor,
-  ffi.Pointer<ffi.Int32> always_deprecated,
-  ffi.Pointer<CXString> deprecated_message,
-  ffi.Pointer<ffi.Int32> always_unavailable,
-  ffi.Pointer<CXString> unavailable_message,
-  ffi.Pointer<CXPlatformAvailability> availability,
-  ffi.Int32 availability_size,
-);
-
-typedef _dart_clang_getCursorPlatformAvailability = int Function(
-  CXCursor cursor,
-  ffi.Pointer<ffi.Int32> always_deprecated,
-  ffi.Pointer<CXString> deprecated_message,
-  ffi.Pointer<ffi.Int32> always_unavailable,
-  ffi.Pointer<CXString> unavailable_message,
-  ffi.Pointer<CXPlatformAvailability> availability,
-  int availability_size,
-);
-
-typedef Native_clang_disposeCXPlatformAvailability = ffi.Void Function(
-  ffi.Pointer<CXPlatformAvailability> availability,
-);
-
-typedef _dart_clang_disposeCXPlatformAvailability = void Function(
-  ffi.Pointer<CXPlatformAvailability> availability,
-);
-
-typedef Native_clang_getCursorLanguage = ffi.Int32 Function(
-  CXCursor cursor,
-);
-
-typedef _dart_clang_getCursorLanguage = int Function(
-  CXCursor cursor,
-);
-
-typedef Native_clang_getCursorTLSKind = ffi.Int32 Function(
-  CXCursor cursor,
-);
-
-typedef _dart_clang_getCursorTLSKind = int Function(
-  CXCursor cursor,
-);
-
-typedef Native_clang_Cursor_getTranslationUnit
-    = ffi.Pointer<CXTranslationUnitImpl> Function(
-  CXCursor arg0,
-);
-
-typedef _dart_clang_Cursor_getTranslationUnit
-    = ffi.Pointer<CXTranslationUnitImpl> Function(
-  CXCursor arg0,
-);
-
-typedef Native_clang_createCXCursorSet = ffi.Pointer<CXCursorSetImpl>
-    Function();
-
-typedef _dart_clang_createCXCursorSet = ffi.Pointer<CXCursorSetImpl> Function();
-
-typedef Native_clang_disposeCXCursorSet = ffi.Void Function(
-  ffi.Pointer<CXCursorSetImpl> cset,
-);
-
-typedef _dart_clang_disposeCXCursorSet = void Function(
-  ffi.Pointer<CXCursorSetImpl> cset,
-);
-
-typedef Native_clang_CXCursorSet_contains = ffi.Uint32 Function(
-  ffi.Pointer<CXCursorSetImpl> cset,
-  CXCursor cursor,
-);
-
-typedef _dart_clang_CXCursorSet_contains = int Function(
-  ffi.Pointer<CXCursorSetImpl> cset,
-  CXCursor cursor,
-);
-
-typedef Native_clang_CXCursorSet_insert = ffi.Uint32 Function(
-  ffi.Pointer<CXCursorSetImpl> cset,
-  CXCursor cursor,
-);
-
-typedef _dart_clang_CXCursorSet_insert = int Function(
-  ffi.Pointer<CXCursorSetImpl> cset,
-  CXCursor cursor,
-);
-
-typedef Native_clang_getCursorSemanticParent = CXCursor Function(
-  CXCursor cursor,
-);
-
-typedef _dart_clang_getCursorSemanticParent = CXCursor Function(
-  CXCursor cursor,
-);
-
-typedef Native_clang_getCursorLexicalParent = CXCursor Function(
-  CXCursor cursor,
-);
-
-typedef _dart_clang_getCursorLexicalParent = CXCursor Function(
-  CXCursor cursor,
-);
-
-typedef Native_clang_getOverriddenCursors = ffi.Void Function(
-  CXCursor cursor,
-  ffi.Pointer<ffi.Pointer<CXCursor>> overridden,
-  ffi.Pointer<ffi.Uint32> num_overridden,
-);
-
-typedef _dart_clang_getOverriddenCursors = void Function(
-  CXCursor cursor,
-  ffi.Pointer<ffi.Pointer<CXCursor>> overridden,
-  ffi.Pointer<ffi.Uint32> num_overridden,
-);
-
-typedef Native_clang_disposeOverriddenCursors = ffi.Void Function(
-  ffi.Pointer<CXCursor> overridden,
-);
-
-typedef _dart_clang_disposeOverriddenCursors = void Function(
-  ffi.Pointer<CXCursor> overridden,
-);
-
-typedef Native_clang_getIncludedFile = ffi.Pointer<ffi.Void> Function(
-  CXCursor cursor,
-);
-
-typedef _dart_clang_getIncludedFile = ffi.Pointer<ffi.Void> Function(
-  CXCursor cursor,
-);
-
-typedef Native_clang_getCursor = CXCursor Function(
-  ffi.Pointer<CXTranslationUnitImpl> arg0,
-  CXSourceLocation arg1,
-);
-
-typedef _dart_clang_getCursor = CXCursor Function(
-  ffi.Pointer<CXTranslationUnitImpl> arg0,
-  CXSourceLocation arg1,
-);
-
-typedef Native_clang_getCursorLocation = CXSourceLocation Function(
-  CXCursor arg0,
-);
-
-typedef _dart_clang_getCursorLocation = CXSourceLocation Function(
-  CXCursor arg0,
-);
-
-typedef Native_clang_getCursorExtent = CXSourceRange Function(
-  CXCursor arg0,
-);
-
-typedef _dart_clang_getCursorExtent = CXSourceRange Function(
-  CXCursor arg0,
-);
-
-typedef Native_clang_getCursorType = CXType Function(
-  CXCursor C,
-);
-
-typedef _dart_clang_getCursorType = CXType Function(
-  CXCursor C,
-);
-
-typedef Native_clang_getTypeSpelling = CXString Function(
-  CXType CT,
-);
-
-typedef _dart_clang_getTypeSpelling = CXString Function(
-  CXType CT,
-);
-
-typedef Native_clang_getTypedefDeclUnderlyingType = CXType Function(
-  CXCursor C,
-);
-
-typedef _dart_clang_getTypedefDeclUnderlyingType = CXType Function(
-  CXCursor C,
-);
-
-typedef Native_clang_getEnumDeclIntegerType = CXType Function(
-  CXCursor C,
-);
-
-typedef _dart_clang_getEnumDeclIntegerType = CXType Function(
-  CXCursor C,
-);
-
-typedef Native_clang_getEnumConstantDeclValue = ffi.Int64 Function(
-  CXCursor C,
-);
-
-typedef _dart_clang_getEnumConstantDeclValue = int Function(
-  CXCursor C,
-);
-
-typedef Native_clang_getEnumConstantDeclUnsignedValue = ffi.Uint64 Function(
-  CXCursor C,
-);
-
-typedef _dart_clang_getEnumConstantDeclUnsignedValue = int Function(
-  CXCursor C,
-);
-
-typedef Native_clang_getFieldDeclBitWidth = ffi.Int32 Function(
-  CXCursor C,
-);
-
-typedef _dart_clang_getFieldDeclBitWidth = int Function(
-  CXCursor C,
-);
-
-typedef Native_clang_Cursor_getNumArguments = ffi.Int32 Function(
-  CXCursor C,
-);
-
-typedef _dart_clang_Cursor_getNumArguments = int Function(
-  CXCursor C,
-);
-
-typedef Native_clang_Cursor_getArgument = CXCursor Function(
-  CXCursor C,
-  ffi.Uint32 i,
-);
-
-typedef _dart_clang_Cursor_getArgument = CXCursor Function(
-  CXCursor C,
-  int i,
-);
-
-typedef Native_clang_Cursor_getNumTemplateArguments = ffi.Int32 Function(
-  CXCursor C,
-);
-
-typedef _dart_clang_Cursor_getNumTemplateArguments = int Function(
-  CXCursor C,
-);
-
-typedef Native_clang_Cursor_getTemplateArgumentKind = ffi.Int32 Function(
-  CXCursor C,
-  ffi.Uint32 I,
-);
-
-typedef _dart_clang_Cursor_getTemplateArgumentKind = int Function(
-  CXCursor C,
-  int I,
-);
-
-typedef Native_clang_Cursor_getTemplateArgumentType = CXType Function(
-  CXCursor C,
-  ffi.Uint32 I,
-);
-
-typedef _dart_clang_Cursor_getTemplateArgumentType = CXType Function(
-  CXCursor C,
-  int I,
-);
-
-typedef Native_clang_Cursor_getTemplateArgumentValue = ffi.Int64 Function(
-  CXCursor C,
-  ffi.Uint32 I,
-);
-
-typedef _dart_clang_Cursor_getTemplateArgumentValue = int Function(
-  CXCursor C,
-  int I,
-);
-
-typedef Native_clang_Cursor_getTemplateArgumentUnsignedValue = ffi.Uint64
-    Function(
-  CXCursor C,
-  ffi.Uint32 I,
-);
-
-typedef _dart_clang_Cursor_getTemplateArgumentUnsignedValue = int Function(
-  CXCursor C,
-  int I,
-);
-
-typedef Native_clang_equalTypes = ffi.Uint32 Function(
-  CXType A,
-  CXType B,
-);
-
-typedef _dart_clang_equalTypes = int Function(
-  CXType A,
-  CXType B,
-);
-
-typedef Native_clang_getCanonicalType = CXType Function(
-  CXType T,
-);
-
-typedef _dart_clang_getCanonicalType = CXType Function(
-  CXType T,
-);
-
-typedef Native_clang_isConstQualifiedType = ffi.Uint32 Function(
-  CXType T,
-);
-
-typedef _dart_clang_isConstQualifiedType = int Function(
-  CXType T,
-);
-
-typedef Native_clang_Cursor_isMacroFunctionLike = ffi.Uint32 Function(
-  CXCursor C,
-);
-
-typedef _dart_clang_Cursor_isMacroFunctionLike = int Function(
-  CXCursor C,
-);
-
-typedef Native_clang_Cursor_isMacroBuiltin = ffi.Uint32 Function(
-  CXCursor C,
-);
-
-typedef _dart_clang_Cursor_isMacroBuiltin = int Function(
-  CXCursor C,
-);
-
-typedef Native_clang_Cursor_isFunctionInlined = ffi.Uint32 Function(
-  CXCursor C,
-);
-
-typedef _dart_clang_Cursor_isFunctionInlined = int Function(
-  CXCursor C,
-);
-
-typedef Native_clang_isVolatileQualifiedType = ffi.Uint32 Function(
-  CXType T,
-);
-
-typedef _dart_clang_isVolatileQualifiedType = int Function(
-  CXType T,
-);
-
-typedef Native_clang_isRestrictQualifiedType = ffi.Uint32 Function(
-  CXType T,
-);
-
-typedef _dart_clang_isRestrictQualifiedType = int Function(
-  CXType T,
-);
-
-typedef Native_clang_getAddressSpace = ffi.Uint32 Function(
-  CXType T,
-);
-
-typedef _dart_clang_getAddressSpace = int Function(
-  CXType T,
-);
-
-typedef Native_clang_getTypedefName = CXString Function(
-  CXType CT,
-);
-
-typedef _dart_clang_getTypedefName = CXString Function(
-  CXType CT,
-);
-
-typedef Native_clang_getPointeeType = CXType Function(
-  CXType T,
-);
-
-typedef _dart_clang_getPointeeType = CXType Function(
-  CXType T,
-);
-
-typedef Native_clang_getTypeDeclaration = CXCursor Function(
-  CXType T,
-);
-
-typedef _dart_clang_getTypeDeclaration = CXCursor Function(
-  CXType T,
-);
-
-typedef Native_clang_getDeclObjCTypeEncoding = CXString Function(
-  CXCursor C,
-);
-
-typedef _dart_clang_getDeclObjCTypeEncoding = CXString Function(
-  CXCursor C,
-);
-
-typedef Native_clang_Type_getObjCEncoding = CXString Function(
-  CXType type,
-);
-
-typedef _dart_clang_Type_getObjCEncoding = CXString Function(
-  CXType type,
-);
-
-typedef Native_clang_getTypeKindSpelling = CXString Function(
-  ffi.Int32 K,
-);
-
-typedef _dart_clang_getTypeKindSpelling = CXString Function(
-  int K,
-);
-
-typedef Native_clang_getFunctionTypeCallingConv = ffi.Int32 Function(
-  CXType T,
-);
-
-typedef _dart_clang_getFunctionTypeCallingConv = int Function(
-  CXType T,
-);
-
-typedef Native_clang_getResultType = CXType Function(
-  CXType T,
-);
-
-typedef _dart_clang_getResultType = CXType Function(
-  CXType T,
-);
-
-typedef Native_clang_getExceptionSpecificationType = ffi.Int32 Function(
-  CXType T,
-);
-
-typedef _dart_clang_getExceptionSpecificationType = int Function(
-  CXType T,
-);
-
-typedef Native_clang_getNumArgTypes = ffi.Int32 Function(
-  CXType T,
-);
-
-typedef _dart_clang_getNumArgTypes = int Function(
-  CXType T,
-);
-
-typedef Native_clang_getArgType = CXType Function(
-  CXType T,
-  ffi.Uint32 i,
-);
-
-typedef _dart_clang_getArgType = CXType Function(
-  CXType T,
-  int i,
-);
-
-typedef Native_clang_Type_getObjCObjectBaseType = CXType Function(
-  CXType T,
-);
-
-typedef _dart_clang_Type_getObjCObjectBaseType = CXType Function(
-  CXType T,
-);
-
-typedef Native_clang_Type_getNumObjCProtocolRefs = ffi.Uint32 Function(
-  CXType T,
-);
-
-typedef _dart_clang_Type_getNumObjCProtocolRefs = int Function(
-  CXType T,
-);
-
-typedef Native_clang_Type_getObjCProtocolDecl = CXCursor Function(
-  CXType T,
-  ffi.Uint32 i,
-);
-
-typedef _dart_clang_Type_getObjCProtocolDecl = CXCursor Function(
-  CXType T,
-  int i,
-);
-
-typedef Native_clang_Type_getNumObjCTypeArgs = ffi.Uint32 Function(
-  CXType T,
-);
-
-typedef _dart_clang_Type_getNumObjCTypeArgs = int Function(
-  CXType T,
-);
-
-typedef Native_clang_Type_getObjCTypeArg = CXType Function(
-  CXType T,
-  ffi.Uint32 i,
-);
-
-typedef _dart_clang_Type_getObjCTypeArg = CXType Function(
-  CXType T,
-  int i,
-);
-
-typedef Native_clang_isFunctionTypeVariadic = ffi.Uint32 Function(
-  CXType T,
-);
-
-typedef _dart_clang_isFunctionTypeVariadic = int Function(
-  CXType T,
-);
-
-typedef Native_clang_getCursorResultType = CXType Function(
-  CXCursor C,
-);
-
-typedef _dart_clang_getCursorResultType = CXType Function(
-  CXCursor C,
-);
-
-typedef Native_clang_getCursorExceptionSpecificationType = ffi.Int32 Function(
-  CXCursor C,
-);
-
-typedef _dart_clang_getCursorExceptionSpecificationType = int Function(
-  CXCursor C,
-);
-
-typedef Native_clang_isPODType = ffi.Uint32 Function(
-  CXType T,
-);
-
-typedef _dart_clang_isPODType = int Function(
-  CXType T,
-);
-
-typedef Native_clang_getElementType = CXType Function(
-  CXType T,
-);
-
-typedef _dart_clang_getElementType = CXType Function(
-  CXType T,
-);
-
-typedef Native_clang_getNumElements = ffi.Int64 Function(
-  CXType T,
-);
-
-typedef _dart_clang_getNumElements = int Function(
-  CXType T,
-);
-
-typedef Native_clang_getArrayElementType = CXType Function(
-  CXType T,
-);
-
-typedef _dart_clang_getArrayElementType = CXType Function(
-  CXType T,
-);
-
-typedef Native_clang_getArraySize = ffi.Int64 Function(
-  CXType T,
-);
-
-typedef _dart_clang_getArraySize = int Function(
-  CXType T,
-);
-
-typedef Native_clang_Type_getNamedType = CXType Function(
-  CXType T,
-);
-
-typedef _dart_clang_Type_getNamedType = CXType Function(
-  CXType T,
-);
-
-typedef Native_clang_Type_isTransparentTagTypedef = ffi.Uint32 Function(
-  CXType T,
-);
-
-typedef _dart_clang_Type_isTransparentTagTypedef = int Function(
-  CXType T,
-);
-
-typedef Native_clang_Type_getNullability = ffi.Int32 Function(
-  CXType T,
-);
-
-typedef _dart_clang_Type_getNullability = int Function(
-  CXType T,
-);
-
-typedef Native_clang_Type_getAlignOf = ffi.Int64 Function(
-  CXType T,
-);
-
-typedef _dart_clang_Type_getAlignOf = int Function(
-  CXType T,
-);
-
-typedef Native_clang_Type_getClassType = CXType Function(
-  CXType T,
-);
-
-typedef _dart_clang_Type_getClassType = CXType Function(
-  CXType T,
-);
-
-typedef Native_clang_Type_getSizeOf = ffi.Int64 Function(
-  CXType T,
-);
-
-typedef _dart_clang_Type_getSizeOf = int Function(
-  CXType T,
-);
-
-typedef Native_clang_Type_getOffsetOf = ffi.Int64 Function(
-  CXType T,
-  ffi.Pointer<ffi.Int8> S,
-);
-
-typedef _dart_clang_Type_getOffsetOf = int Function(
-  CXType T,
-  ffi.Pointer<ffi.Int8> S,
-);
-
-typedef Native_clang_Type_getModifiedType = CXType Function(
-  CXType T,
-);
-
-typedef _dart_clang_Type_getModifiedType = CXType Function(
-  CXType T,
-);
-
-typedef Native_clang_Cursor_getOffsetOfField = ffi.Int64 Function(
-  CXCursor C,
-);
-
-typedef _dart_clang_Cursor_getOffsetOfField = int Function(
-  CXCursor C,
-);
-
-typedef Native_clang_Cursor_isAnonymous = ffi.Uint32 Function(
-  CXCursor C,
-);
-
-typedef _dart_clang_Cursor_isAnonymous = int Function(
-  CXCursor C,
-);
-
-typedef Native_clang_Cursor_isAnonymousRecordDecl = ffi.Uint32 Function(
-  CXCursor C,
-);
-
-typedef _dart_clang_Cursor_isAnonymousRecordDecl = int Function(
-  CXCursor C,
-);
-
-typedef Native_clang_Cursor_isInlineNamespace = ffi.Uint32 Function(
-  CXCursor C,
-);
-
-typedef _dart_clang_Cursor_isInlineNamespace = int Function(
-  CXCursor C,
-);
-
-typedef Native_clang_Type_getNumTemplateArguments = ffi.Int32 Function(
-  CXType T,
-);
-
-typedef _dart_clang_Type_getNumTemplateArguments = int Function(
-  CXType T,
-);
-
-typedef Native_clang_Type_getTemplateArgumentAsType = CXType Function(
-  CXType T,
-  ffi.Uint32 i,
-);
-
-typedef _dart_clang_Type_getTemplateArgumentAsType = CXType Function(
-  CXType T,
-  int i,
-);
-
-typedef Native_clang_Type_getCXXRefQualifier = ffi.Int32 Function(
-  CXType T,
-);
-
-typedef _dart_clang_Type_getCXXRefQualifier = int Function(
-  CXType T,
-);
-
-typedef Native_clang_Cursor_isBitField = ffi.Uint32 Function(
-  CXCursor C,
-);
-
-typedef _dart_clang_Cursor_isBitField = int Function(
-  CXCursor C,
-);
-
-typedef Native_clang_isVirtualBase = ffi.Uint32 Function(
-  CXCursor arg0,
-);
-
-typedef _dart_clang_isVirtualBase = int Function(
-  CXCursor arg0,
-);
-
-typedef Native_clang_getCXXAccessSpecifier = ffi.Int32 Function(
-  CXCursor arg0,
-);
-
-typedef _dart_clang_getCXXAccessSpecifier = int Function(
-  CXCursor arg0,
-);
-
-typedef Native_clang_Cursor_getStorageClass = ffi.Int32 Function(
-  CXCursor arg0,
-);
-
-typedef _dart_clang_Cursor_getStorageClass = int Function(
-  CXCursor arg0,
-);
-
-typedef Native_clang_getNumOverloadedDecls = ffi.Uint32 Function(
-  CXCursor cursor,
-);
-
-typedef _dart_clang_getNumOverloadedDecls = int Function(
-  CXCursor cursor,
-);
-
-typedef Native_clang_getOverloadedDecl = CXCursor Function(
-  CXCursor cursor,
-  ffi.Uint32 index,
-);
-
-typedef _dart_clang_getOverloadedDecl = CXCursor Function(
-  CXCursor cursor,
-  int index,
-);
-
-typedef Native_clang_getIBOutletCollectionType = CXType Function(
-  CXCursor arg0,
-);
-
-typedef _dart_clang_getIBOutletCollectionType = CXType Function(
-  CXCursor arg0,
-);
-
-typedef CXCursorVisitor = ffi.Int32 Function(
-  CXCursor,
-  CXCursor,
-  ffi.Pointer<ffi.Void>,
-);
-
-typedef Native_clang_visitChildren = ffi.Uint32 Function(
-  CXCursor parent,
-  ffi.Pointer<ffi.NativeFunction<CXCursorVisitor>> visitor,
-  ffi.Pointer<ffi.Void> client_data,
-);
-
-typedef _dart_clang_visitChildren = int Function(
-  CXCursor parent,
-  ffi.Pointer<ffi.NativeFunction<CXCursorVisitor>> visitor,
-  ffi.Pointer<ffi.Void> client_data,
-);
-
-typedef Native_clang_getCursorUSR = CXString Function(
-  CXCursor arg0,
-);
-
-typedef _dart_clang_getCursorUSR = CXString Function(
-  CXCursor arg0,
-);
-
-typedef Native_clang_constructUSR_ObjCClass = CXString Function(
-  ffi.Pointer<ffi.Int8> class_name,
-);
-
-typedef _dart_clang_constructUSR_ObjCClass = CXString Function(
-  ffi.Pointer<ffi.Int8> class_name,
-);
-
-typedef Native_clang_constructUSR_ObjCCategory = CXString Function(
-  ffi.Pointer<ffi.Int8> class_name,
-  ffi.Pointer<ffi.Int8> category_name,
-);
-
-typedef _dart_clang_constructUSR_ObjCCategory = CXString Function(
-  ffi.Pointer<ffi.Int8> class_name,
-  ffi.Pointer<ffi.Int8> category_name,
-);
-
-typedef Native_clang_constructUSR_ObjCProtocol = CXString Function(
-  ffi.Pointer<ffi.Int8> protocol_name,
-);
-
-typedef _dart_clang_constructUSR_ObjCProtocol = CXString Function(
-  ffi.Pointer<ffi.Int8> protocol_name,
-);
-
-typedef Native_clang_constructUSR_ObjCIvar = CXString Function(
-  ffi.Pointer<ffi.Int8> name,
-  CXString classUSR,
-);
-
-typedef _dart_clang_constructUSR_ObjCIvar = CXString Function(
-  ffi.Pointer<ffi.Int8> name,
-  CXString classUSR,
-);
-
-typedef Native_clang_constructUSR_ObjCMethod = CXString Function(
-  ffi.Pointer<ffi.Int8> name,
-  ffi.Uint32 isInstanceMethod,
-  CXString classUSR,
-);
-
-typedef _dart_clang_constructUSR_ObjCMethod = CXString Function(
-  ffi.Pointer<ffi.Int8> name,
-  int isInstanceMethod,
-  CXString classUSR,
-);
-
-typedef Native_clang_constructUSR_ObjCProperty = CXString Function(
-  ffi.Pointer<ffi.Int8> property,
-  CXString classUSR,
-);
-
-typedef _dart_clang_constructUSR_ObjCProperty = CXString Function(
-  ffi.Pointer<ffi.Int8> property,
-  CXString classUSR,
-);
-
-typedef Native_clang_getCursorSpelling = CXString Function(
-  CXCursor arg0,
-);
-
-typedef _dart_clang_getCursorSpelling = CXString Function(
-  CXCursor arg0,
-);
-
-typedef Native_clang_Cursor_getSpellingNameRange = CXSourceRange Function(
-  CXCursor arg0,
-  ffi.Uint32 pieceIndex,
-  ffi.Uint32 options,
-);
-
-typedef _dart_clang_Cursor_getSpellingNameRange = CXSourceRange Function(
-  CXCursor arg0,
-  int pieceIndex,
-  int options,
-);
-
-typedef Native_clang_PrintingPolicy_getProperty = ffi.Uint32 Function(
-  ffi.Pointer<ffi.Void> Policy,
-  ffi.Int32 Property,
-);
-
-typedef _dart_clang_PrintingPolicy_getProperty = int Function(
-  ffi.Pointer<ffi.Void> Policy,
-  int Property,
-);
-
-typedef Native_clang_PrintingPolicy_setProperty = ffi.Void Function(
-  ffi.Pointer<ffi.Void> Policy,
-  ffi.Int32 Property,
-  ffi.Uint32 Value,
-);
-
-typedef _dart_clang_PrintingPolicy_setProperty = void Function(
-  ffi.Pointer<ffi.Void> Policy,
-  int Property,
-  int Value,
-);
-
-typedef Native_clang_getCursorPrintingPolicy = ffi.Pointer<ffi.Void> Function(
-  CXCursor arg0,
-);
-
-typedef _dart_clang_getCursorPrintingPolicy = ffi.Pointer<ffi.Void> Function(
-  CXCursor arg0,
-);
-
-typedef Native_clang_PrintingPolicy_dispose = ffi.Void Function(
-  ffi.Pointer<ffi.Void> Policy,
-);
-
-typedef _dart_clang_PrintingPolicy_dispose = void Function(
-  ffi.Pointer<ffi.Void> Policy,
-);
-
-typedef Native_clang_getCursorPrettyPrinted = CXString Function(
-  CXCursor Cursor,
-  ffi.Pointer<ffi.Void> Policy,
-);
-
-typedef _dart_clang_getCursorPrettyPrinted = CXString Function(
-  CXCursor Cursor,
-  ffi.Pointer<ffi.Void> Policy,
-);
-
-typedef Native_clang_getCursorDisplayName = CXString Function(
-  CXCursor arg0,
-);
-
-typedef _dart_clang_getCursorDisplayName = CXString Function(
-  CXCursor arg0,
-);
-
-typedef Native_clang_getCursorReferenced = CXCursor Function(
-  CXCursor arg0,
-);
-
-typedef _dart_clang_getCursorReferenced = CXCursor Function(
-  CXCursor arg0,
-);
-
-typedef Native_clang_getCursorDefinition = CXCursor Function(
-  CXCursor arg0,
-);
-
-typedef _dart_clang_getCursorDefinition = CXCursor Function(
-  CXCursor arg0,
-);
-
-typedef Native_clang_isCursorDefinition = ffi.Uint32 Function(
-  CXCursor arg0,
-);
-
-typedef _dart_clang_isCursorDefinition = int Function(
-  CXCursor arg0,
-);
-
-typedef Native_clang_getCanonicalCursor = CXCursor Function(
-  CXCursor arg0,
-);
-
-typedef _dart_clang_getCanonicalCursor = CXCursor Function(
-  CXCursor arg0,
-);
-
-typedef Native_clang_Cursor_getObjCSelectorIndex = ffi.Int32 Function(
-  CXCursor arg0,
-);
-
-typedef _dart_clang_Cursor_getObjCSelectorIndex = int Function(
-  CXCursor arg0,
-);
-
-typedef Native_clang_Cursor_isDynamicCall = ffi.Int32 Function(
-  CXCursor C,
-);
-
-typedef _dart_clang_Cursor_isDynamicCall = int Function(
-  CXCursor C,
-);
-
-typedef Native_clang_Cursor_getReceiverType = CXType Function(
-  CXCursor C,
-);
-
-typedef _dart_clang_Cursor_getReceiverType = CXType Function(
-  CXCursor C,
-);
-
-typedef Native_clang_Cursor_getObjCPropertyAttributes = ffi.Uint32 Function(
-  CXCursor C,
-  ffi.Uint32 reserved,
-);
-
-typedef _dart_clang_Cursor_getObjCPropertyAttributes = int Function(
-  CXCursor C,
-  int reserved,
-);
-
-typedef Native_clang_Cursor_getObjCPropertyGetterName = CXString Function(
-  CXCursor C,
-);
-
-typedef _dart_clang_Cursor_getObjCPropertyGetterName = CXString Function(
-  CXCursor C,
-);
-
-typedef Native_clang_Cursor_getObjCPropertySetterName = CXString Function(
-  CXCursor C,
-);
-
-typedef _dart_clang_Cursor_getObjCPropertySetterName = CXString Function(
-  CXCursor C,
-);
-
-typedef Native_clang_Cursor_getObjCDeclQualifiers = ffi.Uint32 Function(
-  CXCursor C,
-);
-
-typedef _dart_clang_Cursor_getObjCDeclQualifiers = int Function(
-  CXCursor C,
-);
-
-typedef Native_clang_Cursor_isObjCOptional = ffi.Uint32 Function(
-  CXCursor C,
-);
-
-typedef _dart_clang_Cursor_isObjCOptional = int Function(
-  CXCursor C,
-);
-
-typedef Native_clang_Cursor_isVariadic = ffi.Uint32 Function(
-  CXCursor C,
-);
-
-typedef _dart_clang_Cursor_isVariadic = int Function(
-  CXCursor C,
-);
-
-typedef Native_clang_Cursor_isExternalSymbol = ffi.Uint32 Function(
-  CXCursor C,
-  ffi.Pointer<CXString> language,
-  ffi.Pointer<CXString> definedIn,
-  ffi.Pointer<ffi.Uint32> isGenerated,
-);
-
-typedef _dart_clang_Cursor_isExternalSymbol = int Function(
-  CXCursor C,
-  ffi.Pointer<CXString> language,
-  ffi.Pointer<CXString> definedIn,
-  ffi.Pointer<ffi.Uint32> isGenerated,
-);
-
-typedef Native_clang_Cursor_getCommentRange = CXSourceRange Function(
-  CXCursor C,
-);
-
-typedef _dart_clang_Cursor_getCommentRange = CXSourceRange Function(
-  CXCursor C,
-);
-
-typedef Native_clang_Cursor_getRawCommentText = CXString Function(
-  CXCursor C,
-);
-
-typedef _dart_clang_Cursor_getRawCommentText = CXString Function(
-  CXCursor C,
-);
-
-typedef Native_clang_Cursor_getBriefCommentText = CXString Function(
-  CXCursor C,
-);
-
-typedef _dart_clang_Cursor_getBriefCommentText = CXString Function(
-  CXCursor C,
-);
-
-typedef Native_clang_Cursor_getMangling = CXString Function(
-  CXCursor arg0,
-);
-
-typedef _dart_clang_Cursor_getMangling = CXString Function(
-  CXCursor arg0,
-);
-
-typedef Native_clang_Cursor_getCXXManglings = ffi.Pointer<CXStringSet> Function(
-  CXCursor arg0,
-);
-
-typedef _dart_clang_Cursor_getCXXManglings = ffi.Pointer<CXStringSet> Function(
-  CXCursor arg0,
-);
-
-typedef Native_clang_Cursor_getObjCManglings = ffi.Pointer<CXStringSet>
-    Function(
-  CXCursor arg0,
-);
-
-typedef _dart_clang_Cursor_getObjCManglings = ffi.Pointer<CXStringSet> Function(
-  CXCursor arg0,
-);
-
-typedef Native_clang_Cursor_getModule = ffi.Pointer<ffi.Void> Function(
-  CXCursor C,
-);
-
-typedef _dart_clang_Cursor_getModule = ffi.Pointer<ffi.Void> Function(
-  CXCursor C,
-);
-
-typedef Native_clang_getModuleForFile = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<CXTranslationUnitImpl> arg0,
-  ffi.Pointer<ffi.Void> arg1,
-);
-
-typedef _dart_clang_getModuleForFile = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<CXTranslationUnitImpl> arg0,
-  ffi.Pointer<ffi.Void> arg1,
-);
-
-typedef Native_clang_Module_getASTFile = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<ffi.Void> Module,
-);
-
-typedef _dart_clang_Module_getASTFile = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<ffi.Void> Module,
-);
-
-typedef Native_clang_Module_getParent = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<ffi.Void> Module,
-);
-
-typedef _dart_clang_Module_getParent = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<ffi.Void> Module,
-);
-
-typedef Native_clang_Module_getName = CXString Function(
-  ffi.Pointer<ffi.Void> Module,
-);
-
-typedef _dart_clang_Module_getName = CXString Function(
-  ffi.Pointer<ffi.Void> Module,
-);
-
-typedef Native_clang_Module_getFullName = CXString Function(
-  ffi.Pointer<ffi.Void> Module,
-);
-
-typedef _dart_clang_Module_getFullName = CXString Function(
-  ffi.Pointer<ffi.Void> Module,
-);
-
-typedef Native_clang_Module_isSystem = ffi.Int32 Function(
-  ffi.Pointer<ffi.Void> Module,
-);
-
-typedef _dart_clang_Module_isSystem = int Function(
-  ffi.Pointer<ffi.Void> Module,
-);
-
-typedef Native_clang_Module_getNumTopLevelHeaders = ffi.Uint32 Function(
-  ffi.Pointer<CXTranslationUnitImpl> arg0,
-  ffi.Pointer<ffi.Void> Module,
-);
-
-typedef _dart_clang_Module_getNumTopLevelHeaders = int Function(
-  ffi.Pointer<CXTranslationUnitImpl> arg0,
-  ffi.Pointer<ffi.Void> Module,
-);
-
-typedef Native_clang_Module_getTopLevelHeader = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<CXTranslationUnitImpl> arg0,
-  ffi.Pointer<ffi.Void> Module,
-  ffi.Uint32 Index,
-);
-
-typedef _dart_clang_Module_getTopLevelHeader = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<CXTranslationUnitImpl> arg0,
-  ffi.Pointer<ffi.Void> Module,
-  int Index,
-);
-
-typedef Native_clang_CXXConstructor_isConvertingConstructor = ffi.Uint32
-    Function(
-  CXCursor C,
-);
-
-typedef _dart_clang_CXXConstructor_isConvertingConstructor = int Function(
-  CXCursor C,
-);
-
-typedef Native_clang_CXXConstructor_isCopyConstructor = ffi.Uint32 Function(
-  CXCursor C,
-);
-
-typedef _dart_clang_CXXConstructor_isCopyConstructor = int Function(
-  CXCursor C,
-);
-
-typedef Native_clang_CXXConstructor_isDefaultConstructor = ffi.Uint32 Function(
-  CXCursor C,
-);
-
-typedef _dart_clang_CXXConstructor_isDefaultConstructor = int Function(
-  CXCursor C,
-);
-
-typedef Native_clang_CXXConstructor_isMoveConstructor = ffi.Uint32 Function(
-  CXCursor C,
-);
-
-typedef _dart_clang_CXXConstructor_isMoveConstructor = int Function(
-  CXCursor C,
-);
-
-typedef Native_clang_CXXField_isMutable = ffi.Uint32 Function(
-  CXCursor C,
-);
-
-typedef _dart_clang_CXXField_isMutable = int Function(
-  CXCursor C,
-);
-
-typedef Native_clang_CXXMethod_isDefaulted = ffi.Uint32 Function(
-  CXCursor C,
-);
-
-typedef _dart_clang_CXXMethod_isDefaulted = int Function(
-  CXCursor C,
-);
-
-typedef Native_clang_CXXMethod_isPureVirtual = ffi.Uint32 Function(
-  CXCursor C,
-);
-
-typedef _dart_clang_CXXMethod_isPureVirtual = int Function(
-  CXCursor C,
-);
-
-typedef Native_clang_CXXMethod_isStatic = ffi.Uint32 Function(
-  CXCursor C,
-);
-
-typedef _dart_clang_CXXMethod_isStatic = int Function(
-  CXCursor C,
-);
-
-typedef Native_clang_CXXMethod_isVirtual = ffi.Uint32 Function(
-  CXCursor C,
-);
-
-typedef _dart_clang_CXXMethod_isVirtual = int Function(
-  CXCursor C,
-);
-
-typedef Native_clang_CXXRecord_isAbstract = ffi.Uint32 Function(
-  CXCursor C,
-);
-
-typedef _dart_clang_CXXRecord_isAbstract = int Function(
-  CXCursor C,
-);
-
-typedef Native_clang_EnumDecl_isScoped = ffi.Uint32 Function(
-  CXCursor C,
-);
-
-typedef _dart_clang_EnumDecl_isScoped = int Function(
-  CXCursor C,
-);
-
-typedef Native_clang_CXXMethod_isConst = ffi.Uint32 Function(
-  CXCursor C,
-);
-
-typedef _dart_clang_CXXMethod_isConst = int Function(
-  CXCursor C,
-);
-
-typedef Native_clang_getTemplateCursorKind = ffi.Int32 Function(
-  CXCursor C,
-);
-
-typedef _dart_clang_getTemplateCursorKind = int Function(
-  CXCursor C,
-);
-
-typedef Native_clang_getSpecializedCursorTemplate = CXCursor Function(
-  CXCursor C,
-);
-
-typedef _dart_clang_getSpecializedCursorTemplate = CXCursor Function(
-  CXCursor C,
-);
-
-typedef Native_clang_getCursorReferenceNameRange = CXSourceRange Function(
-  CXCursor C,
-  ffi.Uint32 NameFlags,
-  ffi.Uint32 PieceIndex,
-);
-
-typedef _dart_clang_getCursorReferenceNameRange = CXSourceRange Function(
-  CXCursor C,
-  int NameFlags,
-  int PieceIndex,
-);
-
-typedef Native_clang_getToken = ffi.Pointer<CXToken> Function(
-  ffi.Pointer<CXTranslationUnitImpl> TU,
-  CXSourceLocation Location,
-);
-
-typedef _dart_clang_getToken = ffi.Pointer<CXToken> Function(
-  ffi.Pointer<CXTranslationUnitImpl> TU,
-  CXSourceLocation Location,
-);
-
-typedef Native_clang_getTokenKind = ffi.Int32 Function(
-  CXToken arg0,
-);
-
-typedef _dart_clang_getTokenKind = int Function(
-  CXToken arg0,
-);
-
-typedef Native_clang_getTokenSpelling = CXString Function(
-  ffi.Pointer<CXTranslationUnitImpl> arg0,
-  CXToken arg1,
-);
-
-typedef _dart_clang_getTokenSpelling = CXString Function(
-  ffi.Pointer<CXTranslationUnitImpl> arg0,
-  CXToken arg1,
-);
-
-typedef Native_clang_getTokenLocation = CXSourceLocation Function(
-  ffi.Pointer<CXTranslationUnitImpl> arg0,
-  CXToken arg1,
-);
-
-typedef _dart_clang_getTokenLocation = CXSourceLocation Function(
-  ffi.Pointer<CXTranslationUnitImpl> arg0,
-  CXToken arg1,
-);
-
-typedef Native_clang_getTokenExtent = CXSourceRange Function(
-  ffi.Pointer<CXTranslationUnitImpl> arg0,
-  CXToken arg1,
-);
-
-typedef _dart_clang_getTokenExtent = CXSourceRange Function(
-  ffi.Pointer<CXTranslationUnitImpl> arg0,
-  CXToken arg1,
-);
-
-typedef Native_clang_tokenize = ffi.Void Function(
-  ffi.Pointer<CXTranslationUnitImpl> TU,
-  CXSourceRange Range,
-  ffi.Pointer<ffi.Pointer<CXToken>> Tokens,
-  ffi.Pointer<ffi.Uint32> NumTokens,
-);
-
-typedef _dart_clang_tokenize = void Function(
-  ffi.Pointer<CXTranslationUnitImpl> TU,
-  CXSourceRange Range,
-  ffi.Pointer<ffi.Pointer<CXToken>> Tokens,
-  ffi.Pointer<ffi.Uint32> NumTokens,
-);
-
-typedef Native_clang_annotateTokens = ffi.Void Function(
-  ffi.Pointer<CXTranslationUnitImpl> TU,
-  ffi.Pointer<CXToken> Tokens,
-  ffi.Uint32 NumTokens,
-  ffi.Pointer<CXCursor> Cursors,
-);
-
-typedef _dart_clang_annotateTokens = void Function(
-  ffi.Pointer<CXTranslationUnitImpl> TU,
-  ffi.Pointer<CXToken> Tokens,
-  int NumTokens,
-  ffi.Pointer<CXCursor> Cursors,
-);
-
-typedef Native_clang_disposeTokens = ffi.Void Function(
-  ffi.Pointer<CXTranslationUnitImpl> TU,
-  ffi.Pointer<CXToken> Tokens,
-  ffi.Uint32 NumTokens,
-);
-
-typedef _dart_clang_disposeTokens = void Function(
-  ffi.Pointer<CXTranslationUnitImpl> TU,
-  ffi.Pointer<CXToken> Tokens,
-  int NumTokens,
-);
-
-typedef Native_clang_getCursorKindSpelling = CXString Function(
-  ffi.Int32 Kind,
-);
-
-typedef _dart_clang_getCursorKindSpelling = CXString Function(
-  int Kind,
-);
-
-typedef Native_clang_getDefinitionSpellingAndExtent = ffi.Void Function(
-  CXCursor arg0,
-  ffi.Pointer<ffi.Pointer<ffi.Int8>> startBuf,
-  ffi.Pointer<ffi.Pointer<ffi.Int8>> endBuf,
-  ffi.Pointer<ffi.Uint32> startLine,
-  ffi.Pointer<ffi.Uint32> startColumn,
-  ffi.Pointer<ffi.Uint32> endLine,
-  ffi.Pointer<ffi.Uint32> endColumn,
-);
-
-typedef _dart_clang_getDefinitionSpellingAndExtent = void Function(
-  CXCursor arg0,
-  ffi.Pointer<ffi.Pointer<ffi.Int8>> startBuf,
-  ffi.Pointer<ffi.Pointer<ffi.Int8>> endBuf,
-  ffi.Pointer<ffi.Uint32> startLine,
-  ffi.Pointer<ffi.Uint32> startColumn,
-  ffi.Pointer<ffi.Uint32> endLine,
-  ffi.Pointer<ffi.Uint32> endColumn,
-);
-
-typedef Native_clang_enableStackTraces = ffi.Void Function();
-
-typedef _dart_clang_enableStackTraces = void Function();
-
-typedef _typedefC_1 = ffi.Void Function(
-  ffi.Pointer<ffi.Void>,
-);
-
-typedef Native_clang_executeOnThread = ffi.Void Function(
-  ffi.Pointer<ffi.NativeFunction<_typedefC_1>> fn,
-  ffi.Pointer<ffi.Void> user_data,
-  ffi.Uint32 stack_size,
-);
-
-typedef _dart_clang_executeOnThread = void Function(
-  ffi.Pointer<ffi.NativeFunction<_typedefC_1>> fn,
-  ffi.Pointer<ffi.Void> user_data,
-  int stack_size,
-);
-
-typedef Native_clang_getCompletionChunkKind = ffi.Int32 Function(
-  ffi.Pointer<ffi.Void> completion_string,
-  ffi.Uint32 chunk_number,
-);
-
-typedef _dart_clang_getCompletionChunkKind = int Function(
-  ffi.Pointer<ffi.Void> completion_string,
-  int chunk_number,
-);
-
-typedef Native_clang_getCompletionChunkText = CXString Function(
-  ffi.Pointer<ffi.Void> completion_string,
-  ffi.Uint32 chunk_number,
-);
-
-typedef _dart_clang_getCompletionChunkText = CXString Function(
-  ffi.Pointer<ffi.Void> completion_string,
-  int chunk_number,
-);
-
-typedef Native_clang_getCompletionChunkCompletionString = ffi.Pointer<ffi.Void>
-    Function(
-  ffi.Pointer<ffi.Void> completion_string,
-  ffi.Uint32 chunk_number,
-);
-
-typedef _dart_clang_getCompletionChunkCompletionString = ffi.Pointer<ffi.Void>
-    Function(
-  ffi.Pointer<ffi.Void> completion_string,
-  int chunk_number,
-);
-
-typedef Native_clang_getNumCompletionChunks = ffi.Uint32 Function(
-  ffi.Pointer<ffi.Void> completion_string,
-);
-
-typedef _dart_clang_getNumCompletionChunks = int Function(
-  ffi.Pointer<ffi.Void> completion_string,
-);
-
-typedef Native_clang_getCompletionPriority = ffi.Uint32 Function(
-  ffi.Pointer<ffi.Void> completion_string,
-);
-
-typedef _dart_clang_getCompletionPriority = int Function(
-  ffi.Pointer<ffi.Void> completion_string,
-);
-
-typedef Native_clang_getCompletionAvailability = ffi.Int32 Function(
-  ffi.Pointer<ffi.Void> completion_string,
-);
-
-typedef _dart_clang_getCompletionAvailability = int Function(
-  ffi.Pointer<ffi.Void> completion_string,
-);
-
-typedef Native_clang_getCompletionNumAnnotations = ffi.Uint32 Function(
-  ffi.Pointer<ffi.Void> completion_string,
-);
-
-typedef _dart_clang_getCompletionNumAnnotations = int Function(
-  ffi.Pointer<ffi.Void> completion_string,
-);
-
-typedef Native_clang_getCompletionAnnotation = CXString Function(
-  ffi.Pointer<ffi.Void> completion_string,
-  ffi.Uint32 annotation_number,
-);
-
-typedef _dart_clang_getCompletionAnnotation = CXString Function(
-  ffi.Pointer<ffi.Void> completion_string,
-  int annotation_number,
-);
-
-typedef Native_clang_getCompletionParent = CXString Function(
-  ffi.Pointer<ffi.Void> completion_string,
-  ffi.Pointer<ffi.Int32> kind,
-);
-
-typedef _dart_clang_getCompletionParent = CXString Function(
-  ffi.Pointer<ffi.Void> completion_string,
-  ffi.Pointer<ffi.Int32> kind,
-);
-
-typedef Native_clang_getCompletionBriefComment = CXString Function(
-  ffi.Pointer<ffi.Void> completion_string,
-);
-
-typedef _dart_clang_getCompletionBriefComment = CXString Function(
-  ffi.Pointer<ffi.Void> completion_string,
-);
-
-typedef Native_clang_getCursorCompletionString = ffi.Pointer<ffi.Void> Function(
-  CXCursor cursor,
-);
-
-typedef _dart_clang_getCursorCompletionString = ffi.Pointer<ffi.Void> Function(
-  CXCursor cursor,
-);
-
-typedef Native_clang_getCompletionNumFixIts = ffi.Uint32 Function(
-  ffi.Pointer<CXCodeCompleteResults> results,
-  ffi.Uint32 completion_index,
-);
-
-typedef _dart_clang_getCompletionNumFixIts = int Function(
-  ffi.Pointer<CXCodeCompleteResults> results,
-  int completion_index,
-);
-
-typedef Native_clang_getCompletionFixIt = CXString Function(
-  ffi.Pointer<CXCodeCompleteResults> results,
-  ffi.Uint32 completion_index,
-  ffi.Uint32 fixit_index,
-  ffi.Pointer<CXSourceRange> replacement_range,
-);
-
-typedef _dart_clang_getCompletionFixIt = CXString Function(
-  ffi.Pointer<CXCodeCompleteResults> results,
-  int completion_index,
-  int fixit_index,
-  ffi.Pointer<CXSourceRange> replacement_range,
-);
-
-typedef Native_clang_defaultCodeCompleteOptions = ffi.Uint32 Function();
-
-typedef _dart_clang_defaultCodeCompleteOptions = int Function();
-
-typedef Native_clang_codeCompleteAt = ffi.Pointer<CXCodeCompleteResults>
-    Function(
-  ffi.Pointer<CXTranslationUnitImpl> TU,
-  ffi.Pointer<ffi.Int8> complete_filename,
-  ffi.Uint32 complete_line,
-  ffi.Uint32 complete_column,
-  ffi.Pointer<CXUnsavedFile> unsaved_files,
-  ffi.Uint32 num_unsaved_files,
-  ffi.Uint32 options,
-);
-
-typedef _dart_clang_codeCompleteAt = ffi.Pointer<CXCodeCompleteResults>
-    Function(
-  ffi.Pointer<CXTranslationUnitImpl> TU,
-  ffi.Pointer<ffi.Int8> complete_filename,
-  int complete_line,
-  int complete_column,
-  ffi.Pointer<CXUnsavedFile> unsaved_files,
-  int num_unsaved_files,
-  int options,
-);
-
-typedef Native_clang_sortCodeCompletionResults = ffi.Void Function(
-  ffi.Pointer<CXCompletionResult> Results,
-  ffi.Uint32 NumResults,
-);
-
-typedef _dart_clang_sortCodeCompletionResults = void Function(
-  ffi.Pointer<CXCompletionResult> Results,
-  int NumResults,
-);
-
-typedef Native_clang_disposeCodeCompleteResults = ffi.Void Function(
-  ffi.Pointer<CXCodeCompleteResults> Results,
-);
-
-typedef _dart_clang_disposeCodeCompleteResults = void Function(
-  ffi.Pointer<CXCodeCompleteResults> Results,
-);
-
-typedef Native_clang_codeCompleteGetNumDiagnostics = ffi.Uint32 Function(
-  ffi.Pointer<CXCodeCompleteResults> Results,
-);
-
-typedef _dart_clang_codeCompleteGetNumDiagnostics = int Function(
-  ffi.Pointer<CXCodeCompleteResults> Results,
-);
-
-typedef Native_clang_codeCompleteGetDiagnostic = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<CXCodeCompleteResults> Results,
-  ffi.Uint32 Index,
-);
-
-typedef _dart_clang_codeCompleteGetDiagnostic = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<CXCodeCompleteResults> Results,
-  int Index,
-);
-
-typedef Native_clang_codeCompleteGetContexts = ffi.Uint64 Function(
-  ffi.Pointer<CXCodeCompleteResults> Results,
-);
-
-typedef _dart_clang_codeCompleteGetContexts = int Function(
-  ffi.Pointer<CXCodeCompleteResults> Results,
-);
-
-typedef Native_clang_codeCompleteGetContainerKind = ffi.Int32 Function(
-  ffi.Pointer<CXCodeCompleteResults> Results,
-  ffi.Pointer<ffi.Uint32> IsIncomplete,
-);
-
-typedef _dart_clang_codeCompleteGetContainerKind = int Function(
-  ffi.Pointer<CXCodeCompleteResults> Results,
-  ffi.Pointer<ffi.Uint32> IsIncomplete,
-);
-
-typedef Native_clang_codeCompleteGetContainerUSR = CXString Function(
-  ffi.Pointer<CXCodeCompleteResults> Results,
-);
-
-typedef _dart_clang_codeCompleteGetContainerUSR = CXString Function(
-  ffi.Pointer<CXCodeCompleteResults> Results,
-);
-
-typedef Native_clang_codeCompleteGetObjCSelector = CXString Function(
-  ffi.Pointer<CXCodeCompleteResults> Results,
-);
-
-typedef _dart_clang_codeCompleteGetObjCSelector = CXString Function(
-  ffi.Pointer<CXCodeCompleteResults> Results,
-);
-
-typedef Native_clang_getClangVersion = CXString Function();
-
-typedef _dart_clang_getClangVersion = CXString Function();
-
-typedef Native_clang_toggleCrashRecovery = ffi.Void Function(
-  ffi.Uint32 isEnabled,
-);
-
-typedef _dart_clang_toggleCrashRecovery = void Function(
-  int isEnabled,
-);
-
-typedef CXInclusionVisitor = ffi.Void Function(
-  ffi.Pointer<ffi.Void>,
-  ffi.Pointer<CXSourceLocation>,
-  ffi.Uint32,
-  ffi.Pointer<ffi.Void>,
-);
-
-typedef Native_clang_getInclusions = ffi.Void Function(
-  ffi.Pointer<CXTranslationUnitImpl> tu,
-  ffi.Pointer<ffi.NativeFunction<CXInclusionVisitor>> visitor,
-  ffi.Pointer<ffi.Void> client_data,
-);
-
-typedef _dart_clang_getInclusions = void Function(
-  ffi.Pointer<CXTranslationUnitImpl> tu,
-  ffi.Pointer<ffi.NativeFunction<CXInclusionVisitor>> visitor,
-  ffi.Pointer<ffi.Void> client_data,
-);
-
-typedef Native_clang_Cursor_Evaluate = ffi.Pointer<ffi.Void> Function(
-  CXCursor C,
-);
-
-typedef _dart_clang_Cursor_Evaluate = ffi.Pointer<ffi.Void> Function(
-  CXCursor C,
-);
-
-typedef Native_clang_EvalResult_getKind = ffi.Int32 Function(
-  ffi.Pointer<ffi.Void> E,
-);
-
-typedef _dart_clang_EvalResult_getKind = int Function(
-  ffi.Pointer<ffi.Void> E,
-);
-
-typedef Native_clang_EvalResult_getAsInt = ffi.Int32 Function(
-  ffi.Pointer<ffi.Void> E,
-);
-
-typedef _dart_clang_EvalResult_getAsInt = int Function(
-  ffi.Pointer<ffi.Void> E,
-);
-
-typedef Native_clang_EvalResult_getAsLongLong = ffi.Int64 Function(
-  ffi.Pointer<ffi.Void> E,
-);
-
-typedef _dart_clang_EvalResult_getAsLongLong = int Function(
-  ffi.Pointer<ffi.Void> E,
-);
-
-typedef Native_clang_EvalResult_isUnsignedInt = ffi.Uint32 Function(
-  ffi.Pointer<ffi.Void> E,
-);
-
-typedef _dart_clang_EvalResult_isUnsignedInt = int Function(
-  ffi.Pointer<ffi.Void> E,
-);
-
-typedef Native_clang_EvalResult_getAsUnsigned = ffi.Uint64 Function(
-  ffi.Pointer<ffi.Void> E,
-);
-
-typedef _dart_clang_EvalResult_getAsUnsigned = int Function(
-  ffi.Pointer<ffi.Void> E,
-);
-
-typedef Native_clang_EvalResult_getAsDouble = ffi.Double Function(
-  ffi.Pointer<ffi.Void> E,
-);
-
-typedef _dart_clang_EvalResult_getAsDouble = double Function(
-  ffi.Pointer<ffi.Void> E,
-);
-
-typedef Native_clang_EvalResult_getAsStr = ffi.Pointer<ffi.Int8> Function(
-  ffi.Pointer<ffi.Void> E,
-);
-
-typedef _dart_clang_EvalResult_getAsStr = ffi.Pointer<ffi.Int8> Function(
-  ffi.Pointer<ffi.Void> E,
-);
-
-typedef Native_clang_EvalResult_dispose = ffi.Void Function(
-  ffi.Pointer<ffi.Void> E,
-);
-
-typedef _dart_clang_EvalResult_dispose = void Function(
-  ffi.Pointer<ffi.Void> E,
-);
-
-typedef Native_clang_getRemappings = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<ffi.Int8> path,
-);
-
-typedef _dart_clang_getRemappings = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<ffi.Int8> path,
-);
-
-typedef Native_clang_getRemappingsFromFileList = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<ffi.Pointer<ffi.Int8>> filePaths,
-  ffi.Uint32 numFiles,
-);
-
-typedef _dart_clang_getRemappingsFromFileList = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<ffi.Pointer<ffi.Int8>> filePaths,
-  int numFiles,
-);
-
-typedef Native_clang_remap_getNumFiles = ffi.Uint32 Function(
-  ffi.Pointer<ffi.Void> arg0,
-);
-
-typedef _dart_clang_remap_getNumFiles = int Function(
-  ffi.Pointer<ffi.Void> arg0,
-);
-
-typedef Native_clang_remap_getFilenames = ffi.Void Function(
-  ffi.Pointer<ffi.Void> arg0,
-  ffi.Uint32 index,
-  ffi.Pointer<CXString> original,
-  ffi.Pointer<CXString> transformed,
-);
-
-typedef _dart_clang_remap_getFilenames = void Function(
-  ffi.Pointer<ffi.Void> arg0,
-  int index,
-  ffi.Pointer<CXString> original,
-  ffi.Pointer<CXString> transformed,
-);
-
-typedef Native_clang_remap_dispose = ffi.Void Function(
-  ffi.Pointer<ffi.Void> arg0,
-);
-
-typedef _dart_clang_remap_dispose = void Function(
-  ffi.Pointer<ffi.Void> arg0,
-);
-
-typedef Native_clang_findReferencesInFile = ffi.Int32 Function(
-  CXCursor cursor,
-  ffi.Pointer<ffi.Void> file,
-  CXCursorAndRangeVisitor visitor,
-);
-
-typedef _dart_clang_findReferencesInFile = int Function(
-  CXCursor cursor,
-  ffi.Pointer<ffi.Void> file,
-  CXCursorAndRangeVisitor visitor,
-);
-
-typedef Native_clang_findIncludesInFile = ffi.Int32 Function(
-  ffi.Pointer<CXTranslationUnitImpl> TU,
-  ffi.Pointer<ffi.Void> file,
-  CXCursorAndRangeVisitor visitor,
-);
-
-typedef _dart_clang_findIncludesInFile = int Function(
-  ffi.Pointer<CXTranslationUnitImpl> TU,
-  ffi.Pointer<ffi.Void> file,
-  CXCursorAndRangeVisitor visitor,
-);
-
-typedef Native_clang_index_isEntityObjCContainerKind = ffi.Int32 Function(
-  ffi.Int32 arg0,
-);
-
-typedef _dart_clang_index_isEntityObjCContainerKind = int Function(
-  int arg0,
-);
-
-typedef Native_clang_index_getObjCContainerDeclInfo
-    = ffi.Pointer<CXIdxObjCContainerDeclInfo> Function(
-  ffi.Pointer<CXIdxDeclInfo> arg0,
-);
-
-typedef _dart_clang_index_getObjCContainerDeclInfo
-    = ffi.Pointer<CXIdxObjCContainerDeclInfo> Function(
-  ffi.Pointer<CXIdxDeclInfo> arg0,
-);
-
-typedef Native_clang_index_getObjCInterfaceDeclInfo
-    = ffi.Pointer<CXIdxObjCInterfaceDeclInfo> Function(
-  ffi.Pointer<CXIdxDeclInfo> arg0,
-);
-
-typedef _dart_clang_index_getObjCInterfaceDeclInfo
-    = ffi.Pointer<CXIdxObjCInterfaceDeclInfo> Function(
-  ffi.Pointer<CXIdxDeclInfo> arg0,
-);
-
-typedef Native_clang_index_getObjCCategoryDeclInfo
-    = ffi.Pointer<CXIdxObjCCategoryDeclInfo> Function(
-  ffi.Pointer<CXIdxDeclInfo> arg0,
-);
-
-typedef _dart_clang_index_getObjCCategoryDeclInfo
-    = ffi.Pointer<CXIdxObjCCategoryDeclInfo> Function(
-  ffi.Pointer<CXIdxDeclInfo> arg0,
-);
-
-typedef Native_clang_index_getObjCProtocolRefListInfo
-    = ffi.Pointer<CXIdxObjCProtocolRefListInfo> Function(
-  ffi.Pointer<CXIdxDeclInfo> arg0,
-);
-
-typedef _dart_clang_index_getObjCProtocolRefListInfo
-    = ffi.Pointer<CXIdxObjCProtocolRefListInfo> Function(
-  ffi.Pointer<CXIdxDeclInfo> arg0,
-);
-
-typedef Native_clang_index_getObjCPropertyDeclInfo
-    = ffi.Pointer<CXIdxObjCPropertyDeclInfo> Function(
-  ffi.Pointer<CXIdxDeclInfo> arg0,
-);
-
-typedef _dart_clang_index_getObjCPropertyDeclInfo
-    = ffi.Pointer<CXIdxObjCPropertyDeclInfo> Function(
-  ffi.Pointer<CXIdxDeclInfo> arg0,
-);
-
-typedef Native_clang_index_getIBOutletCollectionAttrInfo
-    = ffi.Pointer<CXIdxIBOutletCollectionAttrInfo> Function(
-  ffi.Pointer<CXIdxAttrInfo> arg0,
-);
-
-typedef _dart_clang_index_getIBOutletCollectionAttrInfo
-    = ffi.Pointer<CXIdxIBOutletCollectionAttrInfo> Function(
-  ffi.Pointer<CXIdxAttrInfo> arg0,
-);
-
-typedef Native_clang_index_getCXXClassDeclInfo
-    = ffi.Pointer<CXIdxCXXClassDeclInfo> Function(
-  ffi.Pointer<CXIdxDeclInfo> arg0,
-);
-
-typedef _dart_clang_index_getCXXClassDeclInfo
-    = ffi.Pointer<CXIdxCXXClassDeclInfo> Function(
-  ffi.Pointer<CXIdxDeclInfo> arg0,
-);
-
-typedef Native_clang_index_getClientContainer = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<CXIdxContainerInfo> arg0,
-);
-
-typedef _dart_clang_index_getClientContainer = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<CXIdxContainerInfo> arg0,
-);
-
-typedef Native_clang_index_setClientContainer = ffi.Void Function(
-  ffi.Pointer<CXIdxContainerInfo> arg0,
-  ffi.Pointer<ffi.Void> arg1,
-);
-
-typedef _dart_clang_index_setClientContainer = void Function(
-  ffi.Pointer<CXIdxContainerInfo> arg0,
-  ffi.Pointer<ffi.Void> arg1,
-);
-
-typedef Native_clang_index_getClientEntity = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<CXIdxEntityInfo> arg0,
-);
-
-typedef _dart_clang_index_getClientEntity = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<CXIdxEntityInfo> arg0,
-);
-
-typedef Native_clang_index_setClientEntity = ffi.Void Function(
-  ffi.Pointer<CXIdxEntityInfo> arg0,
-  ffi.Pointer<ffi.Void> arg1,
-);
-
-typedef _dart_clang_index_setClientEntity = void Function(
-  ffi.Pointer<CXIdxEntityInfo> arg0,
-  ffi.Pointer<ffi.Void> arg1,
-);
-
-typedef Native_clang_IndexAction_create = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<ffi.Void> CIdx,
-);
-
-typedef _dart_clang_IndexAction_create = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<ffi.Void> CIdx,
-);
-
-typedef Native_clang_IndexAction_dispose = ffi.Void Function(
-  ffi.Pointer<ffi.Void> arg0,
-);
-
-typedef _dart_clang_IndexAction_dispose = void Function(
-  ffi.Pointer<ffi.Void> arg0,
-);
-
-typedef Native_clang_indexSourceFile = ffi.Int32 Function(
-  ffi.Pointer<ffi.Void> arg0,
-  ffi.Pointer<ffi.Void> client_data,
-  ffi.Pointer<IndexerCallbacks> index_callbacks,
-  ffi.Uint32 index_callbacks_size,
-  ffi.Uint32 index_options,
-  ffi.Pointer<ffi.Int8> source_filename,
-  ffi.Pointer<ffi.Pointer<ffi.Int8>> command_line_args,
-  ffi.Int32 num_command_line_args,
-  ffi.Pointer<CXUnsavedFile> unsaved_files,
-  ffi.Uint32 num_unsaved_files,
-  ffi.Pointer<ffi.Pointer<CXTranslationUnitImpl>> out_TU,
-  ffi.Uint32 TU_options,
-);
-
-typedef _dart_clang_indexSourceFile = int Function(
-  ffi.Pointer<ffi.Void> arg0,
-  ffi.Pointer<ffi.Void> client_data,
-  ffi.Pointer<IndexerCallbacks> index_callbacks,
-  int index_callbacks_size,
-  int index_options,
-  ffi.Pointer<ffi.Int8> source_filename,
-  ffi.Pointer<ffi.Pointer<ffi.Int8>> command_line_args,
-  int num_command_line_args,
-  ffi.Pointer<CXUnsavedFile> unsaved_files,
-  int num_unsaved_files,
-  ffi.Pointer<ffi.Pointer<CXTranslationUnitImpl>> out_TU,
-  int TU_options,
-);
-
-typedef Native_clang_indexSourceFileFullArgv = ffi.Int32 Function(
-  ffi.Pointer<ffi.Void> arg0,
-  ffi.Pointer<ffi.Void> client_data,
-  ffi.Pointer<IndexerCallbacks> index_callbacks,
-  ffi.Uint32 index_callbacks_size,
-  ffi.Uint32 index_options,
-  ffi.Pointer<ffi.Int8> source_filename,
-  ffi.Pointer<ffi.Pointer<ffi.Int8>> command_line_args,
-  ffi.Int32 num_command_line_args,
-  ffi.Pointer<CXUnsavedFile> unsaved_files,
-  ffi.Uint32 num_unsaved_files,
-  ffi.Pointer<ffi.Pointer<CXTranslationUnitImpl>> out_TU,
-  ffi.Uint32 TU_options,
-);
-
-typedef _dart_clang_indexSourceFileFullArgv = int Function(
-  ffi.Pointer<ffi.Void> arg0,
-  ffi.Pointer<ffi.Void> client_data,
-  ffi.Pointer<IndexerCallbacks> index_callbacks,
-  int index_callbacks_size,
-  int index_options,
-  ffi.Pointer<ffi.Int8> source_filename,
-  ffi.Pointer<ffi.Pointer<ffi.Int8>> command_line_args,
-  int num_command_line_args,
-  ffi.Pointer<CXUnsavedFile> unsaved_files,
-  int num_unsaved_files,
-  ffi.Pointer<ffi.Pointer<CXTranslationUnitImpl>> out_TU,
-  int TU_options,
-);
-
-typedef Native_clang_indexTranslationUnit = ffi.Int32 Function(
-  ffi.Pointer<ffi.Void> arg0,
-  ffi.Pointer<ffi.Void> client_data,
-  ffi.Pointer<IndexerCallbacks> index_callbacks,
-  ffi.Uint32 index_callbacks_size,
-  ffi.Uint32 index_options,
-  ffi.Pointer<CXTranslationUnitImpl> arg5,
-);
-
-typedef _dart_clang_indexTranslationUnit = int Function(
-  ffi.Pointer<ffi.Void> arg0,
-  ffi.Pointer<ffi.Void> client_data,
-  ffi.Pointer<IndexerCallbacks> index_callbacks,
-  int index_callbacks_size,
-  int index_options,
-  ffi.Pointer<CXTranslationUnitImpl> arg5,
-);
-
-typedef Native_clang_indexLoc_getFileLocation = ffi.Void Function(
-  CXIdxLoc loc,
-  ffi.Pointer<ffi.Pointer<ffi.Void>> indexFile,
-  ffi.Pointer<ffi.Pointer<ffi.Void>> file,
-  ffi.Pointer<ffi.Uint32> line,
-  ffi.Pointer<ffi.Uint32> column,
-  ffi.Pointer<ffi.Uint32> offset,
-);
-
-typedef _dart_clang_indexLoc_getFileLocation = void Function(
-  CXIdxLoc loc,
-  ffi.Pointer<ffi.Pointer<ffi.Void>> indexFile,
-  ffi.Pointer<ffi.Pointer<ffi.Void>> file,
-  ffi.Pointer<ffi.Uint32> line,
-  ffi.Pointer<ffi.Uint32> column,
-  ffi.Pointer<ffi.Uint32> offset,
-);
-
-typedef Native_clang_indexLoc_getCXSourceLocation = CXSourceLocation Function(
-  CXIdxLoc loc,
-);
-
-typedef _dart_clang_indexLoc_getCXSourceLocation = CXSourceLocation Function(
-  CXIdxLoc loc,
-);
-
-typedef CXFieldVisitor = ffi.Int32 Function(
-  CXCursor,
-  ffi.Pointer<ffi.Void>,
-);
-
-typedef Native_clang_Type_visitFields = ffi.Uint32 Function(
-  CXType T,
-  ffi.Pointer<ffi.NativeFunction<CXFieldVisitor>> visitor,
-  ffi.Pointer<ffi.Void> client_data,
-);
-
-typedef _dart_clang_Type_visitFields = int Function(
-  CXType T,
-  ffi.Pointer<ffi.NativeFunction<CXFieldVisitor>> visitor,
-  ffi.Pointer<ffi.Void> client_data,
-);
-
-typedef _typedefC_2 = ffi.Int32 Function(
-  ffi.Pointer<ffi.Void>,
-  CXCursor,
-  CXSourceRange,
-);
-
-typedef _typedefC_3 = ffi.Int32 Function(
-  ffi.Pointer<ffi.Void>,
-  ffi.Pointer<ffi.Void>,
-);
-
-typedef _typedefC_4 = ffi.Void Function(
-  ffi.Pointer<ffi.Void>,
-  ffi.Pointer<ffi.Void>,
-  ffi.Pointer<ffi.Void>,
-);
-
-typedef _typedefC_5 = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<ffi.Void>,
-  ffi.Pointer<ffi.Void>,
-  ffi.Pointer<ffi.Void>,
-);
-
-typedef _typedefC_6 = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<ffi.Void>,
-  ffi.Pointer<CXIdxIncludedFileInfo>,
-);
-
-typedef _typedefC_7 = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<ffi.Void>,
-  ffi.Pointer<CXIdxImportedASTFileInfo>,
-);
-
-typedef _typedefC_8 = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<ffi.Void>,
-  ffi.Pointer<ffi.Void>,
-);
-
-typedef _typedefC_9 = ffi.Void Function(
-  ffi.Pointer<ffi.Void>,
-  ffi.Pointer<CXIdxDeclInfo>,
-);
-
-typedef _typedefC_10 = ffi.Void Function(
-  ffi.Pointer<ffi.Void>,
-  ffi.Pointer<CXIdxEntityRefInfo>,
-);

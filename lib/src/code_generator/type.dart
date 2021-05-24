@@ -5,7 +5,7 @@
 import 'package:ffigen/src/code_generator.dart';
 
 import 'compound.dart';
-import 'typedef.dart';
+import 'typealias.dart';
 import 'writer.dart';
 
 class _SubType {
@@ -39,6 +39,12 @@ enum BroadType {
   Compound,
   NativeFunction,
 
+  /// Represents a function type.
+  FunctionType,
+
+  /// Represents a typealias.
+  Typealias,
+
   /// Represents a Dart_Handle.
   Handle,
 
@@ -71,8 +77,14 @@ class Type {
   /// Reference to the [Compound] binding this type refers to.
   Compound? compound;
 
-  /// Reference to the [Typedef] this type refers to.
-  Typedef? nativeFunc;
+  /// Reference to the [NativeFunc] this type refers to.
+  NativeFunc? nativeFunc;
+
+  /// Reference to the [Typealias] this type refers to.
+  Typealias? typealias;
+
+  /// Reference to the [FunctionType] this type refers to.
+  FunctionType? functionType;
 
   /// For providing [SupportedNativeType] only.
   final SupportedNativeType? nativeType;
@@ -95,6 +107,8 @@ class Type {
     this.compound,
     this.nativeType,
     this.nativeFunc,
+    this.typealias,
+    this.functionType,
     this.length,
     this.unimplementedReason,
   });
@@ -111,8 +125,15 @@ class Type {
   factory Type.union(Union union) {
     return Type._(broadType: BroadType.Compound, compound: union);
   }
-  factory Type.nativeFunc(Typedef nativeFunc) {
+  factory Type.functionType(FunctionType functionType) {
+    return Type._(
+        broadType: BroadType.FunctionType, functionType: functionType);
+  }
+  factory Type.nativeFunc(NativeFunc nativeFunc) {
     return Type._(broadType: BroadType.NativeFunction, nativeFunc: nativeFunc);
+  }
+  factory Type.typealias(Typealias typealias) {
+    return Type._(broadType: BroadType.Typealias, typealias: typealias);
   }
   factory Type.nativeType(SupportedNativeType nativeType) {
     return Type._(broadType: BroadType.NativeType, nativeType: nativeType);
@@ -197,7 +218,7 @@ class Type {
       case BroadType.Compound:
         return '${compound!.name}';
       case BroadType.NativeFunction:
-        return '${w.ffiLibraryPrefix}.NativeFunction<${nativeFunc!.name}>';
+        return '${w.ffiLibraryPrefix}.NativeFunction<${nativeFunc!.type.getCType(w)}>';
       case BroadType
           .IncompleteArray: // Array parameters are treated as Pointers in C.
         return '${w.ffiLibraryPrefix}.Pointer<${child!.getCType(w)}>';
@@ -208,8 +229,12 @@ class Type {
         return '${w.ffiLibraryPrefix}.${_primitives[SupportedNativeType.Uint8]!.c}';
       case BroadType.Handle:
         return '${w.ffiLibraryPrefix}.Handle';
-      default:
-        throw Exception('cType unknown');
+      case BroadType.FunctionType:
+        return functionType!.getCType(w);
+      case BroadType.Typealias:
+        return typealias!.name;
+      case BroadType.Unimplemented:
+        throw UnimplementedError('C type unknown for ${broadType.toString()}');
     }
   }
 
@@ -222,7 +247,7 @@ class Type {
       case BroadType.Compound:
         return '${compound!.name}';
       case BroadType.NativeFunction:
-        return '${w.ffiLibraryPrefix}.NativeFunction<${nativeFunc!.name}>';
+        return '${w.ffiLibraryPrefix}.NativeFunction<${nativeFunc!.type.getDartType(w)}>';
       case BroadType
           .IncompleteArray: // Array parameters are treated as Pointers in C.
         return '${w.ffiLibraryPrefix}.Pointer<${child!.getCType(w)}>';
@@ -233,8 +258,13 @@ class Type {
         return _primitives[SupportedNativeType.Uint8]!.dart;
       case BroadType.Handle:
         return 'Object';
-      default:
-        throw Exception('dart type unknown for ${broadType.toString()}');
+      case BroadType.FunctionType:
+        return functionType!.getDartType(w);
+      case BroadType.Typealias:
+        return typealias!.name;
+      case BroadType.Unimplemented:
+        throw UnimplementedError(
+            'dart type unknown for ${broadType.toString()}');
     }
   }
 
@@ -242,4 +272,65 @@ class Type {
   String toString() {
     return 'Type: $broadType';
   }
+}
+
+/// Represents a function type.
+class FunctionType {
+  final Type returnType;
+  final List<Parameter> parameters;
+
+  FunctionType({
+    required this.returnType,
+    required this.parameters,
+  });
+
+  String getCType(Writer w) {
+    final sb = StringBuffer();
+
+    // Write return Type.
+    sb.write(returnType.getCType(w));
+
+    // Write Function.
+    sb.write(' Function(');
+    //TODO: should write type name?
+    sb.write(parameters.map<String>((p) {
+      return p.type.getCType(w);
+    }).join(', '));
+    sb.write(')');
+
+    return sb.toString();
+  }
+
+  String getDartType(Writer w) {
+    final sb = StringBuffer();
+
+    // Write return Type.
+    sb.write(returnType.getDartType(w));
+
+    // Write Function.
+    sb.write(' Function(');
+    //TODO: should write type name?
+    sb.write(parameters.map<String>((p) {
+      return p.type.getDartType(w);
+    }).join(', '));
+    sb.write(')');
+
+    return sb.toString();
+  }
+
+  void getDependencies(Set<Binding> dependencies) {
+    returnType.getDependencies(dependencies);
+    parameters.forEach((p) => p.type.getDependencies(dependencies));
+  }
+}
+
+/// Represents a NativeFunction<Function>.
+class NativeFunc {
+  final Type type;
+
+  NativeFunc.fromFunctionType(FunctionType functionType)
+      : type = Type.functionType(functionType);
+
+  NativeFunc.fromFunctionTypealias(Typealias typealias)
+      : type = Type.typealias(typealias);
 }

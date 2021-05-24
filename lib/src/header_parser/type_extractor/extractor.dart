@@ -64,7 +64,8 @@ Type getCodeGenType(
       final s = getCodeGenType(ct,
           parentName: parentName ?? spelling,
           pointerReference: pointerReference);
-      return s;
+      return Type.typealias(Typealias(name: spelling, type: s));
+
     case clang_types.CXTypeKind.CXType_Elaborated:
       final et = clang.clang_Type_getNamedType(cxtype);
       final s = getCodeGenType(et,
@@ -78,10 +79,10 @@ Type getCodeGenType(
       );
     case clang_types.CXTypeKind.CXType_FunctionProto:
       // Primarily used for function pointers.
-      return _extractFromFunctionProto(cxtype, parentName);
+      return _extractFromFunctionProto(cxtype);
     case clang_types.CXTypeKind.CXType_FunctionNoProto:
       // Primarily used for function types with zero arguments.
-      return _extractFromFunctionProto(cxtype, parentName);
+      return _extractFromFunctionProto(cxtype);
     case clang_types.CXTypeKind
         .CXType_ConstantArray: // Primarily used for constant array in struct members.
       return Type.constantArray(
@@ -183,12 +184,7 @@ Type _extractfromRecord(
 }
 
 // Used for function pointer arguments.
-Type _extractFromFunctionProto(clang_types.CXType cxtype, String? parentName) {
-  var name = parentName;
-
-  // An empty name means the function prototype was declared in-place, instead
-  // of using a typedef.
-  name = name ?? '';
+Type _extractFromFunctionProto(clang_types.CXType cxtype) {
   final _parameters = <Parameter>[];
   final totalArgs = clang.clang_getNumArgTypes(cxtype);
   for (var i = 0; i < totalArgs; i++) {
@@ -207,21 +203,8 @@ Type _extractFromFunctionProto(clang_types.CXType cxtype, String? parentName) {
     );
   }
 
-  Typedef? typedefC;
-  if (bindingsIndex.isSeenFunctionTypedef(name)) {
-    typedefC = bindingsIndex.getSeenFunctionTypedef(name);
-  } else {
-    typedefC = Typedef(
-      name: name.isNotEmpty ? name : incrementalNamer.name('_typedefC'),
-      typedefType: TypedefType.C,
-      parameters: _parameters,
-      returnType: clang.clang_getResultType(cxtype).toCodeGenType(),
-    );
-    // Add to seen, if name isn't empty.
-    if (name.isNotEmpty) {
-      bindingsIndex.addFunctionTypedefToSeen(name, typedefC);
-    }
-  }
-
-  return Type.nativeFunc(typedefC!);
+  return Type.functionType(FunctionType(
+    parameters: _parameters,
+    returnType: clang.clang_getResultType(cxtype).toCodeGenType(),
+  ));
 }

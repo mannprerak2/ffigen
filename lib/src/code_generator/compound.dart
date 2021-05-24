@@ -3,7 +3,6 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:ffigen/src/code_generator.dart';
-import 'package:ffigen/src/code_generator/typedef.dart';
 
 import 'binding.dart';
 import 'binding_string.dart';
@@ -102,23 +101,6 @@ abstract class Compound extends NoLookUpBinding {
       return '${w.ffiLibraryPrefix}.Array<${_getInlineArrayTypeString(type.child!, w)}>';
     }
     return type.getCType(w);
-  }
-
-  List<Typedef>? _typedefDependencies;
-  @override
-  List<Typedef> getTypedefDependencies(Writer w) {
-    if (_typedefDependencies == null) {
-      _typedefDependencies = <Typedef>[];
-
-      // Write typedef's required by members and resolve name conflicts.
-      for (final m in members) {
-        final base = m.type.getBaseType();
-        if (base.broadType == BroadType.NativeFunction) {
-          _typedefDependencies!.addAll(base.nativeFunc!.getDependencies());
-        }
-      }
-    }
-    return _typedefDependencies ?? [];
   }
 
   @override

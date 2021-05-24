@@ -3,7 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'binding_string.dart';
-import 'typedef.dart';
+import 'typealias.dart';
 import 'writer.dart';
 
 /// Base class for all Bindings.
@@ -27,9 +27,6 @@ abstract class Binding {
     required this.name,
     this.dartDoc,
   });
-
-  /// Return typedef dependencies.
-  List<Typedef> getTypedefDependencies(Writer w) => const [];
 
   /// Get all dependencies, including itself and save them in [dependencies].
   void getDependencies(Set<Binding> dependencies);

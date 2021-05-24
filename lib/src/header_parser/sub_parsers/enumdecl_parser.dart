@@ -25,12 +25,7 @@ class _ParsedEnum {
 final _stack = Stack<_ParsedEnum>();
 
 /// Parses a function declaration.
-EnumClass? parseEnumDeclaration(
-  clang_types.CXCursor cursor, {
-
-  /// Optionally provide name to use (useful in case enum is inside a typedef).
-  String? name,
-}) {
+EnumClass? parseEnumDeclaration(clang_types.CXCursor cursor) {
   _stack.push(_ParsedEnum());
 
   // Parse the cursor definition instead, if this is a forward declaration.
@@ -39,8 +34,17 @@ EnumClass? parseEnumDeclaration(
   }
 
   final enumUsr = cursor.usr();
-  final enumName = name ?? cursor.spelling();
-  if (enumName == '') {
+  final String enumName;
+  // Only set name using USR if the type is not Anonymous (i.e not inside
+  // any typedef and declared inplace inside another type).
+  if (clang.clang_Cursor_isAnonymous(cursor) == 0) {
+    // This gives the significant name, i.e name of the enum if defined or
+    // name of the first typedef declaration that refers to it.
+    enumName = enumUsr.split('@').last;
+  } else {
+    enumName = '';
+  }
+  if (enumName.isEmpty) {
     // Save this unnamed enum if it is anonymous (therefore not in a typedef).
     if (clang.clang_Cursor_isAnonymous(cursor) != 0) {
       _logger.fine('Saving anonymous enum.');

@@ -102,8 +102,7 @@ int _typedefdeclarationCursorVisitor(clang_types.CXCursor cursor,
         }
         break;
       case clang_types.CXCursorKind.CXCursor_EnumDecl:
-        _stack.top.binding =
-            parseEnumDeclaration(cursor, name: _stack.top.typedefName);
+        _stack.top.binding = parseEnumDeclaration(cursor);
         break;
       default:
         _logger.finest('typedefdeclarationCursorVisitor: Ignored');

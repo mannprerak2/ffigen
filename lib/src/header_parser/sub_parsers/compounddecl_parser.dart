@@ -119,9 +119,9 @@ Compound? parseCompoundDeclaration(
     cursor = clang.clang_getCursorDefinition(cursor);
   }
   final declUsr = cursor.usr();
-  String declName;
+  final String declName;
 
-// Only set name using USR if the type is not Anonymous (i.e not inside
+  // Only set name using USR if the type is not Anonymous (i.e not inside
   // any typedef and declared inplace inside another type).
   if (clang.clang_Cursor_isAnonymous(cursor) == 0) {
     // This gives the significant name, i.e name of the struct if defined or

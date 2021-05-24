@@ -44,11 +44,12 @@ ${strings.typedefmap}:
 }
 
 Library expectedLibrary() {
-  final namedTypedef = Typedef(
-    name: 'NamedFunctionProto',
-    typedefType: TypedefType.C,
-    returnType: Type.nativeType(SupportedNativeType.Void),
-  );
+  final namedTypealias = Typealias(
+      name: 'NamedFunctionProto',
+      type: Type.functionType(FunctionType(
+        returnType: Type.nativeType(SupportedNativeType.Void),
+        parameters: [],
+      )));
 
   final excludedNtyperef = Struc(name: 'NTyperef1');
   return Library(
@@ -57,16 +58,16 @@ Library expectedLibrary() {
       Struc(name: 'Struct1', members: [
         Member(
           name: 'named',
-          type: Type.pointer(
-              Type.nativeFunc(NativeFunc.fromFunctionTypealias(Typealias()))),
+          type: Type.pointer(Type.nativeFunc(
+              NativeFunc.fromFunctionTypealias(namedTypealias))),
         ),
         Member(
           name: 'unnamed',
-          type: Type.pointer(Type.nativeFunc(Typedef(
-            name: '_typedefC_1',
-            typedefType: TypedefType.C,
+          type: Type.pointer(
+              Type.nativeFunc(NativeFunc.fromFunctionType(FunctionType(
             returnType: Type.nativeType(SupportedNativeType.Void),
-          ))),
+            parameters: [],
+          )))),
         ),
       ]),
       Func(
@@ -74,21 +75,22 @@ Library expectedLibrary() {
         parameters: [
           Parameter(
             name: 'named',
-            type: Type.pointer(Type.nativeFunc(namedTypedef)),
+            type: Type.pointer(Type.nativeFunc(
+                NativeFunc.fromFunctionTypealias(namedTypealias))),
           ),
           Parameter(
             name: 'unnamed',
-            type: Type.pointer(Type.nativeFunc(Typedef(
-              name: '_typedefC_2',
-              typedefType: TypedefType.C,
+            type: Type.pointer(
+                Type.nativeFunc(NativeFunc.fromFunctionType(FunctionType(
               parameters: [
                 Parameter(type: Type.nativeType(SupportedNativeType.Int32)),
               ],
               returnType: Type.nativeType(SupportedNativeType.Void),
-            ))),
+            )))),
           ),
         ],
-        returnType: Type.pointer(Type.nativeFunc(namedTypedef)),
+        returnType: Type.pointer(
+            Type.nativeFunc(NativeFunc.fromFunctionTypealias(namedTypealias))),
       ),
       Struc(name: 'AnonymousStructInTypedef'),
       Struc(name: 'NamedStructInTypedef'),

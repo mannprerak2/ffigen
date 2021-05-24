@@ -48,6 +48,8 @@ enum BroadType {
   /// Represents a Dart_Handle.
   Handle,
 
+  //TODO: add type for enum.
+
   /// Stores its element type in NativeType as only those are supported.
   ConstantArray,
   IncompleteArray,

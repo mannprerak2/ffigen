@@ -46,7 +46,7 @@ class Typealias extends NoLookUpBinding {
     if (dartDoc != null) {
       sb.write(makeDartDoc(dartDoc!));
     }
-    sb.write('typedef $name = ${type.getCType(w)};');
+    sb.write('typedef $name = ${type.getCType(w)};\n');
     return BindingString(
         type: BindingStringType.typeDef, string: sb.toString());
   }

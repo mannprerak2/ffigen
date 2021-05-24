@@ -10,6 +10,7 @@ import 'package:logging/logging.dart';
 import '../clang_bindings/clang_bindings.dart' as clang_types;
 import '../data.dart';
 import '../sub_parsers/compounddecl_parser.dart';
+import '../sub_parsers/enumdecl_parser.dart';
 import '../type_extractor/cxtypekindmap.dart';
 import '../utils.dart';
 
@@ -69,6 +70,9 @@ Type getCodeGenType(
             s.compound!.name == spelling) {
           // Do not use typedef if it refers to a compound with the same name.
           return s;
+        } else if (s.broadType == BroadType.Enum) {
+          // Ignore typedefs to Enum.
+          return s;
         } else {
           final typealias = Typealias(name: spelling, type: s);
           bindingsIndex.addTypealiasToSeen(typedefUsr, typealias);
@@ -82,9 +86,23 @@ Type getCodeGenType(
     case clang_types.CXTypeKind.CXType_Record:
       return _extractfromRecord(cxtype, pointerReference);
     case clang_types.CXTypeKind.CXType_Enum:
-      return Type.nativeType(
-        enumNativeType,
-      );
+      final cursor = clang.clang_getTypeDeclaration(cxtype);
+      final usr = cursor.usr();
+
+      if (bindingsIndex.isSeenEnumClass(usr)) {
+        return Type.enumClass(bindingsIndex.getSeenEnumClass(usr)!);
+      } else {
+        final enumClass = parseEnumDeclaration(
+          cursor,
+          ignoreFilter: true,
+        );
+        if (enumClass == null) {
+          // Handle anonymous enum declarations within another declaration.
+          return Type.nativeType(Type.enumNativeType);
+        } else {
+          return Type.enumClass(enumClass);
+        }
+      }
     case clang_types.CXTypeKind.CXType_FunctionProto:
       // Primarily used for function pointers.
       return _extractFromFunctionProto(cxtype);
@@ -160,7 +178,6 @@ Type _extractfromRecord(clang_types.CXType cxtype, bool pointerReference) {
         compoundType,
         ignoreFilter: true,
         pointerReference: pointerReference,
-        updateName: false,
       );
     } else {
       final struc = parseCompoundDeclaration(

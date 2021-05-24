@@ -82,9 +82,6 @@ Compound? parseCompoundDeclaration(
   /// To track if the declaration was used by reference(i.e T*). (Used to only
   /// generate these as opaque if `dependency-only` was set to opaque).
   bool pointerReference = false,
-
-  /// If the compound name should be updated, if it was already seen.
-  bool updateName = true,
 }) {
   _stack.push(_ParsedCompound());
 
@@ -144,24 +141,22 @@ Compound? parseCompoundDeclaration(
       );
       _setMembers(cursor, className);
     } else {
-      _logger.finest('unnamed $className or typedef $className declaration');
+      _logger.finest('unnamed $className declaration');
     }
-  } else {
-    if ((ignoreFilter || shouldIncludeDecl(declUsr, declName)) &&
-        (!isSeenDecl(declUsr))) {
-      _logger.fine(
-          '++++ Adding $className: Name: $declName, ${cursor.completeStringRepr()}');
-      _stack.top.compound = Compound.fromType(
-        type: compoundType,
-        usr: declUsr,
-        originalName: declName,
-        name: configDecl.renameUsingConfig(declName),
-        dartDoc: getCursorDocComment(cursor),
-      );
-      // Adding to seen here to stop recursion if a declaration has itself as a
-      // member, members are updated later.
-      addDeclToSeen(declUsr, _stack.top.compound!);
-    }
+  } else if ((ignoreFilter || shouldIncludeDecl(declUsr, declName)) &&
+      (!isSeenDecl(declUsr))) {
+    _logger.fine(
+        '++++ Adding $className: Name: $declName, ${cursor.completeStringRepr()}');
+    _stack.top.compound = Compound.fromType(
+      type: compoundType,
+      usr: declUsr,
+      originalName: declName,
+      name: configDecl.renameUsingConfig(declName),
+      dartDoc: getCursorDocComment(cursor),
+    );
+    // Adding to seen here to stop recursion if a declaration has itself as a
+    // member, members are updated later.
+    addDeclToSeen(declUsr, _stack.top.compound!);
   }
 
   if (isSeenDecl(declUsr)) {
@@ -184,11 +179,6 @@ Compound? parseCompoundDeclaration(
       _setMembers(cursor, className);
     } else if (!_stack.top.compound!.parsedDependencies) {
       _logger.fine('Skipped dependencies.');
-    }
-
-    if (updateName) {
-      // If struct is seen, update it's name.
-      _stack.top.compound!.name = configDecl.renameUsingConfig(declName);
     }
   }
 

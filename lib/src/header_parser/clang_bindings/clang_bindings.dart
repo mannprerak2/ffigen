@@ -1079,7 +1079,7 @@ class Clang {
   }
 
   late final _clang_EvalResult_getKind_ptr =
-      _lookup<ffi.NativeFunction<CXEvalResultKind_1 Function(CXEvalResult)>>(
+      _lookup<ffi.NativeFunction<ffi.Int32 Function(CXEvalResult)>>(
           'clang_EvalResult_getKind');
   late final _clang_EvalResult_getKind =
       _clang_EvalResult_getKind_ptr.asFunction<int Function(CXEvalResult)>();
@@ -2395,7 +2395,7 @@ abstract class CXEvalResultKind {
 }
 
 typedef CXEvalResult = ffi.Pointer<ffi.Void>;
-typedef CXEvalResultKind_1 = ffi.Int32;
+
 const int CINDEX_VERSION_MAJOR = 0;
 
 const int CINDEX_VERSION_MINOR = 59;

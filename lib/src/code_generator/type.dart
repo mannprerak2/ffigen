@@ -48,7 +48,7 @@ enum BroadType {
   /// Represents a Dart_Handle.
   Handle,
 
-  //TODO: add type for enum.
+  Enum,
 
   /// Stores its element type in NativeType as only those are supported.
   ConstantArray,
@@ -76,6 +76,9 @@ class Type {
     SupportedNativeType.IntPtr: _SubType(c: 'IntPtr', dart: 'int'),
   };
 
+  /// Enum type is mapped to [SupportedNativeType.Int32].
+  static const enumNativeType = SupportedNativeType.Int32;
+
   /// Reference to the [Compound] binding this type refers to.
   Compound? compound;
 
@@ -87,6 +90,9 @@ class Type {
 
   /// Reference to the [FunctionType] this type refers to.
   FunctionType? functionType;
+
+  /// Reference to the [EnumClass] this type refers to.
+  EnumClass? enumClass;
 
   /// For providing [SupportedNativeType] only.
   final SupportedNativeType? nativeType;
@@ -107,6 +113,7 @@ class Type {
     required this.broadType,
     this.child,
     this.compound,
+    this.enumClass,
     this.nativeType,
     this.nativeFunc,
     this.typealias,
@@ -126,6 +133,9 @@ class Type {
   }
   factory Type.union(Union union) {
     return Type._(broadType: BroadType.Compound, compound: union);
+  }
+  factory Type.enumClass(EnumClass enumClass) {
+    return Type._(broadType: BroadType.Enum, enumClass: enumClass);
   }
   factory Type.functionType(FunctionType functionType) {
     return Type._(
@@ -170,18 +180,16 @@ class Type {
   void getDependencies(Set<Binding> dependencies) {
     if (compound != null && !dependencies.contains(compound)) {
       compound!.getDependencies(dependencies);
-    }
-    if (child != null && !dependencies.contains(child)) {
+    } else if (child != null && !dependencies.contains(child)) {
       child!.getDependencies(dependencies);
-    }
-    if (typealias != null && !dependencies.contains(typealias)) {
+    } else if (typealias != null && !dependencies.contains(typealias)) {
       typealias!.getDependencies(dependencies);
-    }
-    if (nativeFunc != null) {
+    } else if (nativeFunc != null) {
       nativeFunc!.getDependencies(dependencies);
-    }
-    if (functionType != null) {
+    } else if (functionType != null) {
       functionType!.getDependencies(dependencies);
+    } else if (enumClass != null) {
+      enumClass!.getDependencies(dependencies);
     }
   }
 
@@ -228,6 +236,8 @@ class Type {
         return '${w.ffiLibraryPrefix}.Pointer<${child!.getCType(w)}>';
       case BroadType.Compound:
         return '${compound!.name}';
+      case BroadType.Enum:
+        return '${w.ffiLibraryPrefix}.${_primitives[enumNativeType]!.c}';
       case BroadType.NativeFunction:
         return '${w.ffiLibraryPrefix}.NativeFunction<${nativeFunc!.type.getCType(w)}>';
       case BroadType
@@ -257,6 +267,8 @@ class Type {
         return '${w.ffiLibraryPrefix}.Pointer<${child!.getCType(w)}>';
       case BroadType.Compound:
         return '${compound!.name}';
+      case BroadType.Enum:
+        return _primitives[enumNativeType]!.dart;
       case BroadType.NativeFunction:
         return '${w.ffiLibraryPrefix}.NativeFunction<${nativeFunc!.type.getDartType(w)}>';
       case BroadType

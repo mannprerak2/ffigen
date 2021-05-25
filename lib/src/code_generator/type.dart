@@ -232,12 +232,18 @@ class Type {
   bool sameDartAndCType(Writer w) => getCType(w) == getDartType(w);
 
   /// Returns true if the type is a [Compound] and is incomplete.
-  bool get isIncompleteCompound =>
-      (broadType == BroadType.Compound &&
-          compound != null &&
-          compound!.isInComplete) ||
-      (broadType == BroadType.ConstantArray &&
-          getBaseArrayType().isIncompleteCompound);
+  bool get isIncompleteCompound {
+    final baseTypealiasType = getBaseTypealiasType();
+    if (baseTypealiasType == this) {
+      return (broadType == BroadType.Compound &&
+              compound != null &&
+              compound!.isInComplete) ||
+          (broadType == BroadType.ConstantArray &&
+              getBaseArrayType().isIncompleteCompound);
+    } else {
+      return baseTypealiasType.isIncompleteCompound;
+    }
+  }
 
   String getCType(Writer w) {
     switch (broadType) {

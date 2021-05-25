@@ -36,7 +36,7 @@ ${strings.unions}:
         ''') as yaml.YamlMap),
       );
     });
-
+    // TODO: test with typedef to opaque.
     test('Expected bindings', () {
       matchLibraryWithExpected(actual, [
         'test',

@@ -41,6 +41,7 @@ Type getCodeGenType(
       }
       return Type.pointer(s);
     case clang_types.CXTypeKind.CXType_Typedef:
+      //TODO: get comment for typealias.
       final spelling = clang.clang_getTypedefName(cxtype).toStringAndDispose();
       if (config.typedefNativeTypeMappings.containsKey(spelling)) {
         _logger.fine('  Type Mapped from typedef-map');
@@ -75,6 +76,10 @@ Type getCodeGenType(
           return s;
         } else if (s.broadType == BroadType.Handle) {
           // Do not use typedefs to Handle.
+          return s;
+        } else if (s.broadType == BroadType.ConstantArray ||
+            s.broadType == BroadType.IncompleteArray) {
+          // Do not use typedefs to Constant Array.
           return s;
         } else {
           final typealias = Typealias(name: spelling, type: s);

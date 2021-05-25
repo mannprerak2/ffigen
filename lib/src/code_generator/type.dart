@@ -217,6 +217,17 @@ class Type {
     }
   }
 
+  /// Get base typealias type.
+  ///
+  /// Returns itself if it's not a Typealias.
+  Type getBaseTypealiasType() {
+    if (broadType == BroadType.Typealias) {
+      return typealias!.type.getBaseTypealiasType();
+    } else {
+      return this;
+    }
+  }
+
   /// Function to check if the dart and C type string are same.
   bool sameDartAndCType(Writer w) => getCType(w) == getDartType(w);
 
